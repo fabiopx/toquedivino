@@ -1,0 +1,434 @@
+<v-sheet class="ma-2 pa-2 border" :rounded="true" elevation="1">
+                                                                        <h3 class="blue-grey--text">Selecione o evento
+                                                                        </h3>
+                                                                        <v-btn-toggle v-model="contractEvent"
+                                                                            color="blue-grey" tile group>
+                                                                            <v-btn value="Casamento"
+                                                                                @click="selectEvent('casamento')">
+                                                                                Casamento</v-btn>
+                                                                            <v-btn value="Colação de Grau"
+                                                                                @click="selectEvent('formatura')">
+                                                                                Colação de Grau</v-btn>
+                                                                            <v-btn value="Jantar"
+                                                                                @click="selectEvent()">Jantar</v-btn>
+                                                                            <v-btn value="Bodas" @click="selectEvent()">
+                                                                                Bodas</v-btn>
+                                                                            <v-btn value="Recepção"
+                                                                                @click="selectEvent()">Recepção</v-btn>
+                                                                            <v-btn value="Coquetel"
+                                                                                @click="selectEvent()">Coquetel</v-btn>
+                                                                            <v-btn value="Clarinada"
+                                                                                @click="selectEvent()">Clarinada</v-btn>
+                                                                            <v-btn value="Homenagem"
+                                                                                @click="selectEvent()">Homenagem</v-btn>
+                                                                        </v-btn-toggle>
+                                                                    </v-sheet>
+                                                                    <v-sheet class="ma-2 pa-2 border" :rounded="true"
+                                                                        v-show="selectEngaged == true" elevation="1">
+                                                                        <h3 class="blue-grey--text">Dados dos noivos
+                                                                        </h3>
+
+                                                                        <v-form ref="formEngaged">
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <h4>Dados da noiva</h4>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-checkbox
+                                                                                        v-model="engagedBrideAccountable"
+                                                                                        label="Responsável pelo contrato"
+                                                                                        @click="selectAccountableBride()">
+                                                                                    </v-checkbox>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        label="Nome da noiva"
+                                                                                        v-model="engagedBrideName"
+                                                                                        :rules="engagedBrideNameRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        label="Telefone da Noiva"
+                                                                                        v-model="engagedBridePhone"
+                                                                                        :rules="engagedBridePhoneRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        label="Celular da noiva"
+                                                                                        v-model="engagedBrideMobile"
+                                                                                        :rules="engagedBrideMobileRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        label="CEP"
+                                                                                        v-model="engagedBrideAddress.zipcode"
+                                                                                        @blur="getCEP('engagedBrideAddress')"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="6">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Logradouro"
+                                                                                        v-model="engagedBrideAddress.street"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        label="Número"
+                                                                                        v-model="engagedBrideAddress.number"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        label="Complemento"
+                                                                                        v-model="engagedBrideAddress.complement">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Bairro"
+                                                                                        v-model="engagedBrideAddress.neighborhood"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Cidade"
+                                                                                        v-model="engagedBrideAddress.city"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Estado"
+                                                                                        v-model="engagedBrideAddress.state"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-female"
+                                                                                        :loading="inputLoading"
+                                                                                        label="País"
+                                                                                        v-model="engagedBrideAddress.country"
+                                                                                        :rules="engagedBrideAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <h4>Dados do noivo</h4>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-checkbox
+                                                                                        v-model="engagedGroomAccountable"
+                                                                                        label="Responsável pelo contrato"
+                                                                                        @click="selectAccountableGroom()">
+                                                                                    </v-checkbox>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        label="Nome do noivo"
+                                                                                        v-model="engagedGroomName"
+                                                                                        :rules="engagedGroomNameRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        label="Telefone do noivo"
+                                                                                        v-model="engagedGroomPhone"
+                                                                                        :rules="engagedGroomPhoneRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        label="Celular do noivo"
+                                                                                        v-model="engagedGroomMobile"
+                                                                                        :rules="engagedGroomMobileRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        label="CEP"
+                                                                                        v-model="engagedGroomAddress.zipcode"
+                                                                                        @blur="getCEP('engagedGroomAddress')">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="6">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Logradouro"
+                                                                                        v-model="engagedGroomAddress.street"
+                                                                                        :rules="engagedGroomAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        label="Número"
+                                                                                        v-model="engagedGroomAddress.number"
+                                                                                        :rules="engagedGroomAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        label="Complemento"
+                                                                                        v-model="engagedGroomAddress.complement">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Bairro"
+                                                                                        v-model="engagedGroomAddress.neighborhood"
+                                                                                        :rules="engagedGroomAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Cidade"
+                                                                                        v-model="engagedGroomAddress.city"
+                                                                                        :rules="engagedGroomAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        :loading="inputLoading"
+                                                                                        label="Estado"
+                                                                                        v-model="engagedGroomAddress.state"
+                                                                                        :rules="engagedGroomAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        prepend-inner-icon="mdi-human-male"
+                                                                                        :loading="inputLoading"
+                                                                                        label="País"
+                                                                                        v-model="engagedGroomAddress.country"
+                                                                                        :rules="engagedGroomAddressRules"
+                                                                                        required></v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-btn color="blue-grey"
+                                                                                        class="float-right" dark fab
+                                                                                        @click="selectEventNext('engaged')">
+                                                                                        <v-icon>mdi-arrow-down</v-icon>
+                                                                                    </v-btn>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                        </v-form>
+                                                                    </v-sheet>
+
+                                                                    <v-sheet class="ma-2 pa-2 border" :rounded="true"
+                                                                        v-show="selectGraduationCommitte == true"
+                                                                        elevation="1">
+                                                                        <h3 class="blue-grey--text">Dados da comissão de
+                                                                            formatura</h3>
+                                                                        <v-form ref="formGraduationCommitte">
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        v-model="graduationCommitteName"
+                                                                                        label="Membro da comissão"
+                                                                                        :rules="graduationCommitteNameRules"
+                                                                                        required></v-text-field>
+                                                                                    <v-btn color="blue-grey"
+                                                                                        class="white--text" depressed
+                                                                                        @click="addMemberGraduationCommitte()">
+                                                                                        <v-icon>mdi-plus</v-icon>
+                                                                                        Acrescentar
+                                                                                    </v-btn>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-chip
+                                                                                        v-for="(member, i) in graduationCommitteMember"
+                                                                                        :key="i" class="ma-1" close
+                                                                                        @click:close="removeMemberGraduationCommitte(i, 1)">
+                                                                                        {{member}}</v-chip>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-alert v-show="alert" type="info"
+                                                                                        dismissible>{{alertMsg}}
+                                                                                    </v-alert>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-btn color="blue-grey"
+                                                                                        class="float-right" dark fab
+                                                                                        @click="selectEventNext('graduation')">
+                                                                                        <v-icon>mdi-arrow-down</v-icon>
+                                                                                    </v-btn>
+                                                                                </v-col>
+                                                                            </v-row>
+
+                                                                        </v-form>
+                                                                    </v-sheet>
+
+                                                                    <v-sheet class="ma-2 pa-2 border" :rounded="true"
+                                                                        v-show="selectEventData == true" elevation="1">
+                                                                        <h3 class="blue-grey--text">Dados do Evento</h3>
+                                                                        <v-form ref="formEvent">
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-menu v-model="pickDateEvent"
+                                                                                        :close-on-content-click="false"
+                                                                                        :nudge-right="40"
+                                                                                        transition="scale-transition"
+                                                                                        offset-y min-width="auto">
+                                                                                        <template
+                                                                                            v-slot:activator="{ on, attrs }">
+                                                                                            <v-text-field
+                                                                                                v-model="eventDate"
+                                                                                                label="Data do evento"
+                                                                                                prepend-icon="mdi-calendar"
+                                                                                                readonly v-bind="attrs"
+                                                                                                :rules="eventDateRules"
+                                                                                                v-on="on">
+                                                                                            </v-text-field>
+                                                                                        </template>
+                                                                                        <v-date-picker
+                                                                                            v-model="eventDate"
+                                                                                            @input="pickDateEvent = false">
+                                                                                        </v-date-picker>
+                                                                                    </v-menu>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-menu ref="menu"
+                                                                                        v-model="pickTimeEvent"
+                                                                                        :close-on-content-click="false"
+                                                                                        :nudge-right="40"
+                                                                                        :return-value.sync="eventTime"
+                                                                                        transition="scale-transition"
+                                                                                        offset-y max-width="290px"
+                                                                                        min-width="290px">
+                                                                                        <template
+                                                                                            v-slot:activator="{ on, attrs }">
+                                                                                            <v-text-field
+                                                                                                v-model="eventTime"
+                                                                                                label="Horário do Evento"
+                                                                                                prepend-icon="mdi-calendar-clock"
+                                                                                                readonly v-bind="attrs"
+                                                                                                :rules="eventTimeRules"
+                                                                                                v-on="on">
+                                                                                            </v-text-field>
+                                                                                        </template>
+                                                                                        <v-time-picker
+                                                                                            v-if="pickTimeEvent"
+                                                                                            v-model="eventTime"
+                                                                                            full-width
+                                                                                            @click:minute="$refs.menu.save(eventTime)">
+                                                                                        </v-time-picker>
+                                                                                    </v-menu>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field label="CEP"
+                                                                                        v-model="eventAddress.zipcode"
+                                                                                        @blur="getCEP('eventAddress')">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="6">
+                                                                                    <v-text-field
+                                                                                        :loading="inputLoading"
+                                                                                        label="Logradouro"
+                                                                                        v-model="eventAddress.street"
+                                                                                        :rules="eventAddressRules">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field label="Número"
+                                                                                        v-model="eventAddress.number"
+                                                                                        :rules="eventAddressRules">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col cols="2">
+                                                                                    <v-text-field label="Complemento"
+                                                                                        v-model="eventAddress.complement">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                            <v-row>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        :loading="inputLoading"
+                                                                                        label="Bairro"
+                                                                                        v-model="eventAddress.neighborhood"
+                                                                                        :rules="eventAddressRules">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        :loading="inputLoading"
+                                                                                        label="Cidade"
+                                                                                        v-model="eventAddress.city"
+                                                                                        :rules="eventAddressRules">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        :loading="inputLoading"
+                                                                                        label="Estado"
+                                                                                        v-model="eventAddress.state"
+                                                                                        :rules="eventAddressRules">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                                <v-col>
+                                                                                    <v-text-field
+                                                                                        :loading="inputLoading"
+                                                                                        label="País"
+                                                                                        v-model="eventAddress.country"
+                                                                                        :rules="eventAddressRules">
+                                                                                    </v-text-field>
+                                                                                </v-col>
+                                                                            </v-row>
+                                                                        </v-form>
+                                                                    </v-sheet>
