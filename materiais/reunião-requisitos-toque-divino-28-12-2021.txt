@@ -1,0 +1,22 @@
+Destacar a pergunta "Qual o tipo de evento?"
+Tirar obrigatoriedade do telefone (deixa do celular)
+Ressaltar horário oficial do evento
+Especificar na parte evento que os endereços são do evento
+Mudar dashboard no primeiro acesso
+Destacar cadastro de noivos e de formatura
+Alterar nomenclatura de contrato para orçamento
+Separar senha de login e assinatura
+Possibilidades dos noivos: não responsáveis pelo contrato, os dois responsáveis, só um responsável
+Verificar se o responsável (noivos ou não) tem maioridade
+Colocar prazo na possibilidade de excluir (faltando 90 dias) - permitir desbloquear com tempo - emitir aviso com 5 dias de 
+Mudar a forma de apresentar repertório (com busca de música)
+Incluir redes sociais dos noivos
+Incluir valor na tabela instrumento para adicionar um instrumento à formação
+Incluir quantidade de membros da formação para cálculo de carros necessários
+Mudar ênfase de intermediador de contrato para orçamento online
+Acrescentar tabela <<orçamento>>, para registrar o orçamento (incluir validade - 15 dias) - disparar e-mail avisando que está expirando nos 2 dias anteriores
+Liberar as funções após aceite de contrato
+Salvar contrato em pdf
+Criar financeiro (lançar pagamentos)
+verificar apagar lead na tela app
+apagar lead

@@ -100,8 +100,8 @@
             headingLoader: false,
             nTax: true,
             nInstrument: true,
-            urlApi: 'http://localhost/toquedivino/api/',
-            // urlApi: 'https://app.cerimonialtoquedivino.com.br/api/',
+            // urlApi: 'http://localhost/toquedivino/api/',
+            urlApi: 'https://app.cerimonialtoquedivino.com.br/api/',
             selectedPage: 0,
             show: "home",
             alert: false,
@@ -1114,8 +1114,8 @@
                 this.inscribeCpf = item.cpf
                 this.inscribeRg = item.rg
                 this.contractFormation = item.formation
-                this.contractService = item.service
-                this.calculateContractTaxValue(this.contractService.taxas)
+                // this.contractService = item.service
+                this.calculateContractTaxValue()
                 this.calculateContractFormationValue()
                 this.calculateContractValue()
             },
@@ -1417,7 +1417,7 @@
                     }
                 } else if(this.stepContract == 3){
                     if(this.$refs.formEvent.validate()){
-                        this.calculateContractTaxValue(this.contractService.taxas)
+                        this.calculateContractTaxValue()
                         this.calculateContractFormationValue()
                         this.calculateContractValue()
                         this.stepContract = this.stepContract + 1
@@ -1480,13 +1480,13 @@
             },
             calculateContractTaxValue: function(){
                 let value = 0
-                    if(this.contractService.taxas != null){
-                        this.contractService.taxas.forEach(function(t){
-                            if(t.type == 1){
-                                value = parseFloat(value) + parseFloat(t.value)
-                             }
-                        })
-                    }   
+                    // if(this.contractService.taxas != null){
+                    //     this.contractService.taxas.forEach(function(t){
+                    //         if(t.type == 1){
+                    //             value = parseFloat(value) + parseFloat(t.value)
+                    //          }
+                    //     })
+                    // }   
                 this.contractFixTaxValue = value
             },
             calculateContractFormationValue: function(){
@@ -1494,15 +1494,15 @@
             },
             addMultipliedContractValue: function(){
                 let sMultiplied = 0
-                if(this.contractService.taxas){
-                    this.contractService.taxas.forEach(function(item){
-                        sMultiplied += parseFloat(item.value) * parseFloat(item.vValue)
-                    })
+                // if(this.contractService.taxas != null){
+                //     this.contractService.taxas.forEach(function(item){
+                //         sMultiplied += parseFloat(item.value) * parseFloat(item.vValue)
+                //     })
     
-                    this.contractTaxVariantValue = sMultiplied
-                } else{
+                //     this.contractTaxVariantValue = sMultiplied
+                // } else{
                     this.contractTaxVariantValue = 0
-                }
+                // }
                 
             },
             calculateContractValue: function(){
