@@ -1,8 +1,8 @@
 Destacar a pergunta "Qual o tipo de evento?"
-Tirar obrigatoriedade do telefone (deixa do celular)
+Tirar obrigatoriedade do telefone (deixar do celular)
 Ressaltar horário oficial do evento
 Especificar na parte evento que os endereços são do evento
-Mudar dashboard no primeiro acesso
+Mudar dashboard no primeiro acesso (customers)
 Destacar cadastro de noivos e de formatura
 Alterar nomenclatura de contrato para orçamento
 Separar senha de login e assinatura

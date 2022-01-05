@@ -223,30 +223,21 @@ new Vue({
     nextScreen: function(){
         if(this.tela == 1){
             if(this.$refs.firstScreen.validate()){
-                if(this.selectedInstruments.length != 0){
-                    this.alertSelectedInstruments = false
-                    this.tela = 2
-                    localStorage.removeItem('tela')
-                    localStorage.setItem('tela', this.tela)
-                    this.dados.service = this.selectedService 
-                    localStorage.setItem('dados', JSON.stringify(this.dados))
-                    this.getFormationByInstruments()
-                } else{
-                    this.alertSelectedInstruments = true
-                }
+                this.tela = 2
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.dados.service = this.selectedService 
+                localStorage.setItem('dados', JSON.stringify(this.dados))
             }
         } else if(this.tela == 2){
-            if(this.selectedFormation){
-                this.alertSelectedFormation = false
+            if(this.selectedInstruments.length != 0){
+                this.alertSelectedInstruments = false
                 this.tela = 3
                 localStorage.removeItem('tela')
                 localStorage.setItem('tela', this.tela)
-                
-                this.dados.formation = this.selectedFormation
-                localStorage.setItem('dados', JSON.stringify(this.dados))
-
+                this.getFormationByInstruments()
             } else{
-                this.alertSelectedFormation = true
+                this.alertSelectedInstruments = true
             }
         } else if(this.tela == 3){
             if(this.$refs.formInscribePartOne.validate()){
