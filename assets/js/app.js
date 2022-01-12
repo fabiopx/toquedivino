@@ -106,7 +106,7 @@ new Vue({
     inscribePhone: '',
     inscribePhoneRules: [v => !!v || 'O campo TELEFONE é requerido'],
     inscribeMobile: '',
-    inscribeMobileRules: [v => !!v || 'O campo MOBILE é requerido'],
+    inscribeMobileRules: [v => !!v || 'O campo CELULAR é requerido'],
     inscribeAddress: {street: '', number: '', complement: '', neighborhood: '', city: '', zipcode: '', state: '', country: ''},
     inscribeCpf: '',
     inscribeRg: '',
@@ -240,16 +240,26 @@ new Vue({
                 this.alertSelectedInstruments = true
             }
         } else if(this.tela == 3){
-            if(this.$refs.formInscribePartOne.validate()){
+            if(this.selectedFormation){
                 this.tela = 4
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.dados.formation = this.selectedFormation
+                localStorage.setItem('dados', JSON.stringify(this.dados))
+            } else {
+                this.alertSelectedFormation = true
+            }
+        } else if(this.tela == 4){
+            if(this.$refs.formInscribePartOne.validate()){
+                this.tela = 5
                 localStorage.removeItem('tela')
                 localStorage.setItem('tela', this.tela)
                 this.dados.inscribe = {accountable: this.inscribeAccountable, email: this.inscribeEmail, phone: this.inscribePhone, mobile: this.inscribeMobile}
                 localStorage.setItem('dados', JSON.stringify(this.dados))
             }
-        } else if(this.tela == 4){
+        } else if (this.tela == 5){
             if(this.$refs.formInscribePartTwo.validate()){
-                this.tela = 5
+                this.tela = 6
                 localStorage.removeItem('tela')
                 localStorage.setItem('tela', this.tela)
                 this.dados.address = this.inscribeAddress
@@ -259,14 +269,16 @@ new Vue({
         }
     },
     prevScreen: function(){
-        if(this.tela == 2){
-            this.tela = 1
+        if(this.tela >= 1){
+            this.tela = this.tela - 1
             localStorage.removeItem('tela')
             localStorage.setItem('tela', this.tela)
-        } else if(this.tela == 3){
-            this.tela = 2
-            localStorage.removeItem('tela')
-            localStorage.setItem('tela', this.tela)
+        }
+        if(this.tela == 4){
+            this.inscribeAccountable = this.dados.inscribe.accountable
+            this.inscribeEmail = this.dados.inscribe.email
+            this.inscribePhone = this.dados.inscribe.phone
+            this.inscribeMobile = this.dados.inscribe.mobile
         }
     },
     redirect: function(url){
