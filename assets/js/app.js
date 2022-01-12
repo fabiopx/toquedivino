@@ -73,8 +73,8 @@ new Vue({
   },
   data: () => ({
     drawer: false,
-    urlApi: 'http://localhost/toquedivino/api/',
-    // urlApi: 'https://app.cerimonialtoquedivino.com.br/api/',
+    // urlApi: 'http://localhost/toquedivino/api/',
+    urlApi: 'https://app.cerimonialtoquedivino.com.br/api/',
     loadingVisible: false,
     start: false,
     tela: 1,
@@ -121,8 +121,11 @@ new Vue({
     dialogVideoFormation: false,
     formation: '',
     dialogTooltipFormation: false,
-
+    query: ""
   }),
+  watch: {
+      
+  },
   mounted() {
     if(localStorage.start){
         this.start = localStorage.start
@@ -469,6 +472,16 @@ new Vue({
             method: 'POST',
             data: data
         }).then(response =>{
+            console.log(response.data)
+        })
+    },
+    queryHere: function(value){
+        axios.get(`https://autocomplete.search.hereapi.com/v1/autocomplete/?q=${value}/in=countryCode%3ABRA&lang=pt-BR&limit=1`, {
+            headers: {
+                'Authorization' : 'Bearer uQYJ0goB8hGY0g_YF7e8EQ4hIAbMYAw0HWdU7RFYPxQ'
+            }
+        })
+        .then(response => {
             console.log(response.data)
         })
     }

@@ -283,11 +283,12 @@
                                         </p>
                                     </v-sheet>
                                     <p class="text-h6 blue--text mt-3">Dados pessoais: endereço</p>
+                                   
                                     <v-form ref="formInscribePartTwo">
                                         <v-row>
                                             <v-col cols="2">
                                                 <v-text-field v-model="inscribeAddress.zipcode" label="CEP"
-                                                    @blur="getCEP('inscribeAddress')"></v-text-field>
+                                                    @keyup="queryHere(inscribeAddress.zipcode)"></v-text-field>
                                             </v-col>
                                             <v-col>
                                                 <v-text-field v-model="inscribeAddress.street" label="Logradouro">
