@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/toquedivino';
+$config['base_url'] = 'http://localhost/toquedivino/api/';
 // $config['base_url'] = 'https://app.cerimonialtoquedivino.com.br';
 
 /*

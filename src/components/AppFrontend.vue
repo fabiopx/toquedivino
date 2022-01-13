@@ -20,7 +20,7 @@
     name: 'AppFrontend',
 
     data: () => ({
-      start: false
+      //
     }),
   }
 </script>
