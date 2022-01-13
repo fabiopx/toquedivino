@@ -1,0 +1,33 @@
+<v-form ref="formGraduationCommitte">
+                                                                                            <v-row>
+                                                                                                <v-col>
+                                                                                                    <v-text-field
+                                                                                                        v-model="graduationCommitteName"
+                                                                                                        label="Membro da comissão"
+                                                                                                        :rules="graduationCommitteNameRules"
+                                                                                                        required></v-text-field>
+                                                                                                    <v-btn color="blue-grey"
+                                                                                                        class="white--text" depressed
+                                                                                                        @click="addMemberGraduationCommitte()">
+                                                                                                        <v-icon>mdi-plus</v-icon>
+                                                                                                        Acrescentar
+                                                                                                    </v-btn>
+                                                                                                </v-col>
+                                                                                            </v-row>
+                                                                                            <v-row>
+                                                                                                <v-col>
+                                                                                                    <v-chip
+                                                                                                        v-for="(member, i) in graduationCommitteMember"
+                                                                                                        :key="i" class="ma-1" close
+                                                                                                        @click:close="removeMemberGraduationCommitte(i, 1)">
+                                                                                                        {{member}}</v-chip>
+                                                                                                </v-col>
+                                                                                            </v-row>
+                                                                                            <v-row>
+                                                                                                <v-col>
+                                                                                                    <v-alert v-show="alert" type="info"
+                                                                                                        dismissible>{{alertMsg}}
+                                                                                                    </v-alert>
+                                                                                                </v-col>
+                                                                                            </v-row>
+                                                                                        </v-form>

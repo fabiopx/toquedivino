@@ -1,0 +1,53 @@
+@media print {
+    body{
+        width: 21cm;
+        height: 29.7cm;
+        margin: 30mm 45mm 30mm 45mm; 
+        /* change the margins as you want them to be. */
+        font-family: Arial, Helvetica, sans-serif
+    } 
+    div.rowqrcode{
+        padding: 10px;
+        border: solid 1px #ccc;
+        margin-bottom: 20px;
+    }
+    div.rowqrcode{
+        padding: 10px;
+        border: solid 1px #ccc;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: start;
+    }
+
+    div.colqrcode{
+       margin-right: 10px;
+    }
+}
+
+@media screen {
+    body{
+        width: 21cm;
+        height: 29.7cm;
+        margin: 30mm 45mm 30mm 45mm; 
+        /* change the margins as you want them to be. */
+        font-family: Arial, Helvetica, sans-serif
+   } 
+
+   div.rowqrcode{
+        padding: 10px;
+        border: solid 1px #ccc;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: start;
+   }
+
+   div.colqrcode{
+       margin-right: 10px;
+   }
+
+   
+
+
+  
+
+}

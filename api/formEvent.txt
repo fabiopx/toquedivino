@@ -1,0 +1,116 @@
+<v-form ref="formEvent">
+                                                                                            <v-row>
+                                                                                                <v-col>
+                                                                                                    <v-menu v-model="pickDateEvent"
+                                                                                                        :close-on-content-click="false"
+                                                                                                        :nudge-right="40"
+                                                                                                        transition="scale-transition"
+                                                                                                        offset-y min-width="auto">
+                                                                                                        <template
+                                                                                                            v-slot:activator="{ on, attrs }">
+                                                                                                            <v-text-field
+                                                                                                                v-model="eventDate"
+                                                                                                                label="Data do evento"
+                                                                                                                prepend-icon="mdi-calendar"
+                                                                                                                readonly v-bind="attrs"
+                                                                                                                :rules="eventDateRules"
+                                                                                                                v-on="on">
+                                                                                                            </v-text-field>
+                                                                                                        </template>
+                                                                                                        <v-date-picker
+                                                                                                            v-model="eventDate"
+                                                                                                            @input="pickDateEvent = false">
+                                                                                                        </v-date-picker>
+                                                                                                    </v-menu>
+                                                                                                </v-col>
+                                                                                                <v-col>
+                                                                                                    <v-menu ref="menu"
+                                                                                                        v-model="pickTimeEvent"
+                                                                                                        :close-on-content-click="false"
+                                                                                                        :nudge-right="40"
+                                                                                                        :return-value.sync="eventTime"
+                                                                                                        transition="scale-transition"
+                                                                                                        offset-y max-width="290px"
+                                                                                                        min-width="290px">
+                                                                                                        <template
+                                                                                                            v-slot:activator="{ on, attrs }">
+                                                                                                            <v-text-field
+                                                                                                                v-model="eventTime"
+                                                                                                                label="Horário do Evento"
+                                                                                                                prepend-icon="mdi-calendar-clock"
+                                                                                                                readonly v-bind="attrs"
+                                                                                                                :rules="eventTimeRules"
+                                                                                                                v-on="on">
+                                                                                                            </v-text-field>
+                                                                                                        </template>
+                                                                                                        <v-time-picker
+                                                                                                            v-if="pickTimeEvent"
+                                                                                                            v-model="eventTime"
+                                                                                                            full-width
+                                                                                                            @click:minute="$refs.menu.save(eventTime)">
+                                                                                                        </v-time-picker>
+                                                                                                    </v-menu>
+                                                                                                </v-col>
+                                                                                            </v-row>
+                                                                                            <v-row>
+                                                                                                <v-col cols="2">
+                                                                                                    <v-text-field label="CEP"
+                                                                                                        v-model="eventAddress.zipcode"
+                                                                                                        @blur="getCEP('eventAddress')">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                                <v-col cols="6">
+                                                                                                    <v-text-field
+                                                                                                        :loading="inputLoading"
+                                                                                                        label="Logradouro"
+                                                                                                        v-model="eventAddress.street"
+                                                                                                        :rules="eventAddressRules">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                                <v-col cols="2">
+                                                                                                    <v-text-field label="Número"
+                                                                                                        v-model="eventAddress.number"
+                                                                                                        :rules="eventAddressRules">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                                <v-col cols="2">
+                                                                                                    <v-text-field label="Complemento"
+                                                                                                        v-model="eventAddress.complement">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                            </v-row>
+                                                                                            <v-row>
+                                                                                                <v-col>
+                                                                                                    <v-text-field
+                                                                                                        :loading="inputLoading"
+                                                                                                        label="Bairro"
+                                                                                                        v-model="eventAddress.neighborhood"
+                                                                                                        :rules="eventAddressRules">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                                <v-col>
+                                                                                                    <v-text-field
+                                                                                                        :loading="inputLoading"
+                                                                                                        label="Cidade"
+                                                                                                        v-model="eventAddress.city"
+                                                                                                        :rules="eventAddressRules">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                                <v-col>
+                                                                                                    <v-text-field
+                                                                                                        :loading="inputLoading"
+                                                                                                        label="Estado"
+                                                                                                        v-model="eventAddress.state"
+                                                                                                        :rules="eventAddressRules">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                                <v-col>
+                                                                                                    <v-text-field
+                                                                                                        :loading="inputLoading"
+                                                                                                        label="País"
+                                                                                                        v-model="eventAddress.country"
+                                                                                                        :rules="eventAddressRules">
+                                                                                                    </v-text-field>
+                                                                                                </v-col>
+                                                                                            </v-row>
+                                                                                        </v-form>
