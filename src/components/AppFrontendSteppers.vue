@@ -30,15 +30,14 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-btn depressed color="primary" class="ma-2" @click="restartApp()">Recomeçar</v-btn>
-                                    <v-btn depressed color="primary" @click="nextScreen()">
-                                        Continuar
+                                    <v-btn depressed class="d-block mr-0 ml-auto" color="primary" @click="nextScreen()">
+                                        Continuar <v-icon>mdi-menu-right</v-icon>
                                     </v-btn>
                                 </v-col>
                             </v-row>
                         </v-stepper-content>
 
-                        <!-- <v-stepper-content step="2">
+                        <v-stepper-content step="2">
                             <v-row>
                                 <v-col>
                                     <p class="text-h6">Quais instrumentos você gostaria que tocasse no seu evento?</p>
@@ -56,7 +55,7 @@
                                                             <v-scroll-x-transition>
                                                                 <div v-show="!active"
                                                                     class="text-h2 flex-grow-1 text-center">
-                                                                    <v-img :src="instrument.image" width="40"
+                                                                    <v-img :src="require('../assets/instrument/' + instrument.image)" width="40"
                                                                         class="ma-2">
                                                                     </v-img>
                                                                     <p class="grey--text text-left text-body-1">
@@ -66,7 +65,7 @@
                                                             <v-scroll-x-transition>
                                                                 <div v-if="active"
                                                                     class="text-h2 flex-grow-1 text-center">
-                                                                    <v-img :src="instrument.image" width="40"
+                                                                    <v-img :src="require('../assets/instrument/' + instrument.image)" width="40"
                                                                         class="ma-2">
                                                                     </v-img>
                                                                     <p class="white--text text-left text-body-1">
@@ -83,13 +82,17 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-btn depressed color="primary" @click="prevScreen()">Voltar</v-btn>
-                                    <v-btn depressed color="primary" @click="nextScreen()">Continuar</v-btn>
+                                    <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
+                                        <v-icon>mdi-menu-left</v-icon>Voltar
+                                    </v-btn>
+                                    <v-btn depressed class="float-right" color="primary" @click="nextScreen()">
+                                        Continuar <v-icon>mdi-menu-right</v-icon>
+                                    </v-btn>
                                 </v-col>
                             </v-row>
-                        </v-stepper-content> -->
+                        </v-stepper-content>
 
-                        <!-- <v-stepper-content step="3">
+                        <v-stepper-content step="3">
                             <v-row>
                                 <v-col>
                                     <p class="text-h6">Estas são as <b>Formações</b> que contém o(s) instrumento(s) que
@@ -170,11 +173,16 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-btn depressed color="primary" @click="prevScreen()">Voltar</v-btn>
-                                    <v-btn depressed color="primary" @click="nextScreen()">Continuar</v-btn>
+                                    <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
+                                        <v-icon>mdi-menu-left</v-icon> Voltar
+                                    </v-btn>
+                                    <v-btn depressed class="float-right" color="primary" @click="nextScreen()">
+                                        Continuar
+                                        <v-icon>mdi-menu-right</v-icon>
+                                    </v-btn>
                                 </v-col>
                             </v-row>
-                        </v-stepper-content> -->
+                        </v-stepper-content>
 
                         <!-- <v-stepper-content step="4">
                             <v-row>
@@ -294,30 +302,230 @@ export default {
     name:  'AppFrontendSteppers',
 
     data: () => ({
-        tela: 1,
-        services: [],
-        serviceRules: [],
-        selectedService: ""
+    urlApi: 'http://localhost/toquedivino/api/api/',
+    start: false,
+    tela: 1,
+    dados: {service: '', formation: '', inscribe: {}, address: {}},
+    active: false,
+    maskPhone: '(##) ####-####',
+    maskMobile: '(##) #####-####',
+    maskCep: '#####-###',
+    maskCpf: '###.###.###-##',
+    maskCnpj: '##.###.###/####-##',
+    setIP: {},
+    selectedService: '',
+    serviceRules:[v => !!v || "Por favor diga qual o tipo do evento"],
+    services: [],
+    instruments: [],
+    selectedInstruments: [],
+    alertSelectedInstruments: false,
+    formations: [],
+    selectedFormation: null,
+    alertSelectedFormation: false,
+    inscribeID: '',
+    inscribeAccountable: '',
+    inscribeAccountableRules:[v => !!v || 'O campo NOME é requerido'],
+    inscribeEmail: '',
+    inscribeEmailRules: [
+        v => !!v || 'O campo EMAIL é requerido',
+        v => /.+@.+/.test(v) || 'Insira um E-mail válido'
+    ],
+    inscribePhone: '',
+    inscribePhoneRules: [v => !!v || 'O campo TELEFONE é requerido'],
+    inscribeMobile: '',
+    inscribeMobileRules: [v => !!v || 'O campo CELULAR é requerido'],
+    inscribeAddress: {street: '', number: '', complement: '', neighborhood: '', city: '', zipcode: '', state: '', country: ''},
+    inscribeCpf: '',
+    inscribeRg: '',
+    endInscribe: false,
+    eventName: '',
+    eventDate: '',
+    eventTime: '',
+    eventAddress: {street: '', number: '', complement: '', neighborhood: '', city: '', zipcode: '', state: '', country: ''},
+    eventAddressRules: [v => !!v || 'Este campo é obrigatório!'],
+    pickDateEvent: false,
+    pickTimeEvent: false,
+    dialogVideoFormation: false,
+    formation: '',
+    dialogTooltipFormation: false,
     }),
 
      methods: {
     
       getServices(){
-        axios.get('http://localhost/toquedivino/api/api/getServices')
+        axios.get(this.urlApi + 'getServices')
         .then(response => {
-            this.services = response.data;
-            localStorage.setItem('services', JSON.stringify(this.services));
-            // this.loadingVisible =  false
+            localStorage.setItem('services', JSON.stringify(response.data));
+            this.services = JSON.parse(localStorage.services);
         })
       },
 
-      restartApp(){
-          console.log('restart');
-      },
+      getInstruments: function() {
+        axios.get(this.urlApi + 'getInstrument')
+        .then(response => {
+            localStorage.setItem('instruments', JSON.stringify(response.data));
+            this.instruments = JSON.parse(localStorage.instruments);
+        })
+    },
+
+    getFormationByInstruments: function(){
+        let data = new FormData();
+        data.append('instruments', JSON.stringify(this.selectedInstruments));
+        axios(this.urlApi + 'getFormationByInstruments', {
+            method: 'POST',
+            data: data
+        })
+        .then(response => {
+            localStorage.setItem('formations', JSON.stringify(response.data))
+            this.formations = JSON.parse(localStorage.formations)
+        })
+    },
+
+      nextScreen: function(){
+        if(this.tela == 1){
+            if(this.$refs.firstScreen.validate()){
+                this.tela = 2
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.dados.service = this.selectedService 
+                localStorage.setItem('dados', JSON.stringify(this.dados))
+            }
+        } else if(this.tela == 2){
+            if(this.selectedInstruments.length != 0){
+                this.alertSelectedInstruments = false
+                this.tela = 3
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.getFormationByInstruments()
+            } else{
+                this.alertSelectedInstruments = true
+            }
+        } else if(this.tela == 3){
+            if(this.selectedFormation){
+                this.tela = 4
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.dados.formation = this.selectedFormation
+                localStorage.setItem('dados', JSON.stringify(this.dados))
+            } else {
+                this.alertSelectedFormation = true
+            }
+        } else if(this.tela == 4){
+            if(this.$refs.formInscribePartOne.validate()){
+                this.tela = 5
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.dados.inscribe = {accountable: this.inscribeAccountable, email: this.inscribeEmail, phone: this.inscribePhone, mobile: this.inscribeMobile}
+                localStorage.setItem('dados', JSON.stringify(this.dados))
+            }
+        } else if (this.tela == 5){
+            if(this.$refs.formInscribePartTwo.validate()){
+                this.tela = 6
+                localStorage.removeItem('tela')
+                localStorage.setItem('tela', this.tela)
+                this.dados.address = this.inscribeAddress
+                localStorage.setItem('dados', JSON.stringify(this.dados))
+                this.saveLead()
+            }
+        }
+    },
+    prevScreen: function(){
+        if(this.tela >= 1){
+            this.tela = this.tela - 1
+            localStorage.removeItem('tela')
+            localStorage.setItem('tela', this.tela)
+        }
+        if(this.tela == 4){
+            this.inscribeAccountable = this.dados.inscribe.accountable
+            this.inscribeEmail = this.dados.inscribe.email
+            this.inscribePhone = this.dados.inscribe.phone
+            this.inscribeMobile = this.dados.inscribe.mobile
+        }
+    },
+    redirect: function(url){
+        window.open(url, '_blank')
+    },
+    isSelected: function(selected, alert){
+        if(this[selected]){
+            this[alert] = false
+        }
+    },
+    accessVideo: function(video){
+        window.open(video, '_blank')
+    },
+    openDialogFormationVideo: function(formation){
+        this.dialogVideoFormation = true
+        this.formation = formation
+    },
+    closeDialogFormationVideo: function(){
+        this.formation = ''
+        this.dialogVideoFormation = false
+    },
+    openDialogFormationTooltip: function(formation){
+        this.dialogTooltipFormation = true
+        this.formation = formation
+    },
+    closeDialogFormationTooltip: function(){
+        this.formation = ''
+        this.dialogTooltipFormation = false
+    },
+  },
+
+  beforeCreated(){
+    
+  },
+
+  created(){
+    this.getServices();
+    this.getInstruments();
   },
 
   mounted() {
-     this.getServices();
+
+    if(localStorage.tela){
+        this.tela = localStorage.tela
+    }
+
+    if(localStorage.getItem('services')){
+        try{
+            this.services = JSON.parse(localStorage.getItem('services'))
+        } catch(e){
+            localStorage.removeItem('services')
+        }
+    }
+
+    if(localStorage.getItem('instruments')){
+        try{
+            this.instruments = JSON.parse(localStorage.getItem('instruments'))
+        } catch(e){
+            localStorage.removeItem('instruments')
+        }
+    }
+
+    if(localStorage.getItem('formations')){
+        try{
+            this.formations = JSON.parse(localStorage.getItem('formations'))
+        } catch(e){
+            localStorage.removeItem('formations')
+        }
+    }
+
+    if(localStorage.getItem('dados')){
+        try{
+            this.dados = JSON.parse(localStorage.getItem('dados'))
+        } catch(e){
+            localStorage.removeItem('dados')
+        }
+    }
    },
+
+   computed: {
+       
+   },
+
+   destroyed() {
+       console.log('Steppers Destruida');
+   },
+   
 }
 </script>
