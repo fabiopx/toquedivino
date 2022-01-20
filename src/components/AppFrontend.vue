@@ -16,11 +16,13 @@
 </template>
 
 <script>
+  
   export default {
     name: 'AppFrontend',
 
     data: () => ({
       //
     }),
+    
   }
 </script>
