@@ -1,7 +1,7 @@
 <template>
     <v-stepper v-model="tela">
                     <v-stepper-header>
-                        <v-stepper-step :complete="tela > 1" step="1">Evento</v-stepper-step>
+                        <v-stepper-step :complete="tela > 1" step="1">Evento {{tela}}</v-stepper-step>
                         <v-divider></v-divider>
                         <v-stepper-step :complete="tela > 2" step="2">Instrumentos</v-stepper-step>
                         <v-divider></v-divider>
@@ -23,7 +23,7 @@
                                     <v-form ref="firstScreen">
                                         <v-select v-model="selectedService" outlined class="mt-3"
                                             label="Selecione o evento" :items="services" item-text="name"
-                                            :rules="serviceRules" return-object>
+                                            :rules="serviceRules" return-object v-on:change="onChangeService()">
                                         </v-select>
                                     </v-form>
                                 </v-col>
@@ -184,13 +184,13 @@
                             </v-row>
                         </v-stepper-content>
 
-                        <!-- <v-stepper-content step="4">
+                        <v-stepper-content step="4">
                             <v-row>
                                 <v-col>
                                     <v-sheet elevation="0" outlined rounded class="pa-5">
                                         <p class="text-h5 blue--text">Dados reunidos até aqui</p>
-                                        <p><b class="blue--text">Evento:</b> {{dados.service.name}}</p>
-                                        <p><b class="blue--text">Formação:</b> {{dados.formation.name}}</p>
+                                        <p><b class="blue--text">Evento:</b> {{services.name}}</p>
+                                        <p><b class="blue--text">Formação:</b> {{formation.name}}</p>
                                     </v-sheet>
                                     <p class="text-h5 blue--text">Quem será o responsável pelo cadastro?</p>
                                     <v-form ref="formInscribePartOne">
@@ -211,8 +211,12 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-btn depressed color="primary" @click="prevScreen()">Voltar</v-btn>
-                                    <v-btn depressed color="primary" @click="nextScreen()">Continuar</v-btn>
+                                    <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
+                                        <v-icon>mdi-menu-left</v-icon> Voltar
+                                    </v-btn>
+                                    <v-btn depressed class="float-right" color="primary" @click="nextScreen()">
+                                        <v-icon>mdi-menu-right</v-icon> Continuar
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                         </v-stepper-content>
@@ -221,13 +225,13 @@
                                 <v-col>
                                     <v-sheet elevation="0" outlined rounded class="pa-5">
                                         <p class="text-h6 blue--text">Dados reunidos até aqui</p>
-                                        <p><b class="blue--text">Evento:</b> {{dados.service.name}}</p>
-                                        <p><b class="blue--text">Formação:</b> {{dados.formation.name}}</p>
+                                        <p><b class="blue--text">Evento:</b> {{services.name}}</p>
+                                        <p><b class="blue--text">Formação:</b> {{formation.name}}</p>
                                         <p>
-                                            <b class="blue--text">Responsável:</b> {{dados.inscribe.accountable}}
-                                            <b class="blue--text ml-3">E-mail:</b> {{dados.inscribe.email}}
-                                            <b class="blue--text ml-3">Telefone:</b> {{dados.inscribe.phone}}
-                                            <b class="blue--text ml-3">Celular:</b> {{dados.inscribe.mobile}}
+                                            <b class="blue--text">Responsável:</b> {{inscribe.accountable}}
+                                            <b class="blue--text ml-3">E-mail:</b> {{inscribe.email}}
+                                            <b class="blue--text ml-3">Telefone:</b> {{inscribe.phone}}
+                                            <b class="blue--text ml-3">Celular:</b> {{inscribe.mobile}}
                                         </p>
                                     </v-sheet>
                                     <p class="text-h6 blue--text mt-3">Dados pessoais: endereço</p>
@@ -282,7 +286,7 @@
                                     <v-btn depressed color="primary" @click="nextScreen()">Pular etapa</v-btn>
                                 </v-col>
                             </v-row>
-                        </v-stepper-content> -->
+                        </v-stepper-content>
 
 
                         <!-- <v-stepper-content step="6">
@@ -304,7 +308,6 @@ export default {
     name:  'AppFrontendSteppers',
 
     data: () => ({
-    
     active: false,
     maskPhone: '(##) ####-####',
     maskMobile: '(##) #####-####',
@@ -312,8 +315,8 @@ export default {
     maskCpf: '###.###.###-##',
     maskCnpj: '##.###.###/####-##',
     setIP: {},
-    selectedService: '',
     serviceRules:[v => !!v || "Por favor diga qual o tipo do evento"],
+    selectedService: '',
     selectedInstruments: [],
     alertSelectedInstruments: false,
     selectedFormation: null,
@@ -347,67 +350,56 @@ export default {
     }),
 
      methods: {
-         ...mapActions(['getServices']),
+      ...mapActions([
+          'getServices', 
+          'getInstruments',
+          'getFormations',
+          'next', 
+          'prev',
+          'setSelectedService',
+          'setInscribe'
+        ]),
+        
       nextScreen: function(){
-        // if(this.tela == 1){
-        //     if(this.$refs.firstScreen.validate()){
-        //         this.tela = 2
-        //         localStorage.removeItem('tela')
-        //         localStorage.setItem('tela', this.tela)
-        //         this.dados.service = this.selectedService 
-        //         localStorage.setItem('dados', JSON.stringify(this.dados))
-        //     }
-        // } else if(this.tela == 2){
-        //     if(this.selectedInstruments.length != 0){
-        //         this.alertSelectedInstruments = false
-        //         this.tela = 3
-        //         localStorage.removeItem('tela')
-        //         localStorage.setItem('tela', this.tela)
-        //         this.getFormationByInstruments()
-        //     } else{
-        //         this.alertSelectedInstruments = true
-        //     }
-        // } else if(this.tela == 3){
-        //     if(this.selectedFormation){
-        //         this.tela = 4
-        //         localStorage.removeItem('tela')
-        //         localStorage.setItem('tela', this.tela)
-        //         this.dados.formation = this.selectedFormation
-        //         localStorage.setItem('dados', JSON.stringify(this.dados))
-        //     } else {
-        //         this.alertSelectedFormation = true
-        //     }
-        // } else if(this.tela == 4){
-        //     if(this.$refs.formInscribePartOne.validate()){
-        //         this.tela = 5
-        //         localStorage.removeItem('tela')
-        //         localStorage.setItem('tela', this.tela)
-        //         this.dados.inscribe = {accountable: this.inscribeAccountable, email: this.inscribeEmail, phone: this.inscribePhone, mobile: this.inscribeMobile}
-        //         localStorage.setItem('dados', JSON.stringify(this.dados))
-        //     }
-        // } else if (this.tela == 5){
-        //     if(this.$refs.formInscribePartTwo.validate()){
-        //         this.tela = 6
-        //         localStorage.removeItem('tela')
-        //         localStorage.setItem('tela', this.tela)
-        //         this.dados.address = this.inscribeAddress
-        //         localStorage.setItem('dados', JSON.stringify(this.dados))
-        //         this.saveLead()
-        //     }
-        // }
+        if(this.tela == 1){
+            if(this.$refs.firstScreen.validate()){
+                this.next()
+            }
+        } else if(this.tela == 2){
+            if(this.selectedInstruments.length != 0){
+                this.alertSelectedInstruments = false
+                this.next()
+                this.getFormationsByInstruments()
+            } else{
+                this.alertSelectedInstruments = true
+            }
+        } else if(this.tela == 3){
+            if(this.selectedFormation){
+                this.next()
+            } else {
+                this.alertSelectedFormation = true
+            }
+        } else if(this.tela == 4){
+            if(this.$refs.formInscribePartOne.validate()){
+                this.next()
+            }
+        } else if (this.tela == 5){
+            if(this.$refs.formInscribePartTwo.validate()){
+                this.next()
+            }
+        }
     },
     prevScreen: function(){
-        // if(this.tela >= 1){
-        //     this.tela = this.tela - 1
-        //     localStorage.removeItem('tela')
-        //     localStorage.setItem('tela', this.tela)
-        // }
-        // if(this.tela == 4){
-        //     this.inscribeAccountable = this.dados.inscribe.accountable
-        //     this.inscribeEmail = this.dados.inscribe.email
-        //     this.inscribePhone = this.dados.inscribe.phone
-        //     this.inscribeMobile = this.dados.inscribe.mobile
-        // }
+        if(this.tela >= 1){
+            this.prev()
+        }
+    },
+    onChangeService: function(){
+        this.setSelectedService(this.selectedService)
+        console.log(this.selService.name)
+    },
+    getFormationsByInstruments: function(){
+        this.getFormations(this.selectedInstruments)
     },
     redirect: function(url){
         window.open(url, '_blank')
@@ -436,20 +428,35 @@ export default {
         this.formation = ''
         this.dialogTooltipFormation = false
     },
+    maskTel: function(phone){
+        if(!!phone) {
+            return phone.length == 15 ? this.maskMobile : this.maskPhone
+        } else {
+            return this.maskMobile
+        }
+    },
   },
 
-  beforeCreated(){
-    
-  },
-
-  mounted() {
-
-    
-   },
-
+  
    computed: {
-       ...mapGetters(['tela, start'])
+
+       ...mapGetters([
+           'tela', 
+           'start', 
+           'services', 
+           'instruments', 
+           'formations',
+           'selService',
+           'inscribe'
+           ]),
+
    },
+
+   mounted() {
+       this.getServices()
+       this.getInstruments()
+   }
+    
    
 }
 </script>
