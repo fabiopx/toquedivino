@@ -11,12 +11,12 @@ import VueSession from 'vue-session'
 import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
 
 Vue.use(VueMask)
-Vue.use(VueCookies)
-Vue.use(VueSession)
-Vue.use(VueLocalStorage, {
-  name: 'ls',
-  bind: true
-})
+// Vue.use(VueCookies)
+// Vue.use(VueSession)
+// Vue.use(VueLocalStorage, {
+//   name: 'ls',
+//   bind: true
+// })
 Vue.use(VuetifyGoogleAutocomplete, {
   apiKey: 'AIzaSyCDfEljw9VcN0G4EiejU2QZDBwrINuNdTQ'
 })

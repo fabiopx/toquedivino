@@ -7,9 +7,15 @@
       </v-col>
       <v-col class="d-flex align-center">
         <v-card class="transparent mt-5" elevation="0">
-          <img :src="require('../assets/logotipo_branco.png')" width="200" alt="logotipo">
-          <h1 class="text-h2 white--text text-left mt-7">Vamos agora juntar os dados para entender seu evento!</h1>
-          
+          <v-card-text>
+            <img :src="require('../assets/logotipo_branco.png')" width="200" alt="logotipo">
+            <h1 class="text-h2 white--text text-left mt-7">Vamos agora juntar os dados para entender seu evento!</h1>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="amber lighten-1" depressed x-large dark @click="startApp()">
+              <v-icon>mdi-arrow-right-drop-circle</v-icon> Começar
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>

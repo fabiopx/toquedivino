@@ -1,5 +1,7 @@
 <template>
-    <v-stepper v-model="tela">
+<v-card>
+    <v-card-text>
+        <v-stepper v-model="tela">
                     <v-stepper-header>
                         <v-stepper-step :complete="tela > 1" step="1"></v-stepper-step>
                         <v-divider></v-divider>
@@ -100,7 +102,8 @@
                                         selecionou. Escolha uma para prosseguirmos:</p>
                                     <v-alert type="error" v-show="alertSelectedFormation">Selecione uma formação
                                     </v-alert>
-                                    <v-item-group v-model="selectedFormation" active-class="blue darken-4"
+                                    <v-skeleton-loader v-show="loadingFormations" type="image@3" class="mx-auto"></v-skeleton-loader>
+                                    <v-item-group v-show="!loadingFormations" v-model="selectedFormation" active-class="blue darken-4"
                                         @change="isSelected('selectedFormation', 'alertSelectedFormation')">
                                         <v-container>
                                             <v-row>
@@ -242,7 +245,7 @@
                                             </v-btn>
                                             <v-tooltip v-show="!buscarEndereco" class="ml-3" bottom>
                                                 <template  v-slot:activator="{ on, attrs }">
-                                                    <v-icon v-bind="attrs" v-on="on" dark color="primary">mdi-help-circle</v-icon>
+                                                    <v-icon v-bind="attrs" v-on="on" dark color="grey lighten-1">mdi-help-circle</v-icon>
                                                 </template>
                                                 <span>Digite o nome da rua (avenida, alameda, etc) e o número da residência para preencher automaticamente o formulário</span>
                                             </v-tooltip>
@@ -320,7 +323,18 @@
                             </v-row>
                         </v-stepper-content> -->
                     </v-stepper-items>
-                </v-stepper>
+                    <v-overlay v-show="loading">
+                        <v-progress-circular indeterminate></v-progress-circular>
+                    </v-overlay>
+            </v-stepper>
+    </v-card-text>
+    <v-card-actions>
+        <v-btn color="amber ligthen-1"  depressed x-large dark @click="restartApp()">
+          <v-icon>mdi-restart</v-icon> Recomeçar
+        </v-btn>
+    </v-card-actions>
+</v-card>
+    
 </template>
 
 <script>
@@ -332,6 +346,8 @@ export default {
     data: () => ({
     active: false,
     buscarEndereco: false,
+    loading: false,
+    loadingFormations: false,
     maskPhone: '(##) ####-####',
     maskMobile: '(##) #####-####',
     maskCep: '#####-###',
@@ -371,6 +387,7 @@ export default {
     formation: '',
     selectedFormation: '',
     dialogTooltipFormation: false,
+    setIP: {}
     }),
 
     mounted() {
@@ -429,8 +446,10 @@ export default {
             this.setSelectedService(this.selectedService)
             console.log(this.selService.name)
         },
-        getFormationsByInstruments: function(){
-            this.getFormations(this.selectedInstruments)
+        getFormationsByInstruments: async function(){
+            this.loadingFormations = true
+            await this.getFormations(this.selectedInstruments)
+            this.loadingFormations = false
         },
         redirect: function(url){
             window.open(url, '_blank')
@@ -466,10 +485,12 @@ export default {
                 return this.maskMobile
             }
         },
-        removeLS: function(){
-            this.$ls.remove('instruments')
-            this.$ls.remove('tela')
-            this.$ls.remove('services')
+        getIP: function(){
+            axios.get('https://api.ipify.org?format=json')
+            .then(response => {
+                this.setIP = response.data
+                localStorage.setItem('setIP', JSON.stringify(this.setIP))
+            })
         },
         getAddressData: function(addressData, placeResultData, id){
             this.inscribeAddress.street = addressData.route
@@ -481,10 +502,46 @@ export default {
             this.inscribeAddress.country = addressData.country
             this.inscribeAddress.city = addressData.administrative_area_level_2
             this.inscribeAddress.zipcode = (addressData.postal_code) ? addressData.postal_code : ""
-            console.log(addressData)
-            console.log(placeResultData)
-            console.log(id)
-        }
+            this.buscarEndereco = false
+        },
+        saveLead: function(){
+            let data = new FormData()
+            data.append('datetime', new Date().toMysqlFormat())
+            data.append('ip', this.setIP.ip)
+            data.append('origin', 'app toque divino')
+            data.append('accountable', this.dados.inscribe.accountable)
+            data.append('phone', this.dados.inscribe.phone)
+            data.append('mobile', this.dados.inscribe.mobile)
+            data.append('email', this.dados.inscribe.email)
+            data.append('flag', 0)
+            axios(this.urlApi + 'createLead', {
+                method: 'POST',
+                data: data
+            }).then(response => {
+                console.log(response.data)
+            })
+        },
+        saveInscribe: function(){
+            this.loading = true
+            let data = new FormData()
+            data.append('datetime', new Date().toMysqlFormat())
+            data.append('email', this.inscribeEmail)
+            data.append('accountable', this.inscribeAccountable)
+            data.append('phone', this.inscribePhone)
+            data.append('mobile', this.inscribeMobile)
+            data.append('address', JSON.stringify(this.inscribeAddress))
+            data.append('cpf', "")
+            data.append('rg', "")
+            data.append('service_idservice', this.selectedService.idservice)
+            data.append('formation_idformation', this.selectedFormation.idformation)
+            axios(this.urlApi + 'createInscribeApp', {
+                method: 'POST',
+                data: data
+            }).then(response => {
+                console.log(response.data)
+                this.loading = false
+            })
+        },
     },
 
   
