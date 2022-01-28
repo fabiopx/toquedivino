@@ -1,17 +1,17 @@
 <template>
     <v-stepper v-model="tela">
                     <v-stepper-header>
-                        <v-stepper-step :complete="tela > 1" step="1">Evento {{tela}}</v-stepper-step>
+                        <v-stepper-step :complete="tela > 1" step="1"></v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step :complete="tela > 2" step="2">Instrumentos</v-stepper-step>
+                        <v-stepper-step :complete="tela > 2" step="2"></v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step :complete="tela > 3" step="3">Formação</v-stepper-step>
+                        <v-stepper-step :complete="tela > 3" step="3"></v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step :complete="tela > 4" step="4">Responsável</v-stepper-step>
+                        <v-stepper-step :complete="tela > 4" step="4"></v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step :complete="tela > 5" step="5">Dados complementares</v-stepper-step>
+                        <v-stepper-step :complete="tela > 5" step="5"></v-stepper-step>
                         <v-divider></v-divider>
-                        <v-stepper-step step="6">Finalizando</v-stepper-step>
+                        <v-stepper-step :complete="tela == 6" step="6"></v-stepper-step>
                     </v-stepper-header>
                     <v-stepper-items>
                         <v-stepper-content step="1">
@@ -189,8 +189,8 @@
                                 <v-col>
                                     <v-sheet elevation="0" outlined rounded class="pa-5">
                                         <p class="text-h5 blue--text">Dados reunidos até aqui</p>
-                                        <p><b class="blue--text">Evento:</b> {{services.name}}</p>
-                                        <p><b class="blue--text">Formação:</b> {{formation.name}}</p>
+                                        <p><b class="blue--text">Evento:</b> {{selectedService.name}}</p>
+                                        <p><b class="blue--text">Formação:</b> {{selectedFormation.name}}</p>
                                     </v-sheet>
                                     <p class="text-h5 blue--text">Quem será o responsável pelo cadastro?</p>
                                     <v-form ref="formInscribePartOne">
@@ -225,26 +225,44 @@
                                 <v-col>
                                     <v-sheet elevation="0" outlined rounded class="pa-5">
                                         <p class="text-h6 blue--text">Dados reunidos até aqui</p>
-                                        <p><b class="blue--text">Evento:</b> {{services.name}}</p>
-                                        <p><b class="blue--text">Formação:</b> {{formation.name}}</p>
+                                        <p><b class="blue--text">Evento:</b> {{selectedService.name}}</p>
+                                        <p><b class="blue--text">Formação:</b> {{selectedFormation.name}}</p>
                                         <p>
-                                            <b class="blue--text">Responsável:</b> {{inscribe.accountable}}
-                                            <b class="blue--text ml-3">E-mail:</b> {{inscribe.email}}
-                                            <b class="blue--text ml-3">Telefone:</b> {{inscribe.phone}}
-                                            <b class="blue--text ml-3">Celular:</b> {{inscribe.mobile}}
+                                            <b class="blue--text">Responsável:</b> {{inscribeAccountable}}
+                                            <b class="blue--text ml-3">E-mail:</b> {{inscribeEmail}}
+                                            <b class="blue--text ml-3">Telefone:</b> {{inscribePhone}}
+                                            <b class="blue--text ml-3">Celular:</b> {{inscribeMobile}}
                                         </p>
                                     </v-sheet>
                                     <p class="text-h6 blue--text mt-3">Dados pessoais: endereço</p>
-                                   
+                                   <v-row>
+                                       <v-col>
+                                           <v-btn @click="buscarEndereco = !buscarEndereco" depressed color="primary">
+                                               <v-icon>mdi-magnify</v-icon> Buscar endereço
+                                            </v-btn>
+                                            <v-tooltip v-show="!buscarEndereco" class="ml-3" bottom>
+                                                <template  v-slot:activator="{ on, attrs }">
+                                                    <v-icon v-bind="attrs" v-on="on" dark color="primary">mdi-help-circle</v-icon>
+                                                </template>
+                                                <span>Digite o nome da rua (avenida, alameda, etc) e o número da residência para preencher automaticamente o formulário</span>
+                                            </v-tooltip>
+                                            <vuetify-google-autocomplete v-show="buscarEndereco" outlined class="mt-2"
+                                                ref="address"
+                                                id="map"
+                                                placeholder="Digite o endereço"
+                                                v-on:placechanged="getAddressData"
+                                                country="br"
+                                            ></vuetify-google-autocomplete>
+                                            
+                                       </v-col>
+                                   </v-row>
                                     <v-form ref="formInscribePartTwo">
                                         <v-row>
-                                            <v-col cols="2">
-                                                <v-text-field v-model="inscribeAddress.zipcode" label="CEP"
-                                                    @keyup="queryHere(inscribeAddress.zipcode)"></v-text-field>
-                                            </v-col>
                                             <v-col>
-                                                <v-text-field v-model="inscribeAddress.street" label="Logradouro">
-                                                </v-text-field>
+                                                <v-text-field v-model="inscribeAddress.street" label="Logradouro"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="2">
+                                                <v-text-field v-model="inscribeAddress.zipcode" label="CEP"></v-text-field>
                                             </v-col>
                                         </v-row>
                                         <v-row>
@@ -282,8 +300,12 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-btn depressed color="primary" @click="prevScreen()">Voltar</v-btn>
-                                    <v-btn depressed color="primary" @click="nextScreen()">Pular etapa</v-btn>
+                                    <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
+                                        <v-icon>mdi-menu-left</v-icon> Voltar
+                                    </v-btn>
+                                    <v-btn depressed class="float-right" color="primary" @click="nextScreen()">
+                                        <v-icon>mdi-menu-right</v-icon> Finalizar
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                         </v-stepper-content>
@@ -309,6 +331,7 @@ export default {
 
     data: () => ({
     active: false,
+    buscarEndereco: false,
     maskPhone: '(##) ####-####',
     maskMobile: '(##) #####-####',
     maskCep: '#####-###',
@@ -346,11 +369,19 @@ export default {
     pickTimeEvent: false,
     dialogVideoFormation: false,
     formation: '',
+    selectedFormation: '',
     dialogTooltipFormation: false,
     }),
 
-     methods: {
-      ...mapActions([
+    mounted() {
+       this.getServices()
+       this.getInstruments()
+
+    //    this.$refs.address.focus()
+    },
+
+    methods: {
+        ...mapActions([
           'getServices', 
           'getInstruments',
           'getFormations',
@@ -360,82 +391,101 @@ export default {
           'setInscribe'
         ]),
         
-      nextScreen: function(){
-        if(this.tela == 1){
-            if(this.$refs.firstScreen.validate()){
-                this.next()
+        nextScreen: function(){
+            if(this.tela == 1){
+                if(this.$refs.firstScreen.validate()){
+                    this.next()
+                }
+            } else if(this.tela == 2){
+                if(this.selectedInstruments.length != 0){
+                    this.alertSelectedInstruments = false
+                    this.next()
+                    this.getFormationsByInstruments()
+                } else{
+                    this.alertSelectedInstruments = true
+                }
+            } else if(this.tela == 3){
+                if(this.selectedFormation){
+                    this.next()
+                } else {
+                    this.alertSelectedFormation = true
+                }
+            } else if(this.tela == 4){
+                if(this.$refs.formInscribePartOne.validate()){
+                    this.next()
+                }
+            } else if (this.tela == 5){
+                if(this.$refs.formInscribePartTwo.validate()){
+                    this.next()
+                }
             }
-        } else if(this.tela == 2){
-            if(this.selectedInstruments.length != 0){
-                this.alertSelectedInstruments = false
-                this.next()
-                this.getFormationsByInstruments()
-            } else{
-                this.alertSelectedInstruments = true
+        },
+        prevScreen: function(){
+            if(this.tela >= 1){
+                this.prev()
             }
-        } else if(this.tela == 3){
-            if(this.selectedFormation){
-                this.next()
+        },
+        onChangeService: function(){
+            this.setSelectedService(this.selectedService)
+            console.log(this.selService.name)
+        },
+        getFormationsByInstruments: function(){
+            this.getFormations(this.selectedInstruments)
+        },
+        redirect: function(url){
+            window.open(url, '_blank')
+        },
+        isSelected: function(selected, alert){
+            if(this[selected]){
+                this[alert] = false
+            }
+        },
+        accessVideo: function(video){
+            window.open(video, '_blank')
+        },
+        openDialogFormationVideo: function(formation){
+            this.dialogVideoFormation = true
+            this.formation = formation
+        },
+        closeDialogFormationVideo: function(){
+            this.formation = ''
+            this.dialogVideoFormation = false
+        },
+        openDialogFormationTooltip: function(formation){
+            this.dialogTooltipFormation = true
+            this.formation = formation
+        },
+        closeDialogFormationTooltip: function(){
+            this.formation = ''
+            this.dialogTooltipFormation = false
+        },
+        maskTel: function(phone){
+            if(!!phone) {
+                return phone.length == 15 ? this.maskMobile : this.maskPhone
             } else {
-                this.alertSelectedFormation = true
+                return this.maskMobile
             }
-        } else if(this.tela == 4){
-            if(this.$refs.formInscribePartOne.validate()){
-                this.next()
-            }
-        } else if (this.tela == 5){
-            if(this.$refs.formInscribePartTwo.validate()){
-                this.next()
-            }
+        },
+        removeLS: function(){
+            this.$ls.remove('instruments')
+            this.$ls.remove('tela')
+            this.$ls.remove('services')
+        },
+        getAddressData: function(addressData, placeResultData, id){
+            this.inscribeAddress.street = addressData.route
+            this.inscribeAddress.number = (addressData.street_number) ? addressData.street_number : ""
+            const address = placeResultData.formatted_address.split('-')
+            const neighborhood = address[1].split(',')
+            this.inscribeAddress.neighborhood = neighborhood[0]
+            this.inscribeAddress.state = addressData.administrative_area_level_1
+            this.inscribeAddress.country = addressData.country
+            this.inscribeAddress.city = addressData.administrative_area_level_2
+            this.inscribeAddress.zipcode = (addressData.postal_code) ? addressData.postal_code : ""
+            console.log(addressData)
+            console.log(placeResultData)
+            console.log(id)
         }
     },
-    prevScreen: function(){
-        if(this.tela >= 1){
-            this.prev()
-        }
-    },
-    onChangeService: function(){
-        this.setSelectedService(this.selectedService)
-        console.log(this.selService.name)
-    },
-    getFormationsByInstruments: function(){
-        this.getFormations(this.selectedInstruments)
-    },
-    redirect: function(url){
-        window.open(url, '_blank')
-    },
-    isSelected: function(selected, alert){
-        if(this[selected]){
-            this[alert] = false
-        }
-    },
-    accessVideo: function(video){
-        window.open(video, '_blank')
-    },
-    openDialogFormationVideo: function(formation){
-        this.dialogVideoFormation = true
-        this.formation = formation
-    },
-    closeDialogFormationVideo: function(){
-        this.formation = ''
-        this.dialogVideoFormation = false
-    },
-    openDialogFormationTooltip: function(formation){
-        this.dialogTooltipFormation = true
-        this.formation = formation
-    },
-    closeDialogFormationTooltip: function(){
-        this.formation = ''
-        this.dialogTooltipFormation = false
-    },
-    maskTel: function(phone){
-        if(!!phone) {
-            return phone.length == 15 ? this.maskMobile : this.maskPhone
-        } else {
-            return this.maskMobile
-        }
-    },
-  },
 
   
    computed: {
@@ -451,11 +501,6 @@ export default {
            ]),
 
    },
-
-   mounted() {
-       this.getServices()
-       this.getInstruments()
-   }
     
    
 }

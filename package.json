@@ -12,9 +12,12 @@
     "v-mask": "^2.3.0",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.4",
+    "vue-google-autocomplete": "^1.1.2",
     "vue-localstorage": "^0.6.2",
     "vue-router": "^3.5.3",
+    "vue-session": "^1.0.0",
     "vuetify": "^2.4.0",
+    "vuetify-google-autocomplete": "^2.0.4",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
