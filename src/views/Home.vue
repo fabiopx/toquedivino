@@ -37,13 +37,7 @@
 
 
    methods: {
-     ...mapActions(['start', 'restart']),
-      startApp: function(){
-        this.start()
-      },
-      restartApp: function(){
-        this.restart()
-      },
+     
 
     },
 

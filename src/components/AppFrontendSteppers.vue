@@ -18,10 +18,10 @@
                     <v-stepper-items>
                         <v-stepper-content step="1">
                             <v-row>
-                                <v-col>
-                                    <v-img :src="require('../assets/undraw_selection_re_ycpo.svg')" max-width="500"></v-img>
+                                <v-col cols="12" md="5" lg="6">
+                                    <v-img :src="require('../assets/undraw_my_answer_re_k4dv.svg')" max-width="500"></v-img>
                                 </v-col>
-                                <v-col>
+                                <v-col cols="12" md="7" lg="6">
                                     <v-form ref="firstScreen">
                                         <v-select v-model="selectedService" outlined class="mt-3"
                                             label="Selecione o evento" :items="services" item-text="name"
@@ -42,14 +42,14 @@
                         <v-stepper-content step="2">
                             <v-row>
                                 <v-col>
-                                    <p class="text-h6">Quais instrumentos você gostaria que tocasse no seu evento?</p>
+                                    <p class="text-h6 blue--text darken-4">Quais instrumentos você gostaria que tocasse no seu evento?</p>
                                     <v-alert type="error" v-show="alertSelectedInstruments">Selecione ao menos um
                                         instrumento
                                     </v-alert>
                                     <v-item-group v-model="selectedInstruments" multiple>
                                         <v-container>
                                             <v-row>
-                                                <v-col v-for="instrument in instruments" :key="instrument.idinstrument">
+                                                <v-col cols="6" md="4" lg="3" v-for="instrument in instruments" :key="instrument.idinstrument">
                                                     <v-item v-slot="{active, toggle}" :value="instrument.idinstrument">
                                                         <v-card outlined :color="active ? 'blue-grey' : ''"
                                                             class="d-flex align-center pa-3" width="130" height="130"
@@ -97,7 +97,7 @@
                         <v-stepper-content step="3">
                             <v-row>
                                 <v-col>
-                                    <p class="text-h6">Estas são as <b>Formações</b> que contém o(s) instrumento(s) que
+                                    <p class="text-h6 blue--text darken-4">Estas são as <b>Formações</b> que contém o(s) instrumento(s) que
                                         você
                                         selecionou. Escolha uma para prosseguirmos:</p>
                                     <v-alert type="error" v-show="alertSelectedFormation">Selecione uma formação
@@ -239,16 +239,20 @@
                                     </v-sheet>
                                     <p class="text-h6 blue--text mt-3">Dados pessoais: endereço</p>
                                    <v-row>
-                                       <v-col>
+                                       <v-col cols="12">
                                            <v-btn @click="buscarEndereco = !buscarEndereco" depressed color="primary">
                                                <v-icon>mdi-magnify</v-icon> Buscar endereço
                                             </v-btn>
-                                            <v-tooltip v-show="!buscarEndereco" class="ml-3" bottom>
-                                                <template  v-slot:activator="{ on, attrs }">
-                                                    <v-icon v-bind="attrs" v-on="on" dark color="grey lighten-1">mdi-help-circle</v-icon>
+                                            <v-tooltip v-model="tooltipEndereco" class="ml-3" bottom>
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-btn v-show="!buscarEndereco" @click="tooltipEndereco = !tooltipEndereco" icon>
+                                                        <v-icon dark color="grey lighten-1" v-bind="attrs" v-on="on">mdi-help-circle</v-icon>
+                                                    </v-btn>
                                                 </template>
                                                 <span>Digite o nome da rua (avenida, alameda, etc) e o número da residência para preencher automaticamente o formulário</span>
                                             </v-tooltip>
+                                            
+                                            
                                             <vuetify-google-autocomplete v-show="buscarEndereco" outlined class="mt-2"
                                                 ref="address"
                                                 id="map"
@@ -256,44 +260,43 @@
                                                 v-on:placechanged="getAddressData"
                                                 country="br"
                                             ></vuetify-google-autocomplete>
-                                            
                                        </v-col>
                                    </v-row>
                                     <v-form ref="formInscribePartTwo">
                                         <v-row>
-                                            <v-col>
+                                            <v-col cols="12" lg="10">
                                                 <v-text-field v-model="inscribeAddress.street" label="Logradouro"></v-text-field>
                                             </v-col>
-                                            <v-col cols="2">
+                                            <v-col cols="12" lg="2">
                                                 <v-text-field v-model="inscribeAddress.zipcode" label="CEP"></v-text-field>
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col cols="4">
+                                            <v-col cols="12" lg="4">
                                                 <v-text-field v-model="inscribeAddress.number" label="Número">
                                                 </v-text-field>
                                             </v-col>
-                                            <v-col>
+                                            <v-col cols="12" lg="8">
                                                 <v-text-field v-model="inscribeAddress.complement" label="Complemento">
                                                 </v-text-field>
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col>
+                                            <v-col cols="12" lg="6">
                                                 <v-text-field v-model="inscribeAddress.neighborhood" label="Bairro">
                                                 </v-text-field>
                                             </v-col>
-                                            <v-col>
+                                            <v-col cols="12" lg="6">
                                                 <v-text-field v-model="inscribeAddress.city" label="Cidade">
                                                 </v-text-field>
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col>
+                                            <v-col cols="12" lg="6">
                                                 <v-text-field v-model="inscribeAddress.state" label="Estado">
                                                 </v-text-field>
                                             </v-col>
-                                            <v-col>
+                                            <v-col cols="12" lg="6">
                                                 <v-text-field v-model="inscribeAddress.country" label="País">
                                                 </v-text-field>
                                             </v-col>
@@ -306,7 +309,7 @@
                                     <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
                                         <v-icon>mdi-menu-left</v-icon> Voltar
                                     </v-btn>
-                                    <v-btn depressed class="float-right" color="primary" @click="nextScreen()">
+                                    <v-btn depressed class="float-right" color="primary" @click="finish()">
                                         <v-icon>mdi-menu-right</v-icon> Finalizar
                                     </v-btn>
                                 </v-col>
@@ -314,14 +317,13 @@
                         </v-stepper-content>
 
 
-                        <!-- <v-stepper-content step="6">
+                        <v-stepper-content step="6">
                             <v-row>
                                 <v-col>
-                                    <v-btn depressed color="primary" @click="prevScreen()">Voltar</v-btn>
-                                    <v-btn depressed color="primary" >Finalizar</v-btn>
+                                    
                                 </v-col>
                             </v-row>
-                        </v-stepper-content> -->
+                        </v-stepper-content>
                     </v-stepper-items>
                     <v-overlay v-show="loading">
                         <v-progress-circular indeterminate></v-progress-circular>
@@ -329,7 +331,7 @@
             </v-stepper>
     </v-card-text>
     <v-card-actions>
-        <v-btn color="amber ligthen-1"  depressed x-large dark @click="restartApp()">
+        <v-btn color="amber ligthen-1 ml-2"  depressed x-large dark @click="restartApp()">
           <v-icon>mdi-restart</v-icon> Recomeçar
         </v-btn>
     </v-card-actions>
@@ -346,6 +348,7 @@ export default {
     data: () => ({
     active: false,
     buscarEndereco: false,
+    tooltipEndereco: false,
     loading: false,
     loadingFormations: false,
     maskPhone: '(##) ####-####',
@@ -390,6 +393,10 @@ export default {
     setIP: {}
     }),
 
+    computed: {
+        ...mapGetters(['isStart']),
+    },
+
     mounted() {
        this.getServices()
        this.getInstruments()
@@ -405,8 +412,13 @@ export default {
           'next', 
           'prev',
           'setSelectedService',
-          'setInscribe'
+          'setInscribe',
+          'restart'
         ]),
+
+        restartApp: function(){
+            this.restart()
+        },
         
         nextScreen: function(){
             if(this.tela == 1){
@@ -431,15 +443,17 @@ export default {
                 if(this.$refs.formInscribePartOne.validate()){
                     this.next()
                 }
-            } else if (this.tela == 5){
-                if(this.$refs.formInscribePartTwo.validate()){
-                    this.next()
-                }
             }
         },
         prevScreen: function(){
             if(this.tela >= 1){
                 this.prev()
+            }
+        },
+        fisnish: function(){
+            if(this.$refs.formInscribePartTwo.validate()){
+                this.saveInscribe()
+                this.next()
             }
         },
         onChangeService: function(){

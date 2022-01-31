@@ -2,7 +2,7 @@
     <v-row justify="center" class="align-center" no-gutters>
       <v-col lg="4" class="hidden-sm-and-down">
         <v-img class="mt-5" transition="scroll-x-transition"
-          :src="require('../assets/undraw_Sync_files_re_ws4c.svg')" width="350">
+          :src="require('../assets/undraw_mobile_apps_re_3wjf.svg')" width="350">
         </v-img>
       </v-col>
       <v-col class="d-flex align-center">
@@ -22,13 +22,28 @@
 </template>
 
 <script>
-  
+  import {mapGetters, mapActions} from 'vuex' 
   export default {
     name: 'AppFrontend',
 
     data: () => ({
       //
     }),
+
+    computed: {
+      ...mapGetters(['isStart']),
+      
+    },
+
+    methods: {
+
+      ...mapActions(['start']),
+
+      startApp: function(){
+        this.start()
+      },
+
+    }
     
   }
 </script>
