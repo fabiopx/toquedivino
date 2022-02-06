@@ -57,7 +57,7 @@
         >
       </div>
     </v-dialog>
-    <v-navigation-drawer dark v-model="drawer" app>
+    <v-navigation-drawer dark v-model="drawer" app color="primary">
       <v-list dense>
         <v-list-item>
           <v-list-item-avatar>
@@ -94,7 +94,7 @@
             <v-list-item-content>
               <v-list-item-title
                 v-text="nav.text"
-                @click.stop="showActive(nav.link)"
+                @click="$router.push({path: nav.link})"
               >
               </v-list-item-title>
             </v-list-item-content>
@@ -113,7 +113,7 @@
       </v-toolbar-title>
     </v-app-bar>
     <v-main>
-        
+        <router-view></router-view>
     </v-main>
   </div>
 </template>
@@ -131,27 +131,27 @@ export default {
       {
         icon: "mdi-home",
         text: "Home",
-        link: "home",
+        link: "/customer/home",
       },
       {
         icon: "mdi-account",
         text: "Dados de acesso",
-        link: "account",
+        link: "/customer/account",
       },
       {
         icon: "mdi-folder-information",
         text: "Cadastro",
-        link: "inscribe",
+        link: "/customer/inscribe",
       },
       {
         icon: "mdi-music-circle",
         text: "Repertório",
-        link: "repertory",
+        link: "/customer/repertory",
       },
       {
         icon: "mdi-file-document-edit",
         text: "Contrato",
-        link: "agreement",
+        link: "/customer/agreement",
       },
     ],
     showPage: "home",
