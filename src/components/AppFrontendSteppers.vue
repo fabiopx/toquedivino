@@ -310,7 +310,7 @@
                                         <v-icon>mdi-menu-left</v-icon> Voltar
                                     </v-btn>
                                     <v-btn depressed class="float-right" color="primary" @click="finish()">
-                                        <v-icon>mdi-menu-right</v-icon> Finalizar
+                                        Finalizar <v-icon>mdi-menu-right</v-icon>
                                     </v-btn>
                                 </v-col>
                             </v-row>
@@ -320,7 +320,9 @@
                         <v-stepper-content step="6">
                             <v-row>
                                 <v-col>
-                                    
+                                    <p>Que legal! Agora temos as informações necessárias para montar seu orçamento.</p>
+                                    <p>Para continuar, acesse a <router-link to="customer">área restrita</router-link>. As informações de acesso foi enviada para seu e-mail.</p>
+                                    <p></p>
                                 </v-col>
                             </v-row>
                         </v-stepper-content>
@@ -342,10 +344,31 @@
 <script>
 import {mapGetters, mapActions} from 'vuex'
 
+function twoDigits(d) {
+    if (0 <= d && d < 10) return "0" + d.toString();
+    if (-10 < d && d < 0) return "-0" + (-1 * d).toString();
+    return d.toString();
+}
+
+function toDateFormat(input){
+    var datePart = input.match(/\d+/g),
+    year = datePart[0].substring(2), // get only two digits
+    month = datePart[1], day = datePart[2];
+
+    return day+'/'+month+'/'+year;
+}
+
+Date.prototype.toMysqlFormat = function() {
+    return this.getFullYear() + "-" + twoDigits(1 + this.getMonth()) + "-" + twoDigits(this
+    .getDate()) + " " + twoDigits(this.getHours()) + ":" + twoDigits(this.getMinutes()) + ":" +
+        twoDigits(this.getSeconds());
+};
+
 export default {
     name:  'AppFrontendSteppers',
 
     data: () => ({
+    urlApi: 'http://localhost/toquedivino/api/api/',
     active: false,
     buscarEndereco: false,
     tooltipEndereco: false,
@@ -390,7 +413,7 @@ export default {
     formation: '',
     selectedFormation: '',
     dialogTooltipFormation: false,
-    setIP: {}
+    setIP: { ip:null }
     }),
 
     computed: {
@@ -400,8 +423,7 @@ export default {
     mounted() {
        this.getServices()
        this.getInstruments()
-
-    //    this.$refs.address.focus()
+       this.getIP()
     },
 
     methods: {
@@ -441,6 +463,7 @@ export default {
                 }
             } else if(this.tela == 4){
                 if(this.$refs.formInscribePartOne.validate()){
+                    this.saveLead()
                     this.next()
                 }
             }
@@ -450,7 +473,7 @@ export default {
                 this.prev()
             }
         },
-        fisnish: function(){
+        finish: function(){
             if(this.$refs.formInscribePartTwo.validate()){
                 this.saveInscribe()
                 this.next()
@@ -458,7 +481,6 @@ export default {
         },
         onChangeService: function(){
             this.setSelectedService(this.selectedService)
-            console.log(this.selService.name)
         },
         getFormationsByInstruments: async function(){
             this.loadingFormations = true
@@ -503,7 +525,6 @@ export default {
             axios.get('https://api.ipify.org?format=json')
             .then(response => {
                 this.setIP = response.data
-                localStorage.setItem('setIP', JSON.stringify(this.setIP))
             })
         },
         getAddressData: function(addressData, placeResultData, id){
@@ -523,15 +544,27 @@ export default {
             data.append('datetime', new Date().toMysqlFormat())
             data.append('ip', this.setIP.ip)
             data.append('origin', 'app toque divino')
-            data.append('accountable', this.dados.inscribe.accountable)
-            data.append('phone', this.dados.inscribe.phone)
-            data.append('mobile', this.dados.inscribe.mobile)
-            data.append('email', this.dados.inscribe.email)
+            data.append('accountable', this.inscribeAccountable)
+            data.append('phone', this.inscribePhone)
+            data.append('mobile', this.inscribeMobile)
+            data.append('email', this.inscribeEmail)
             data.append('flag', 0)
             axios(this.urlApi + 'createLead', {
                 method: 'POST',
                 data: data
             }).then(response => {
+                console.log(response.data)
+            })
+        },
+        deleteLead: function(){
+            let data = new FormData()
+            data.append('ip', this.setIP.id)
+            data.append('email', this.inscribeEmail)
+            data.append('mobile', this.inscribeMobile)
+            axios(this.urlApi + 'deleteLead', {
+                method: 'POST',
+                data: data
+            }).then(response =>{
                 console.log(response.data)
             })
         },
@@ -548,6 +581,7 @@ export default {
             data.append('rg', "")
             data.append('service_idservice', this.selectedService.idservice)
             data.append('formation_idformation', this.selectedFormation.idformation)
+            data.append('ip', this.setIP.id)
             axios(this.urlApi + 'createInscribeApp', {
                 method: 'POST',
                 data: data

@@ -408,9 +408,8 @@ class Api extends CI_Controller{
     public function deleteLead(){
         $this->load->model('leads');
         $ip = $_POST['ip'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
-        $where = array('ip' => $ip, 'email' => $email, 'phone' => $phone);
+        $mobile = $_POST['mobile'];
+        $where = array('ip' => $ip, 'mobile' => $mobile);
         $resp = ($this->leads->deleteLead($where)) ? 'Lead excluída com sucesso' : 'Lead não pode ser excluída';
 
         echo json_encode($resp);
@@ -477,6 +476,8 @@ class Api extends CI_Controller{
         $this->load->model('account');
         $this->load->model('event');
         $this->load->library('email');
+
+        $this->deleteLead();
         
         $resp = $this->inscribe->createInscribe();
         if($resp['icon'] == 'success'){
@@ -512,7 +513,7 @@ class Api extends CI_Controller{
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td>
-                               <img src="https://toquedivino.com/divine/assets/img/logotipo.png" alt="logotipo" width="200" />
+                               <img src="https://app.cerimonialtoquedivino.com.br/assets/img/logotipo.png" alt="logotipo" width="200" />
                             </td>
                             <td>Olá '.$account->name.'</td>
                         </tr>
