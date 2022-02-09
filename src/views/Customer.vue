@@ -331,5 +331,19 @@ export default {
     signaturePassword: "",
     setIP: {},
   }),
+
+  beforeCreate: function(){
+    if (!this.$session.exists()){
+      this.$router.push('/customer/login')
+    }
+  },
+
+  created: function(){
+    //
+  },
+
+  methods: {
+    //
+  }
 };
 </script>

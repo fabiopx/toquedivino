@@ -12,7 +12,7 @@ import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
 
 Vue.use(VueMask)
 // Vue.use(VueCookies)
-// Vue.use(VueSession)
+Vue.use(VueSession)
 // Vue.use(VueLocalStorage, {
 //   name: 'ls',
 //   bind: true

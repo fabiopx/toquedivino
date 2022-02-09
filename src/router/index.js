@@ -7,6 +7,7 @@ import CustomerAccount from '../components/CustomerAccount.vue'
 import CustomerInscribe from '../components/CustomerInscribe.vue'
 import CustomerRepertoy from '../components/CustomerRepertory.vue'
 import CustomerAgreement from '../components/CustomerAgreement.vue'
+import CustomerLogin from '../components/CustomerLogin.vue'
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,10 @@ const routes = [
       {
         path: 'agreement',
         component: CustomerAgreement
+      },
+      {
+        path: 'login',
+        component: CustomerLogin
       }
     ]
   }

@@ -119,7 +119,7 @@ export default {
     getAccount: function () {
       this.loadingAccountFields = true;
       axios
-        .get(this.urlApi + "getUsers/" + this.userNow.id)
+        .get(this.urlApi + "getUsers/")
         .then((response) => {
           this.accountName = response.data.name;
           this.accountEmail = response.data.email;
@@ -131,9 +131,6 @@ export default {
         });
     },
 
-    loadEnv: function(){
-        console.log(process.env.VUE_APP_URL)
-    }
   },
 };
 </script>
