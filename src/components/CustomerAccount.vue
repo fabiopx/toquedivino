@@ -98,6 +98,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   data: () => ({
     urlApi: process.env.VUE_APP_URL,
@@ -113,13 +114,14 @@ export default {
     uploadError: false,
     uploadMsg: "",
     photo: "",
+    loadingAccountFields: false,
   }),
 
   methods: {
     getAccount: function () {
       this.loadingAccountFields = true;
       axios
-        .get(this.urlApi + "getUsers/")
+        .get(this.urlApi + "getUsers/" + this.userNow.id)
         .then((response) => {
           this.accountName = response.data.name;
           this.accountEmail = response.data.email;
@@ -131,6 +133,59 @@ export default {
         });
     },
 
+    readAccountPhoto: function (file) {
+			if (file) {
+				this.accountPhoto = URL.createObjectURL(file);
+				this.progressShow = true;
+
+				let data = new FormData();
+				data.append("file", file);
+
+				axios
+					.post(this.urlApi + "uploadPhoto", data, {
+						onUploadProgress: (event) => {
+							const totalLength = event.lengthComputable
+								? event.total
+								: event.target.getResponseHeader("content-length") ||
+								  event.target.getResponseHeader(
+										"x-decompressed-content-length"
+								  );
+							console.log("onUploadProgress", totalLength);
+							if (totalLength !== null) {
+								this.progressUpload = Math.round(
+									(event.loaded * 100) / totalLength
+								);
+							}
+						},
+					})
+					.then((response) => {
+						response.data.type == "success"
+							? (this.uploadSuccess = true)
+							: (this.uploadError = true);
+						this.uploadMsg = response.data.msg;
+						this.progressShow = false;
+					})
+					.catch((error) => {
+						this.uploadError = true;
+						this.uploadMsg = error;
+					});
+			} else {
+				this.accountPhoto = imgPath + "profile.svg";
+				this.progressShow = false;
+				this.uploadMsg = "";
+				this.uploadSuccess = false;
+				this.uploadError = false;
+			}
+		},
+
   },
+
+  created(){
+    this.getAccount()
+  },
+
+  computed: {
+    ...mapGetters(['userNow'])
+  }
 };
 </script>
