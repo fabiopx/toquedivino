@@ -9,6 +9,8 @@ import VueCookies from 'vue-cookies'
 import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
 import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 Vue.use(VueMask)
 // Vue.use(VueCookies)
@@ -20,6 +22,7 @@ Vue.use(VueSession)
 Vue.use(VuetifyGoogleAutocomplete, {
   apiKey: 'AIzaSyCDfEljw9VcN0G4EiejU2QZDBwrINuNdTQ'
 })
+Vue.use(VueSweetalert2)
 
 Vue.config.productionTip = false
 

@@ -114,7 +114,7 @@ class Account extends Crud{
                 $resp['userNow']['login'] = false;
                 $resp['userNow']['name'] = $login->row()->name;
                 $resp['userNow']['id'] = $login->row()->idaccount;
-                $resp['userNow']['photo'] = ($login->row()->photo) ?: 'assets/img/profile.svg';
+                $resp['userNow']['photo'] = ($login->row()->photo) ?: 'assets/profile.svg';
                 $resp['alert']['status'] = false;
                 $resp['alert']['msg'] = '';
             } else{
@@ -122,7 +122,7 @@ class Account extends Crud{
                 $resp['userNow']['login'] = true;
                 $resp['userNow']['name'] = 'Usuário';
                 $resp['userNow']['id'] = '';
-                $resp['userNow']['photo'] = 'assets/img/profile.svg';
+                $resp['userNow']['photo'] = 'assets/profile.svg';
                 $resp['alert']['status'] = true;
                 $resp['alert']['msg'] = 'Usuário não autorizado.';
             }
@@ -132,7 +132,7 @@ class Account extends Crud{
             $resp['userNow']['login'] = true;
             $resp['userNow']['name'] = '';
             $resp['userNow']['id'] = '';
-            $resp['userNow']['photo'] = 'assets/img/profile.svg';
+            $resp['userNow']['photo'] = 'assets/profile.svg';
             $resp['alert']['status'] = true;
             $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
         }
@@ -155,7 +155,7 @@ class Account extends Crud{
                 $resp['userNow']['login'] = false;
                 $resp['userNow']['name'] = $login->row()->name;
                 $resp['userNow']['id'] = $login->row()->idaccount;
-                $resp['userNow']['photo'] = ($login->row()->photo) ?: 'assets/img/profile.svg';
+                $resp['userNow']['photo'] = ($login->row()->photo) ?: 'assets/profile.svg';
                 $resp['alert']['status'] = false;
                 $resp['alert']['msg'] = '';
             } else{
@@ -163,7 +163,7 @@ class Account extends Crud{
                 $resp['userNow']['login'] = true;
                 $resp['userNow']['name'] = 'Usuário';
                 $resp['userNow']['id'] = '';
-                $resp['userNow']['photo'] = 'assets/img/profile.svg';
+                $resp['userNow']['photo'] = 'assets/profile.svg';
                 $resp['alert']['status'] = true;
                 $resp['alert']['msg'] = 'Usuário não autorizado.';
             }
@@ -173,7 +173,7 @@ class Account extends Crud{
             $resp['userNow']['login'] = true;
             $resp['userNow']['name'] = '';
             $resp['userNow']['id'] = '';
-            $resp['userNow']['photo'] = 'assets/img/profile.svg';
+            $resp['userNow']['photo'] = 'assets/profile.svg';
             $resp['alert']['status'] = true;
             $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
         }

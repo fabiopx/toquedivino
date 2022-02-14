@@ -82,8 +82,8 @@
                     </v-alert>
                   </v-col>
                   <v-col>
-                    <v-avatar>
-                      <v-img :src="accountPhoto"></v-img>
+                    <v-avatar class="mr-2">
+                      <v-img :src="accountBlob ? accountBlob : accountPhoto"></v-img>
                     </v-avatar>
                     <span>{{ accountName }}</span>
                   </v-col>
@@ -94,19 +94,24 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-overlay v-show="loading">
+      <v-progress-circular indeterminate></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters, mapActions } from "vuex";
+var imgPath = "assets/";
 export default {
   data: () => ({
-    urlApi: process.env.VUE_APP_URL,
+    userData: {},
     accountName: "",
     accountEmail: "",
     accountPassword: "",
     accountPhone: "",
-    accountPhoto: "assets/img/profile.svg",
+    accountPhoto: process.env.VUE_APP_IMGPATH + "profile.svg",
+    accountBlob: null,
     currentFile: undefined,
     progressUpload: 0,
     progressShow: false,
@@ -115,77 +120,110 @@ export default {
     uploadMsg: "",
     photo: "",
     loadingAccountFields: false,
+    loading: false
   }),
 
   methods: {
+    ...mapActions(['setUserNow']),
     getAccount: function () {
       this.loadingAccountFields = true;
       axios
-        .get(this.urlApi + "getUsers/" + this.userNow.id)
+        .get(process.env.VUE_APP_URL + "getUsers/" + this.userNow.id)
         .then((response) => {
           this.accountName = response.data.name;
           this.accountEmail = response.data.email;
           this.accountPassword = response.data.password;
           this.accountPhoto = response.data.photo
             ? response.data.photo
-            : "assets/img/profile.svg";
+            : process.env.VUE_APP_IMGPATH + "profile.svg";
           this.loadingAccountFields = false;
+          this.userData = this.$session.get('userData')
+          this.userData.photo = this.accountPhoto
+          this.userData.name = this.accountName
+          this.$session.remove('userData')
+          this.$session.set('userData', this.userData)
+          this.setUserNow(this.$session.get('userData'))
         });
     },
 
     readAccountPhoto: function (file) {
-			if (file) {
-				this.accountPhoto = URL.createObjectURL(file);
-				this.progressShow = true;
+      if (file) {
+        this.accountBlob = URL.createObjectURL(file);
+        this.progressShow = true;
 
-				let data = new FormData();
-				data.append("file", file);
+        let data = new FormData();
+        data.append("file", file);
 
-				axios
-					.post(this.urlApi + "uploadPhoto", data, {
-						onUploadProgress: (event) => {
-							const totalLength = event.lengthComputable
-								? event.total
-								: event.target.getResponseHeader("content-length") ||
-								  event.target.getResponseHeader(
-										"x-decompressed-content-length"
-								  );
-							console.log("onUploadProgress", totalLength);
-							if (totalLength !== null) {
-								this.progressUpload = Math.round(
-									(event.loaded * 100) / totalLength
-								);
-							}
-						},
-					})
-					.then((response) => {
-						response.data.type == "success"
-							? (this.uploadSuccess = true)
-							: (this.uploadError = true);
-						this.uploadMsg = response.data.msg;
-						this.progressShow = false;
-					})
-					.catch((error) => {
-						this.uploadError = true;
-						this.uploadMsg = error;
-					});
-			} else {
-				this.accountPhoto = imgPath + "profile.svg";
-				this.progressShow = false;
-				this.uploadMsg = "";
-				this.uploadSuccess = false;
-				this.uploadError = false;
-			}
-		},
+        axios
+          .post(process.env.VUE_APP_URL + "uploadPhoto", data, {
+            onUploadProgress: (event) => {
+              const totalLength = event.lengthComputable
+                ? event.total
+                : event.target.getResponseHeader("content-length") ||
+                  event.target.getResponseHeader(
+                    "x-decompressed-content-length"
+                  );
+              console.log("onUploadProgress", totalLength);
+              if (totalLength !== null) {
+                this.progressUpload = Math.round(
+                  (event.loaded * 100) / totalLength
+                );
+              }
+            },
+          })
+          .then((response) => {
+            response.data.type == "success"
+              ? (this.uploadSuccess = true)
+              : (this.uploadError = true);
+            this.uploadMsg = response.data.msg;
+            this.progressShow = false;
+          })
+          .catch((error) => {
+            this.uploadError = true;
+            this.uploadMsg = error;
+          });
+      } else {
+        this.accountPhoto = process.env.VUE_APP_IMGPATH + "profile.svg";
+        this.progressShow = false;
+        this.uploadMsg = "";
+        this.uploadSuccess = false;
+        this.uploadError = false;
+      }
+    },
 
+    saveAccount: function () {
+      let data = new FormData();
+      data.append("name", this.accountName);
+      data.append("email", this.accountEmail);
+      data.append("password", this.accountPassword);
+      data.append(
+        "photo",
+        this.currentFile
+          ? 'http://localhost/toquedivino/api/assets/uploads/' + this.currentFile.name
+          : this.accountPhoto
+      );
+      this.loading = true
+      axios(
+        process.env.VUE_APP_URL +
+          "updateUserCustomers/" +
+          this.userNow.id,
+        {
+          method: "POST",
+          data: data,
+        }
+      ).then((response) => {
+        this.loading = false
+        this.getAccount();
+      });
+    },
   },
 
-  created(){
-    this.getAccount()
+  created() {
+    this.getAccount();
   },
 
   computed: {
-    ...mapGetters(['userNow'])
-  }
+    ...mapGetters(["userNow"]),
+  },
 };
 </script>

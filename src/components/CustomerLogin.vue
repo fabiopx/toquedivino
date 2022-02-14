@@ -9,7 +9,7 @@
       <v-card width="400" height="300" color="blue darken-4">
         <v-toolbar elevation="0" color="blue darken-4">
           <v-toolbar-title>
-            <v-img src="assets/img/logotipo_branco.png" width="150"></v-img>
+            <v-img :src="require('../assets/logotipo_branco.png')" width="150"></v-img>
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
@@ -32,6 +32,13 @@
             >
             </v-text-field>
           </v-form>
+          <v-alert
+            id="alert"
+            border="left"
+            v-show="alertLogin.status"
+            type="error"
+            >{{ alertLogin.msg }}</v-alert
+          >
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -44,13 +51,6 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <!-- <v-alert
-        id="alert"
-        border="left"
-        v-show="alert.status"
-        type="error"
-        >{{ alert.msg }}</v-alert
-      > -->
     </v-dialog>
   </div>
 </template>
@@ -60,7 +60,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     showPassword: false,
-    alertLogin: {status: false, msg: ''},
+    alertLogin: { status: false, msg: "" },
     inputLoading: false,
     loginEmailRules: [(v) => !!v || "Digite o e-mail para realizar o login"],
     loginPasswordRules: [(v) => !!v || "Digite a senha para realizar o login"],
@@ -72,7 +72,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["loginCustomer"]),
+    ...mapActions(["setUserNow"]),
 
     enterLogin: async function () {
       let data = new FormData();
@@ -85,10 +85,14 @@ export default {
 
       if (response.data.userNow.logged) {
         this.$session.start();
-        this.$session.set('userData', response.data)
+        this.$session.set("userData", response.data.userNow);
+        this.setUserNow(this.$session.get('userData'));
         this.$router.push("/customer");
-      } else{
-        this.alertLogin
+      } else {
+        this.alertLogin = response.data.alert;
+        setInterval(() => {
+          this.alertLogin = false;
+        }, 5000);
       }
     },
   },
