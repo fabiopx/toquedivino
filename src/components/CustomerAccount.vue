@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container fluid>
       <v-row>
         <v-col>
           <p class="text-h4 white--text">

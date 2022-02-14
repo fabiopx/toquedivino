@@ -3,8 +3,8 @@
     <v-container fluid>
       <v-row>
         <v-col>
-          <p class="text-h4 teal--text">
-            <v-icon color="teal">mdi-folder-information</v-icon> Cadastro
+          <p class="text-h4 white--text">
+            <v-icon color="white">mdi-folder-information</v-icon> Cadastro
           </p>
         </v-col>
       </v-row>
@@ -899,11 +899,19 @@
 <script>
 export default {
   data: () => ({
+    crud: "c",
+    inputLoading: false,
     showTabInscribe: "inscribe",
     tabInscribeTitle: "Dados do cadastro",
     showPassword: false,
     alert: false,
     alertMsg: "",
+    currentFile: undefined,
+		progressUpload: 0,
+		progressShow: false,
+		uploadSuccess: false,
+		uploadError: false,
+		uploadMsg: "",
     maskPhone: "(##) ####-####",
     maskMobile: "(##) #####-####",
     maskCpf: "###.###.###-##",
@@ -1021,6 +1029,7 @@ export default {
     graduationCommitteNameRules: [(v) => !!v || "Por favor digite um nome"],
     graduationCommitteMember: [],
     loadingSelectFields: false,
+    formWeddingServices: false
   }),
 
   methods: {
