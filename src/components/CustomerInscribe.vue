@@ -10,60 +10,27 @@
       </v-row>
       <v-row>
         <v-col>
+          <v-tabs background-color="primary" dark show-arrows>
+            <v-tab @click="activeTabInscribe('inscribe')">
+              <v-icon>mdi-folder-text</v-icon> Cadastro
+            </v-tab>
+            <v-tab @click="activeTabInscribe('events')">
+              <v-icon>mdi-folder-clock</v-icon> Evento
+            </v-tab>
+            <v-tab @click="activeTabInscribe('engaged')">
+              <v-icon>mdi-human-male-female</v-icon> Noivos
+            </v-tab>
+            <v-tab @click="activeTabInscribe('committe')">
+              <v-icon>mdi-school</v-icon> Comissão de formatura
+            </v-tab>
+          </v-tabs>
           <v-card>
-            <v-toolbar color="teal" dark>
+            <v-toolbar color="primary" dark>
               <v-toolbar-title
-                >Gerenciar cadastro -
+                >
                 <span class="small">{{ tabInscribeTitle }}</span>
               </v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-toolbar-items>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      text
-                      @click="activeTabInscribe('inscribe')"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-folder-text</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Dados do cadastro</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      text
-                      @click="activeTabInscribe('events')"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-folder-clock</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Dados do evento</span>
-                </v-tooltip>
-
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn text v-on="on" v-bind="attrs">
-                      <v-icon> mdi-dots-vertical</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item link @click="activeTabInscribe('engaged')">
-                      <v-list-item-title>Dados dos noivos</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link @click="activeTabInscribe('committe')">
-                      <v-list-item-title
-                        >Comissão de formatura</v-list-item-title
-                      >
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-toolbar-items>
             </v-toolbar>
             <v-card-text v-show="showTabInscribe == 'inscribe'">
               <v-skeleton-loader
@@ -688,7 +655,7 @@
                       <h4>Serviços do casamento</h4>
                       Saber os demais serviços do casamento nos ajuda a alinhar
                       horários, posição da banda etc.
-                      <v-btn text color="teal" dark>
+                      <v-btn text color="primary" dark>
                         <v-icon>mdi-plus-circle</v-icon> Cadastrar
                       </v-btn>
                     </v-col>
@@ -702,7 +669,7 @@
                 persistent
               >
                 <v-card>
-                  <v-toolbar color="teal" dark>
+                  <v-toolbar color="primary" dark>
                     Upload de foto da noiva
                   </v-toolbar>
                   <v-card-text>
@@ -742,7 +709,7 @@
                     <v-btn
                       depressed
                       dark
-                      color="teal"
+                      color="primary"
                       @click="engagedBrideUploadPhoto = false"
                     >
                       Fechar</v-btn
@@ -757,7 +724,7 @@
                 persistent
               >
                 <v-card>
-                  <v-toolbar color="teal" dark>
+                  <v-toolbar color="primary" dark>
                     Upload de foto do noivo
                   </v-toolbar>
                   <v-card-text>
@@ -797,7 +764,7 @@
                     <v-btn
                       depressed
                       dark
-                      color="teal"
+                      color="primary"
                       @click="engagedGroomUploadPhoto = false"
                     >
                       Fechar</v-btn
@@ -820,11 +787,6 @@
               >
                 <v-row>
                   <v-col>
-                    <h4>Comissão de Formatura</h4>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
                     <v-text-field
                       v-model="graduationCommitteName"
                       label="Membro da comissão"
@@ -833,7 +795,7 @@
                     >
                     </v-text-field>
                     <v-btn
-                      color="teal"
+                      color="primary"
                       class="white--text"
                       depressed
                       @click="addMemberGraduationCommitte()"
@@ -867,25 +829,25 @@
             </v-card-text>
             <v-card-actions v-show="showTabInscribe == 'inscribe'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="teal" @click="saveInscribe()">
+              <v-btn depressed dark large color="primary" @click="saveInscribe()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'events'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="teal" @click="saveEvent()">
+              <v-btn depressed dark large color="primary" @click="saveEvent()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'engaged'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="teal" @click="saveEngaged()">
+              <v-btn depressed dark large color="primary" @click="saveEngaged()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'committe'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="teal" @click="saveCommitte()">
+              <v-btn depressed dark large color="primary" @click="saveCommitte()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
@@ -897,6 +859,17 @@
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex'
+
+function toDateFormat(input) {
+	var datePart = input.match(/\d+/g),
+		year = datePart[0], // get only two digits
+		month = datePart[1],
+		day = datePart[2];
+
+	return day + "/" + month + "/" + year;
+}
+
 export default {
   data: () => ({
     crud: "c",
@@ -971,7 +944,7 @@ export default {
     engagedGroomAccountable: false,
     engagedBrideName: "",
     engagedBrideNameRules: [(v) => !!v || "O campo NOME DA NOIVA é requerido"],
-    engagedBridePhoto: "assets/img/woman.png",
+    engagedBridePhoto: process.env.VUE_APP_IMGPATH + "woman.png",
     engagedBrideAddress: {
       street: "",
       number: "",
@@ -997,7 +970,7 @@ export default {
     engagedBrideEmail: "",
     engagedGroomName: "",
     engagedGroomNameRules: [(v) => !!v || "O campo NOME DO NOIVO é requerido"],
-    engagedGroomPhoto: "assets/img/man.png",
+    engagedGroomPhoto: process.env.VUE_APP_IMGPATH + "man.png",
     engagedGroomAddress: {
       street: "",
       number: "",
@@ -1033,6 +1006,7 @@ export default {
   }),
 
   methods: {
+    ...mapActions(['setUserNow']),
     activeTabInscribe: function (tab) {
       this.showTabInscribe = tab;
       this.resetAllVars();
@@ -1139,6 +1113,13 @@ export default {
         return this.maskMobile;
       }
     },
+    openUploadPhoto: function (profile) {
+			this[profile] = true;
+			this.currentFile = undefined;
+			this.uploadMsg = "";
+			this.uploadSuccess = false;
+			this.uploadError = false;
+		},
     readEngagedPhoto: function (file, profile) {
       if (file) {
         this[profile] = URL.createObjectURL(file);
@@ -1355,7 +1336,7 @@ export default {
           } else {
             this.crud = "c";
             this.selectEngaged = false;
-            console.log(selectEngaged);
+            console.log(this.selectEngaged);
           }
           this.loadingEngagedFields = false;
         });
@@ -1485,5 +1466,15 @@ export default {
 			}
 		},
   },
+
+  computed: {
+    ...mapGetters(['userNow'])
+  },
+
+  created: function(){
+    this.getInscribe()
+    this.getServices()
+    this.getFormations()
+  }
 };
 </script>

@@ -73,6 +73,7 @@ export default {
     urlApi: process.env.VUE_APP_URL,
     drawer: false,
     colorToolbar: "primary",
+    inscribe: null,
     navegador: [
       {
         icon: "mdi-home",
@@ -110,13 +111,15 @@ export default {
   },
 
   created: function () {
-    this.setUserNow = this.$session.get('userData')
+    this.setUserNow(this.$session.get('userData'))
+    this.getInscribeID()
+    this.setInscribeID(this.inscribe)
   },
 
   mounted() {},
 
   methods: {
-    ...mapActions(["setUserNow"]),
+    ...mapActions(["setUserNow, setInscribeID"]),
 
     logout: function () {
       this.setUserNow({
@@ -129,10 +132,20 @@ export default {
       this.$session.destroy();
       this.$router.push("/customer/login");
     },
+    getInscribeID: function () {
+			axios
+				.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
+				.then((response) => {
+					const resp = response.data;
+					if (resp) {
+						this.inscribeID = resp.idinscribe;
+					}
+				});
+		},
   },
 
   computed: {
-    ...mapGetters(["userNow"]),
+    ...mapGetters(["userNow, inscribeID"]),
   },
 };
 </script>
