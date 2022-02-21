@@ -68,11 +68,11 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["userNow", "alert"]),
+    ...mapGetters(["userNow"]),
   },
 
   methods: {
-    ...mapActions(["setUserNow"]),
+    ...mapActions(["setUserNow", "setInscribeID"]),
 
     enterLogin: async function () {
       let data = new FormData();
@@ -87,6 +87,7 @@ export default {
         this.$session.start();
         this.$session.set("userData", response.data.userNow);
         this.setUserNow(this.$session.get('userData'));
+        this.getInscribeID()
         this.$router.push("/customer");
       } else {
         this.alertLogin = response.data.alert;
@@ -95,6 +96,14 @@ export default {
         }, 5000);
       }
     },
+    getInscribeID: function () {
+			axios
+				.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
+				.then((response) => {
+					const resp = response.data;
+          this.setInscribeID(resp.idinscribe)
+				});
+		},
   },
 
   created() {

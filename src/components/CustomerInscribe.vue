@@ -10,7 +10,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-tabs background-color="primary" dark show-arrows>
+          <v-tabs background-color="grey darken-4" dark show-arrows>
             <v-tab @click="activeTabInscribe('inscribe')">
               <v-icon>mdi-folder-text</v-icon> Cadastro
             </v-tab>
@@ -25,7 +25,7 @@
             </v-tab>
           </v-tabs>
           <v-card>
-            <v-toolbar color="primary" dark>
+            <v-toolbar color="grey darken-4" dark>
               <v-toolbar-title
                 >
                 <span class="small">{{ tabInscribeTitle }}</span>
@@ -795,7 +795,7 @@
                     >
                     </v-text-field>
                     <v-btn
-                      color="primary"
+                      color="grey darken-4"
                       class="white--text"
                       depressed
                       @click="addMemberGraduationCommitte()"
@@ -829,25 +829,25 @@
             </v-card-text>
             <v-card-actions v-show="showTabInscribe == 'inscribe'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="primary" @click="saveInscribe()">
+              <v-btn depressed dark large color="grey darken-4" @click="saveInscribe()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'events'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="primary" @click="saveEvent()">
+              <v-btn depressed dark large color="grey darken-4" @click="saveEvent()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'engaged'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="primary" @click="saveEngaged()">
+              <v-btn depressed dark large color="grey darken-4" @click="saveEngaged()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'committe'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="primary" @click="saveCommitte()">
+              <v-btn depressed dark large color="grey darken-4" @click="saveCommitte()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
@@ -1472,6 +1472,9 @@ export default {
   },
 
   created: function(){
+    if(this.$session.exists()){
+      this.setUserNow(this.$session.get('userData'))
+    }
     this.getInscribe()
     this.getServices()
     this.getFormations()

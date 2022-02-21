@@ -11,7 +11,7 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar color="" dark>
+            <v-toolbar color="grey darken-4" dark>
               <v-toolbar-title>Gerenciar repertório</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-toolbar-items>
@@ -85,7 +85,7 @@
                       <v-btn
                         v-show="!loadingSelectFields"
                         depressed
-                        class="primary my-3"
+                        class="grey darken-4 my-3"
                         dark
                         @click="addRepertoryItem()"
                       >
@@ -173,6 +173,18 @@ export default {
 
   methods: {
     ...mapActions(["setUserNow"]),
+
+    startRepertory: function () {
+			let data = new FormData();
+			data.append("idinscribe", this.inscribeID);
+			axios(process.env.VUE_APP_URL + "startRepertory", {
+				method: "POST",
+				data: data,
+			}).then((response) => {
+				this.$swal(response.data.msg, "", response.data.icon);
+				this.getRepertory();
+			});
+		},
     getRepertory: function () {
 			this.loadingListRepertory = true;
 			axios
@@ -186,6 +198,30 @@ export default {
 						this.startedRepertory = false;
 					}
 					this.loadingListRepertory = false;
+				});
+		},
+    addRepertoryItem: function () {
+			if (this.$refs.formAddRepertoryItem.validate()) {
+				let data = new FormData();
+				data.append("idrepertory", this.repertoryID);
+				data.append("idmoments", this.repertoryMoments);
+				data.append("idmusic", this.repertoryMusic.idmusic);
+				data.append("sequence", this.repertorySequence);
+				axios(process.env.VUE_APP_URL + "addRepertoryItem", {
+					method: "POST",
+					data: data,
+				}).then((response) => {
+					this.$swal(response.data.msg, "", response.data.icon);
+					this.getRepertory();
+				});
+			}
+		},
+    delRepertoryItem: function (music, moments) {
+			axios
+				.get(process.env.VUE_APP_URL + "deleteRepertoryItem/" + music + "/" + moments)
+				.then((response) => {
+					this.$swal(response.data.msg, "", response.data.icon);
+					this.getRepertory();
 				});
 		},
 		getRepertoryID: function () {
@@ -211,8 +247,19 @@ export default {
 		},
   },
 
+  created: function(){
+    if(this.$session.exists()){
+      this.setUserNow(this.$session.get('userData'))
+    }
+
+    this.getRepertory();
+		this.getRepertoryID();
+		this.getMoments();
+    
+  },
+
   computed: {
-    ...mapGetters(["userNow, inscribeID"]),
+    ...mapGetters(["userNow", "inscribeID"]),
   },
 };
 </script>

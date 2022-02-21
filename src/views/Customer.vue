@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer dark v-model="drawer" app color="primary">
+    <v-navigation-drawer dark v-model="drawer" app color="grey darken-4">
       <v-list dense>
         <v-list-item>
           <v-list-item-avatar>
@@ -53,7 +53,7 @@
 
       <v-toolbar-title>
         <v-img
-          :src="require('../assets/logotipo_branco.png')"
+          :src="require('../assets/logotipo.png')"
           width="120"
         ></v-img>
       </v-toolbar-title>
@@ -72,7 +72,7 @@ export default {
   data: () => ({
     urlApi: process.env.VUE_APP_URL,
     drawer: false,
-    colorToolbar: "primary",
+    colorToolbar: "grey darken-4",
     inscribe: null,
     navegador: [
       {
@@ -111,15 +111,15 @@ export default {
   },
 
   created: function () {
-    this.setUserNow(this.$session.get('userData'))
-    this.getInscribeID()
-    this.setInscribeID(this.inscribe)
+    if(this.$session.exists()){
+      this.getInscribeID()
+    }
   },
 
   mounted() {},
 
   methods: {
-    ...mapActions(["setUserNow, setInscribeID"]),
+    ...mapActions(["setUserNow", "setInscribeID"]),
 
     logout: function () {
       this.setUserNow({
@@ -137,15 +137,14 @@ export default {
 				.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
 				.then((response) => {
 					const resp = response.data;
-					if (resp) {
-						this.inscribeID = resp.idinscribe;
-					}
+          this.setInscribeID(resp.idinscribe)
+          console.log(resp.idinscribe)
 				});
 		},
   },
 
   computed: {
-    ...mapGetters(["userNow, inscribeID"]),
+    ...mapGetters(['userNow']),
   },
 };
 </script>

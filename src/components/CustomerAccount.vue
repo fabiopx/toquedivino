@@ -11,7 +11,7 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar color="blue" dark>
+            <v-toolbar color="grey darken-4" dark>
               <v-toolbar-title>Gerenciar dados</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-toolbar-items>
@@ -219,6 +219,9 @@ export default {
   },
 
   created() {
+    if(this.$session.exists()){
+      this.setUserNow(this.$session.get('userData'))
+    }
     this.getAccount();
   },
 
