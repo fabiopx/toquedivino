@@ -763,8 +763,10 @@ class Api extends CI_Controller{
                     $moments = $this->moments->readMoments(array('idmoments' => $m->moments_idmoments));
                     $music = $this->music->readMusic(array('idmusic' => $m->music_idmusic));
                     $resp[] = array(
+                        'id' => $m->id,
                         'moments' => $moments->row(), 
-                        'music' => $music->row()
+                        'music' => $music->row(),
+                        'sequence' => $m->sequence
                     );
                 endforeach;
             } else{
@@ -811,10 +813,10 @@ class Api extends CI_Controller{
         echo json_encode($repertory->row()->idrepertory);
     }
 
-    public function deleteRepertoryItem($music, $moments){
+    public function deleteRepertoryItem($music, $repertory){
         $this->load->model('repertory');
         // $this->db->db_debug = false;
-        $where = array('music_idmusic' => $music, 'moments_idmoments' => $moments);
+        $where = array('music_idmusic' => $music, 'repertory_ididrepertory' => $repertory);
         $response = $this->repertory->delRepertoryItem($where);
         if($response !== false){
             $resp = array('msg' => 'Item excluído do repertório com sucesso', 'icon' => 'success');
@@ -825,7 +827,47 @@ class Api extends CI_Controller{
         echo json_encode($resp);
     }
 
-    
+    public function getNextSequence($repertory){
+        $this->load->model('repertory');
+
+        $sequence = $this->repertory->readMaxSequence($repertory);
+
+        $seq = $sequence->row();
+
+        $seq = is_null($seq->sequence) ? 0 : $seq->sequence;
+
+        $resp = $seq + 1;
+
+        echo json_encode($resp);
+    }
+
+    public function sequenceUp($id){
+        $this->load->model('repertory');
+
+        $repertory = $this->input->post('repertory');
+        $sequence = $this->input->post('sequence');
+
+        $sequenceUP = $sequence + 1;
+
+        $seqToUp = $this->repertory->readSequenceToUp($repertory, $sequenceUP);
+
+        $this->repertory->updateSequence($id, $sequenceUP);
+        $this->repertory->updateSequence($seqToUp->row()->id, $sequence);
+    }
+
+    public function sequenceDown($id){
+        $this->load->model('repertory');
+
+        $repertory = $this->input->post('repertory');
+        $sequence = $this->input->post('sequence');
+
+        $sequenceDown = $sequence - 1;
+
+        $seqToDown = $this->repertory->readSequenceToUp($repertory, $sequenceDown);
+
+        $this->repertory->updateSequence($id, $sequenceDown);
+        $this->repertory->updateSequence($seqToDown->row()->id, $sequence);
+    }
 
     public function getMomentsCustomers(){
         $this->load->model('moments');
@@ -833,16 +875,21 @@ class Api extends CI_Controller{
         echo json_encode($resp->result());
     }
 
-    public function getMusicCustomers($id){
+    public function getMusicCustomers(){
         $this->load->model('music');
         $this->load->model('moments');
         $resp = array();
-        $where = array('moments_idmoments' => $id);
-        $mhm = $this->moments->readMomentsHasMusic($where);
-        foreach($mhm->result() as $m):
-            $whereMusic = array('idmusic' => $m->music_idmusic);
-            $music = $this->music->readMusic($whereMusic);
-            $resp[] = $music->row();
+        $moments = array();
+        $musics = $this->music->readMusic();
+        foreach($musics->result() as $music):
+            $mhm = $this->music->readMusicHasMoments($music->idmusic);
+            foreach($mhm->result() as $m):
+                $moment = $this->moments->readMoments(array('idmoments' => $m->moments_idmoments));
+                array_push($moments, $moment->row());
+            endforeach;
+            $music->moments = $moments;
+            $moments = [];
+            $resp[] = $music;
         endforeach;
         echo json_encode($resp);
     }

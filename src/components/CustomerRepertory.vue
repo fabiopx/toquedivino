@@ -52,7 +52,17 @@
                         type="text@2, button"
                       >
                       </v-skeleton-loader>
-                      <v-select
+                      <v-autocomplete
+                        v-model="repertoryMusic"
+                        :loading="loading"
+                        :items="music"
+                        item-text="name"
+                        flat
+                        label="Procure por uma música"
+                        return-object
+                      >
+                      </v-autocomplete>
+                      <!-- <v-select
                         v-show="!loadingSelectFields"
                         v-model="repertoryMoments"
                         label="Momento"
@@ -61,8 +71,8 @@
                         item-value="idmoments"
                         @change="getMusic(repertoryMoments)"
                       >
-                      </v-select>
-                      <v-select
+                      </v-select> -->
+                      <!-- <v-select
                         v-show="!loadingSelectFields"
                         v-model="repertoryMusic"
                         label="Música"
@@ -70,18 +80,20 @@
                         item-text="name"
                         item-value="idmusic"
                         return-object
-                      ></v-select>
-                      <p v-show="repertoryMusic">
-                        Ouvir {{ repertoryMusic.name }}
-                      </p>
+                      ></v-select> -->
+                      
                       <audio
                         v-show="repertoryMusic"
                         :src="repertoryMusic.url"
                         controls="controls"
                       ></audio>
-                      <div v-show="repertoryMusic" class="small">
-                        {{ repertoryMusic.url }}
-                      </div>
+                      <v-sheet rounded class="pa-5 grey lighten-3" v-show="repertoryMusic">
+                        <h3>Selecione um momento</h3>
+                        <hr class="white mt-1 mb-2">
+                        <v-chip-group v-model="repertoryMoments" column>
+                          <v-chip filter class="ma-1" v-for="moments in repertoryMusic.moments" :key="moments.idmoments">{{moments.name}}</v-chip>
+                        </v-chip-group>
+                      </v-sheet>
                       <v-btn
                         v-show="!loadingSelectFields"
                         depressed
@@ -103,15 +115,14 @@
                           v-if="loadingListRepertory"
                           type="text@2, button"
                         ></v-skeleton-loader>
-                        <v-list v-show="!loadingListRepertory">
+                        <v-list three-line v-show="!loadingListRepertory">
                           <v-list-item v-for="(item, i) in repertory" :key="i">
                             <v-list-item-icon>
-                              <v-icon outlined>mdi-bookmark-music</v-icon>
+                              <v-icon outlined>mdi-bookmark-music</v-icon> {{ item.sequence }}
                             </v-list-item-icon>
                             <v-list-item-content>
                               <v-list-item-title>
-                                <b>{{ item.moments.name }}:</b>
-                                {{ item.music.name }}
+                                {{item.music.name }}
                               </v-list-item-title>
                               <v-list-item-subtitle>
                                 <audio
@@ -120,24 +131,20 @@
                                   width="200"
                                 ></audio>
                               </v-list-item-subtitle>
-                              <v-list-item-action>
+                            </v-list-item-content>
+                            <v-list-item-action>
+                                <v-btn icon><v-icon>mdi-arrow-up-circle</v-icon></v-btn>
+                                <v-btn icon><v-icon>mdi-arrow-down-circle</v-icon></v-btn>
                                 <v-btn
                                   v-show="item.music.idmusic != 0"
-                                  depressed
-                                  color="primary"
+                                  icon
+                                  color="red"
                                   dark
-                                  @click="
-                                    delRepertoryItem(
-                                      item.music.idmusic,
-                                      item.moments.idmoments
-                                    )
-                                  "
+                                  @click="delRepertoryItem(item.id)"
                                 >
                                   <v-icon>mdi-delete</v-icon>
                                 </v-btn>
                               </v-list-item-action>
-                              <v-divider></v-divider>
-                            </v-list-item-content>
                           </v-list-item>
                         </v-list>
                       </v-card-text>
@@ -160,6 +167,9 @@ export default {
     loadingSelectFields: false,
     loadingListRepertory: false,
     startedRepertory: false,
+    items: [],
+    loading: false,
+    search: null,
     repertory: [],
     repertoryID: "",
     repertoryMoments: "",
@@ -175,87 +185,100 @@ export default {
     ...mapActions(["setUserNow"]),
 
     startRepertory: function () {
-			let data = new FormData();
-			data.append("idinscribe", this.inscribeID);
-			axios(process.env.VUE_APP_URL + "startRepertory", {
-				method: "POST",
-				data: data,
-			}).then((response) => {
-				this.$swal(response.data.msg, "", response.data.icon);
-				this.getRepertory();
-			});
-		},
+      let data = new FormData();
+      data.append("idinscribe", this.inscribeID);
+      axios(process.env.VUE_APP_URL + "startRepertory", {
+        method: "POST",
+        data: data,
+      }).then((response) => {
+        this.$swal(response.data.msg, "", response.data.icon);
+        this.getRepertory();
+      });
+    },
     getRepertory: function () {
-			this.loadingListRepertory = true;
-			axios
-				.get(process.env.VUE_APP_URL + "getRepertoryCustomers/" + this.inscribeID)
-				.then((response) => {
-					const resp = response.data;
-					if (resp) {
-						this.startedRepertory = true;
-						this.repertory = response.data;
-					} else {
-						this.startedRepertory = false;
-					}
-					this.loadingListRepertory = false;
-				});
-		},
+      this.loadingListRepertory = true;
+      axios
+        .get(
+          process.env.VUE_APP_URL + "getRepertoryCustomers/" + this.inscribeID
+        )
+        .then((response) => {
+          const resp = response.data;
+          if (resp) {
+            this.startedRepertory = true;
+            this.repertory = response.data;
+          } else {
+            this.startedRepertory = false;
+          }
+          this.loadingListRepertory = false;
+        });
+    },
     addRepertoryItem: function () {
-			if (this.$refs.formAddRepertoryItem.validate()) {
-				let data = new FormData();
-				data.append("idrepertory", this.repertoryID);
-				data.append("idmoments", this.repertoryMoments);
-				data.append("idmusic", this.repertoryMusic.idmusic);
-				data.append("sequence", this.repertorySequence);
-				axios(process.env.VUE_APP_URL + "addRepertoryItem", {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getRepertory();
-				});
-			}
-		},
+      if (this.$refs.formAddRepertoryItem.validate()) {
+        let data = new FormData();
+        data.append("idrepertory", this.repertoryID);
+        data.append("idmoments", (this.repertoryMoments) ? this.repertoryMoments : null);
+        data.append("idmusic", this.repertoryMusic.idmusic);
+        data.append("sequence", this.repertorySequence);
+        axios(process.env.VUE_APP_URL + "addRepertoryItem", {
+          method: "POST",
+          data: data,
+        }).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getRepertory();
+        });
+      }
+    },
     delRepertoryItem: function (music, moments) {
-			axios
-				.get(process.env.VUE_APP_URL + "deleteRepertoryItem/" + music + "/" + moments)
-				.then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getRepertory();
-				});
-		},
-		getRepertoryID: function () {
-			axios
-				.get(process.env.VUE_APP_URL + "getRepertoryCustomersID/" + this.inscribeID)
-				.then((response) => {
-					this.repertoryID = response.data;
-				});
-		},
-		getMoments: function () {
-			this.loadingSelectFields = true;
-			axios.get(process.env.VUE_APP_URL + "getMomentsCustomers").then((response) => {
-				this.moments = response.data;
-				this.loadingSelectFields = false;
-			});
-		},
-		getMusic: function (id) {
-			this.loadingSelectFields = true;
-			axios.get(process.env.VUE_APP_URL + "getMusicCustomers/" + id).then((response) => {
-				this.music = response.data;
-				this.loadingSelectFields = false;
-			});
-		},
+      axios
+        .get(
+          process.env.VUE_APP_URL +
+            "deleteRepertoryItem/" +
+            music +
+            "/" +
+            moments
+        )
+        .then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getRepertory();
+        });
+    },
+    getRepertoryID: function () {
+      axios
+        .get(
+          process.env.VUE_APP_URL + "getRepertoryCustomersID/" + this.inscribeID
+        )
+        .then((response) => {
+          this.repertoryID = response.data;
+        });
+    },
+    getMoments: function () {
+      this.loadingSelectFields = true;
+      axios
+        .get(process.env.VUE_APP_URL + "getMomentsCustomers")
+        .then((response) => {
+          this.moments = response.data;
+          this.loadingSelectFields = false;
+        });
+    },
+    getMusic: function (id) {
+      this.loadingSelectFields = true;
+      axios
+        .get(process.env.VUE_APP_URL + "getMusicCustomers/")
+        .then((response) => {
+          this.music = response.data;
+          this.loadingSelectFields = false;
+        });
+    },
   },
 
-  created: function(){
-    if(this.$session.exists()){
-      this.setUserNow(this.$session.get('userData'))
+  created: function () {
+    if (this.$session.exists()) {
+      this.setUserNow(this.$session.get("userData"));
     }
 
     this.getRepertory();
-		this.getRepertoryID();
-		this.getMoments();
-    
+    this.getRepertoryID();
+    this.getMusic();
   },
 
   computed: {

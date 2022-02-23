@@ -33,6 +33,23 @@ class Repertory extends Crud{
         return $this->ready('moments_has_repertory', $where);
     }
 
+    public function readMaxSequence($id){
+        $this->db->select_max('sequence');
+        $where = array('repertory_idrepertory' => $id);
+        return $this->ready('moments_has_repertory', $where);
+    }
+
+    public function readSequenceToUpdate($repertory, $sequence){
+        $where = array('repertory_idrepertory' => $repertory, 'sequence' => $sequence);
+        return $this->ready('moments_has_repertory', $where);
+    }
+
+    public function updateSequence($id, $sequence){
+        $where = array('id' => $id);
+        $data = array('sequence' => $sequence);
+        return $this->update('moments_has_repertory', $where, $data);
+    }
+
     public function delRepertoryItem($where){
         return $this->delete('moments_has_repertory', $where);
     }
