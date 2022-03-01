@@ -17,7 +17,7 @@ class Repertory extends Crud{
         $this->moments_idmoments = $_POST['idmoments'];
         $this->repertory_idrepertory = $_POST['idrepertory'];
         $this->music_idmusic = $_POST['idmusic'];
-        $this->sequence = $_POST['sequence'];
+        $this->sequence = $this->nextSequence($_POST['idrepertory']);
         $data = $this;
 
         return $this->create('moments_has_repertory', $data);
@@ -30,6 +30,7 @@ class Repertory extends Crud{
 
     public function readMomentsHasRepertory($id){
         $where = array('repertory_idrepertory' => $id);
+        $this->db->order_by('sequence');
         return $this->ready('moments_has_repertory', $where);
     }
 
@@ -48,6 +49,23 @@ class Repertory extends Crud{
         $where = array('id' => $id);
         $data = array('sequence' => $sequence);
         return $this->update('moments_has_repertory', $where, $data);
+    }
+
+    public function nextSequence($id){
+        $sequence = $this->readMaxSequence($id);
+
+        $seq = $sequence->row();
+
+        $seq = is_null($seq->sequence) ? 0 : $seq->sequence;
+
+        return $seq + 1;
+    }
+    
+    public function orderSequence($sequence){
+        $this->db->set('sequence', 'sequence-1', FALSE);
+        $this->db->where('sequence >', $sequence);
+        $this->db->update('moments_has_repertory');
+
     }
 
     public function delRepertoryItem($where){

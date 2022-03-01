@@ -704,7 +704,7 @@ class Api extends CI_Controller{
         echo json_encode($resp);
     }
 
-    public function updateEngagedCUstomers($id){
+    public function updateEngagedCustomers($id){
         $this->load->model('engaged');
         $where = array('idengaged' => $id);
         if($this->engaged->updateEngaged($where)){
@@ -713,6 +713,13 @@ class Api extends CI_Controller{
             $resp = array('msg' => 'Cadastro dos noivos não pode ser editado', 'icon' => 'error');
         }
         echo json_encode($resp);
+    }
+
+    public function getWeddingServices($id){
+        $this->load->model('engaged');
+        $where = array('engaged_idengaged', $id);
+        $resp = $this->engaged->readWeddingServices($where);
+        echo json_encode($resp->result());
     }
 
     public function getCommitteCustomers($id){
@@ -764,6 +771,7 @@ class Api extends CI_Controller{
                     $music = $this->music->readMusic(array('idmusic' => $m->music_idmusic));
                     $resp[] = array(
                         'id' => $m->id,
+                        'repertory' => $repertory->row()->idrepertory,
                         'moments' => $moments->row(), 
                         'music' => $music->row(),
                         'sequence' => $m->sequence
@@ -813,12 +821,14 @@ class Api extends CI_Controller{
         echo json_encode($repertory->row()->idrepertory);
     }
 
-    public function deleteRepertoryItem($music, $repertory){
+    public function deleteRepertoryItem($id, $sequence){
         $this->load->model('repertory');
         // $this->db->db_debug = false;
-        $where = array('music_idmusic' => $music, 'repertory_ididrepertory' => $repertory);
+
+        $where = array('id' => $id);
         $response = $this->repertory->delRepertoryItem($where);
         if($response !== false){
+            $this->repertory->orderSequence($sequence);
             $resp = array('msg' => 'Item excluído do repertório com sucesso', 'icon' => 'success');
         } else{
             $error = $this->db->error();
@@ -827,16 +837,14 @@ class Api extends CI_Controller{
         echo json_encode($resp);
     }
 
-    public function getNextSequence($repertory){
+    public function getMaxSequence($repertory){
         $this->load->model('repertory');
 
         $sequence = $this->repertory->readMaxSequence($repertory);
 
         $seq = $sequence->row();
 
-        $seq = is_null($seq->sequence) ? 0 : $seq->sequence;
-
-        $resp = $seq + 1;
+        $resp = $seq->sequence;
 
         echo json_encode($resp);
     }
@@ -847,9 +855,9 @@ class Api extends CI_Controller{
         $repertory = $this->input->post('repertory');
         $sequence = $this->input->post('sequence');
 
-        $sequenceUP = $sequence + 1;
+        $sequenceUP = $sequence - 1;
 
-        $seqToUp = $this->repertory->readSequenceToUp($repertory, $sequenceUP);
+        $seqToUp = $this->repertory->readSequenceToUpdate($repertory, $sequenceUP);
 
         $this->repertory->updateSequence($id, $sequenceUP);
         $this->repertory->updateSequence($seqToUp->row()->id, $sequence);
@@ -861,9 +869,9 @@ class Api extends CI_Controller{
         $repertory = $this->input->post('repertory');
         $sequence = $this->input->post('sequence');
 
-        $sequenceDown = $sequence - 1;
+        $sequenceDown = $sequence + 1;
 
-        $seqToDown = $this->repertory->readSequenceToUp($repertory, $sequenceDown);
+        $seqToDown = $this->repertory->readSequenceToUpdate($repertory, $sequenceDown);
 
         $this->repertory->updateSequence($id, $sequenceDown);
         $this->repertory->updateSequence($seqToDown->row()->id, $sequence);

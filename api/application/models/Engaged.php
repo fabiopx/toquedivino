@@ -12,6 +12,7 @@ class Engaged extends Crud{
     public $groom_rg;
     public $groom_birthdate;
     public $groom_email;
+    public $groom_responsible_for;
     public $bride_name;
     public $bride_address;
     public $bride_phone;
@@ -21,6 +22,7 @@ class Engaged extends Crud{
     public $bride_rg;
     public $bride_birthdate;
     public $bride_email;
+    public $bride_responsible_for;
     public $inscribe_idinscribe;
 
     public function createEngaged(){
@@ -33,6 +35,7 @@ class Engaged extends Crud{
         $this->groom_rg = $_POST['groom_rg'];
         $this->groom_birthdate = $_POST['groom_birthdate'];
         $this->groom_email = $_POST['groom_email'];
+        $this->groom_responsible_for = $_POST['groom_responsible_for'];
         $this->bride_name = $_POST['bride_name'];
         $this->bride_address = $_POST['bride_address'];
         $this->bride_phone = $_POST['bride_phone'];
@@ -42,6 +45,7 @@ class Engaged extends Crud{
         $this->bride_rg = $_POST['bride_rg'];
         $this->bride_birthdate = $_POST['bride_birthdate'];
         $this->bride_email = $_POST['bride_email'];
+        $this->bride_responsible_for = $_POST['bride_responsible_for'];
         $this->inscribe_idinscribe = $_POST['idinscribe'];
         $data = $this;
 
@@ -49,6 +53,14 @@ class Engaged extends Crud{
     }
 
     public function readEngaged($where = null){
+        if(!is_null($where)){
+            return $this->ready('engaged', $where);
+        } else{
+            return $this->ready('engaged');
+        }
+    }
+
+    public function readWeedingServices($where = null){
         if(!is_null($where)){
             return $this->ready('engaged', $where);
         } else{
@@ -64,8 +76,9 @@ class Engaged extends Crud{
         $this->groom_photo = (isset($_POST['groom_photo'])) ? $_POST['groom_photo'] : null;
         $this->groom_cpf = $_POST['groom_cpf'];
         $this->groom_rg = $_POST['groom_rg'];
-        $this->groom_birthdate = inverteData($_POST['groom_birthdate']);
+        $this->groom_birthdate = $_POST['groom_birthdate'];
         $this->groom_email = $_POST['groom_email'];
+        $this->groom_responsible_for = $_POST['groom_responsible_for'];
         $this->bride_name = $_POST['bride_name'];
         $this->bride_address = $_POST['bride_address'];
         $this->bride_phone = $_POST['bride_phone'];
@@ -73,8 +86,9 @@ class Engaged extends Crud{
         $this->bride_photo = (isset($_POST['bride_photo'])) ? $_POST['bride_photo'] : null;
         $this->bride_cpf = $_POST['bride_cpf'];
         $this->bride_rg = $_POST['bride_rg'];
-        $this->bride_birthdate = inverteData($_POST['bride_birthdate']);
+        $this->bride_birthdate = $_POST['bride_birthdate'];
         $this->bride_email = $_POST['bride_email'];
+        $this->bride_responsible_for = $_POST['bride_responsible_for'];
         $this->inscribe_idinscribe = $_POST['idinscribe'];
         $data = $this;
 

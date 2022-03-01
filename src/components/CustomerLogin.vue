@@ -6,14 +6,14 @@
       persistent
       transition="dialog-transition"
     >
-      <v-card width="400" height="300" color="blue darken-4">
+      <v-card width="400" height="400" color="blue darken-4">
         <v-toolbar elevation="0" color="blue darken-4">
           <v-toolbar-title>
-            <v-img :src="require('../assets/logotipo_branco.png')" width="150"></v-img>
+            <v-img :src="require('../assets/logotipo_branco.png')" width="200"></v-img>
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-form ref="formLogin">
+          <v-form class="mt-3" ref="formLogin">
             <v-text-field
               v-model="loginData.email"
               label="Login"
@@ -43,8 +43,7 @@
         <v-card-actions>
           <v-btn
             depressed
-            large
-            block
+            x-large
             color="orange white--text"
             @click="enterLogin()"
             >Entrar

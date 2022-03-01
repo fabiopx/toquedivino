@@ -26,8 +26,7 @@
           </v-tabs>
           <v-card>
             <v-toolbar color="grey darken-4" dark>
-              <v-toolbar-title
-                >
+              <v-toolbar-title>
                 <span class="small">{{ tabInscribeTitle }}</span>
               </v-toolbar-title>
               <v-spacer></v-spacer>
@@ -307,7 +306,7 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12">
-                      <h4>Dados da noiva</h4>
+                      <h2>Dados da noiva</h2>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -317,14 +316,19 @@
                         color="grey lighten-4"
                         @click="openUploadPhoto('engagedBrideUploadPhoto')"
                       >
-                        <v-img :src="engagedBridePhoto"></v-img>
+                        <v-img
+                          :src="
+                            engagedBrideBlob
+                              ? engagedBrideBlob
+                              : engagedBridePhoto
+                          "
+                        ></v-img>
                       </v-avatar>
                     </v-col>
-                    <v-col v-show="crud == 'c'" cols="12" md="6">
+                    <v-col cols="12" md="6">
                       <v-checkbox
                         v-model="engagedBrideAccountable"
                         label="Responsável pelo contrato"
-                        @click="selectAccountableBride()"
                       >
                       </v-checkbox>
                     </v-col>
@@ -480,7 +484,7 @@
                   </v-row>
                   <v-row>
                     <v-col>
-                      <h4>Dados do noivo</h4>
+                      <h2>Dados do noivo</h2>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -490,14 +494,19 @@
                         color="grey lighten-4"
                         @click="openUploadPhoto('engagedGroomUploadPhoto')"
                       >
-                        <v-img :src="engagedGroomPhoto"></v-img>
+                        <v-img
+                          :src="
+                            engagedGroomBlob
+                              ? engagedGroomBlob
+                              : engagedGroomPhoto
+                          "
+                        ></v-img>
                       </v-avatar>
                     </v-col>
-                    <v-col v-show="crud == 'c'" cols="12" md="6">
+                    <v-col cols="12" md="6">
                       <v-checkbox
                         v-model="engagedGroomAccountable"
                         label="Responsável pelo contrato"
-                        @click="selectAccountableGroom()"
                       >
                       </v-checkbox>
                     </v-col>
@@ -518,6 +527,7 @@
                         prepend-inner-icon="mdi-human-male"
                         label="Telefone"
                         v-model="engagedGroomPhone"
+                        v-mask="maskTel(engagedGroomPhone)"
                         :rules="engagedGroomPhoneRules"
                         required
                       >
@@ -529,6 +539,7 @@
                         label="Celular"
                         v-model="engagedGroomMobile"
                         :rules="engagedGroomMobileRules"
+                        v-mask="maskTel(engagedGroomMobile)"
                         required
                       >
                       </v-text-field>
@@ -652,12 +663,14 @@
                 <v-container v-if="selectEngaged">
                   <v-row>
                     <v-col>
-                      <h4>Serviços do casamento</h4>
-                      Saber os demais serviços do casamento nos ajuda a alinhar
-                      horários, posição da banda etc.
-                      <v-btn text color="primary" dark>
-                        <v-icon>mdi-plus-circle</v-icon> Cadastrar
-                      </v-btn>
+                      <v-sheet elevation="1" color="grey lighten-4" class="pa-4">
+                        <h2>Serviços do casamento</h2>
+                        Saber os demais serviços do casamento nos ajuda a
+                        alinhar horários, posição da banda etc.
+                        <v-btn text color="grey darken-4" dark>
+                          <v-icon>mdi-plus-circle</v-icon> Cadastrar
+                        </v-btn>
+                      </v-sheet>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -674,11 +687,11 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-file-input
-                      v-model="currentFile"
+                      v-model="currentFileBride"
                       label="Foto"
                       chips
                       @change="
-                        readEngagedPhoto(currentFile, 'engagedBridePhoto')
+                        readEngagedPhoto(currentFileBride, 'engagedBrideBlob')
                       "
                     >
                     </v-file-input>
@@ -729,11 +742,11 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-file-input
-                      v-model="currentFile"
+                      v-model="currentFileGroom"
                       label="Foto"
                       chips
                       @change="
-                        readEngagedPhoto(currentFile, 'engagedGroomPhoto')
+                        readEngagedPhoto(currentFileGroom, 'engagedGroomBlob')
                       "
                     >
                     </v-file-input>
@@ -773,7 +786,17 @@
                 </v-card>
               </v-dialog>
               <v-dialog v-model="formWeddingServices">
-                <v-card> </v-card>
+                <v-card>
+                  <v-form>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12" md="6">
+                          <v-text-field label="Nome da empresa"></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-form>
+                </v-card>
               </v-dialog>
             </v-card-text>
             <v-card-text v-show="showTabInscribe == 'committe'">
@@ -829,25 +852,49 @@
             </v-card-text>
             <v-card-actions v-show="showTabInscribe == 'inscribe'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="grey darken-4" @click="saveInscribe()">
+              <v-btn
+                depressed
+                dark
+                large
+                color="grey darken-4"
+                @click="saveInscribe()"
+              >
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'events'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="grey darken-4" @click="saveEvent()">
+              <v-btn
+                depressed
+                dark
+                large
+                color="grey darken-4"
+                @click="saveEvent()"
+              >
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'engaged'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="grey darken-4" @click="saveEngaged()">
+              <v-btn
+                depressed
+                dark
+                large
+                color="grey darken-4"
+                @click="saveEngaged()"
+              >
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'committe'">
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="grey darken-4" @click="saveCommitte()">
+              <v-btn
+                depressed
+                dark
+                large
+                color="grey darken-4"
+                @click="saveCommitte()"
+              >
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
@@ -859,15 +906,23 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import { mapGetters, mapActions } from "vuex";
 
 function toDateFormat(input) {
-	var datePart = input.match(/\d+/g),
-		year = datePart[0], // get only two digits
-		month = datePart[1],
-		day = datePart[2];
+  var datePart = input.match(/\d+/g),
+    year = datePart[0], // get only two digits
+    month = datePart[1],
+    day = datePart[2];
 
-	return day + "/" + month + "/" + year;
+  return day + "/" + month + "/" + year;
+}
+
+function FormataStringData(data) {
+  var dia = data.split("/")[0];
+  var mes = data.split("/")[1];
+  var ano = data.split("/")[2];
+
+  return ano + "-" + ("0" + mes).slice(-2) + "-" + ("0" + dia).slice(-2);
 }
 
 export default {
@@ -879,12 +934,13 @@ export default {
     showPassword: false,
     alert: false,
     alertMsg: "",
-    currentFile: undefined,
-		progressUpload: 0,
-		progressShow: false,
-		uploadSuccess: false,
-		uploadError: false,
-		uploadMsg: "",
+    currentFileBride: undefined,
+    currentFileGroom: undefined,
+    progressUpload: 0,
+    progressShow: false,
+    uploadSuccess: false,
+    uploadError: false,
+    uploadMsg: "",
     maskPhone: "(##) ####-####",
     maskMobile: "(##) #####-####",
     maskCpf: "###.###.###-##",
@@ -945,6 +1001,7 @@ export default {
     engagedBrideName: "",
     engagedBrideNameRules: [(v) => !!v || "O campo NOME DA NOIVA é requerido"],
     engagedBridePhoto: process.env.VUE_APP_IMGPATH + "woman.png",
+    engagedBrideBlob: "",
     engagedBrideAddress: {
       street: "",
       number: "",
@@ -968,9 +1025,11 @@ export default {
     engagedBrideRg: "",
     engagedBrideBirthdate: "",
     engagedBrideEmail: "",
+    engagedBrideResponsibleFor: false,
     engagedGroomName: "",
     engagedGroomNameRules: [(v) => !!v || "O campo NOME DO NOIVO é requerido"],
     engagedGroomPhoto: process.env.VUE_APP_IMGPATH + "man.png",
+    engagedGroomBlob: "",
     engagedGroomAddress: {
       street: "",
       number: "",
@@ -994,6 +1053,7 @@ export default {
     engagedGroomRg: "",
     engagedGroomBirthdate: "",
     engagedGroomEmail: "",
+    engagedGroomResponsibleFor: false,
     engagedBrideUploadPhoto: false,
     engagedGroomUploadPhoto: false,
     loadingCommitteFields: false,
@@ -1002,11 +1062,15 @@ export default {
     graduationCommitteNameRules: [(v) => !!v || "Por favor digite um nome"],
     graduationCommitteMember: [],
     loadingSelectFields: false,
-    formWeddingServices: false
+    formWeddingServices: false,
+    weddingServiceCompanyName: "",
+    weddingServiceAddress: "",
+    weddingServicePhone: "",
+    weddingServiceContactName: ""
   }),
 
   methods: {
-    ...mapActions(['setUserNow']),
+    ...mapActions(["setUserNow"]),
     activeTabInscribe: function (tab) {
       this.showTabInscribe = tab;
       this.resetAllVars();
@@ -1034,7 +1098,8 @@ export default {
       }
     },
     resetAllVars: function () {
-      this.currentFile = undefined;
+      this.currentFileBride = undefined;
+      this.currentFileGroom = undefined;
       this.inscribeAccountable = "";
       this.inscribePhone = "";
       this.inscribeMobile = "";
@@ -1087,7 +1152,7 @@ export default {
       this.engagedBrideRg = "";
       this.engagedBrideBirthdate = "";
       this.engagedBrideEmail = "";
-      this.engagedGroomName = "";
+      (this.engagedBrideResponsibleFor = false), (this.engagedGroomName = "");
       this.engagedGroomAddress = {
         street: "",
         number: "",
@@ -1103,7 +1168,8 @@ export default {
       this.engagedGroomCpf = "";
       (this.engagedGroomRg = ""), (this.engagedGroomBirthdate = "");
       this.engagedGroomEmail = "";
-      this.graduationCommitteName = "";
+      (this.engagedGroomResponsibleFor = false),
+        (this.graduationCommitteName = "");
       this.graduationCommitteMember = [];
     },
     maskTel: function (phone) {
@@ -1114,17 +1180,18 @@ export default {
       }
     },
     openUploadPhoto: function (profile) {
-			this[profile] = true;
-			this.currentFile = undefined;
-			this.uploadMsg = "";
-			this.uploadSuccess = false;
-			this.uploadError = false;
-		},
+      this[profile] = true;
+      this.currentFileBride = undefined;
+      this.currentFileGroom = undefined;
+      this.uploadMsg = "";
+      this.uploadSuccess = false;
+      this.uploadError = false;
+    },
     readEngagedPhoto: function (file, profile) {
       if (file) {
         this[profile] = URL.createObjectURL(file);
         this.progressShow = true;
-        this.photo = profile == "engagedBridePhoto" ? "woman.png" : "man.png";
+        this.photo = profile == "engagedBrideBlob" ? "woman.png" : "man.png";
 
         let data = new FormData();
         data.append("file", file);
@@ -1287,7 +1354,7 @@ export default {
           if (resp) {
             this.eventID = resp.idevent;
             this.eventName = resp.name;
-            this.eventDate = toDateFormat(resp.date);
+            this.eventDate = resp.date;
             this.eventDateCountDown = new Date(resp.date);
             this.eventTime = resp.time;
             this.eventAddress = resp.address;
@@ -1321,6 +1388,8 @@ export default {
             this.engagedGroomRg = resp.groom_rg;
             this.engagedGroomBirthdate = toDateFormat(resp.groom_birthdate);
             this.engagedGroomEmail = resp.groom_email;
+            this.engagedGroomResponsibleFor =
+              resp.groom_responsible_for == 0 ? false : true;
             this.engagedBrideName = resp.bride_name;
             this.engagedBrideAddress = resp.bride_address;
             this.engagedBridePhone = resp.bride_phone;
@@ -1332,6 +1401,8 @@ export default {
             this.engagedBrideRg = resp.bride_rg;
             this.engagedBrideBirthdate = toDateFormat(resp.bride_birthdate);
             this.engagedBrideEmail = resp.bride_email;
+            this.engagedBrideResponsibleFor =
+              resp.bride_responsible_for == 0 ? false : true;
             this.selectEngaged = resp.selectEngaged;
           } else {
             this.crud = "c";
@@ -1344,7 +1415,9 @@ export default {
     getCommitte: function () {
       this.loadingCommitteFields = true;
       axios
-        .get(process.env.VUE_APP_URL + "getCommitteCustomers/" + this.inscribeID)
+        .get(
+          process.env.VUE_APP_URL + "getCommitteCustomers/" + this.inscribeID
+        )
         .then((response) => {
           const resp = response.data;
           if (resp) {
@@ -1358,126 +1431,183 @@ export default {
           this.loadingCommitteFields = false;
         });
     },
+    getWeddingServices: function(){
+      this.loadingWeddingServices = true
+      axios.get(process.env.VUE_APP_URL + 'getWeddingServices/' + this.engagedID)
+      .then((response) => {
+        this.weddingServices = response.data
+        this.loadingWeddingServices = false
+      })
+    },
     saveInscribe: function () {
-			let data = new FormData();
-			data.append("accountable", this.inscribeAccountable);
-			data.append("phone", this.inscribePhone);
-			data.append("mobile", this.inscribeMobile);
-			data.append("address", JSON.stringify(this.inscribeAddress));
-			data.append("cpf", this.inscribeCpf);
-			data.append("rg", this.inscribeRg);
-			data.append("idservice", this.inscribeService.idservice);
-			data.append("idformation", this.inscribeFormation.idformation);
-			axios(process.env.VUE_APP_URL + "updateInscribeCustomers/" + this.inscribeID, {
-				method: "POST",
-				data: data,
-			}).then((response) => {
-				this.$swal(response.data.msg, "", response.data.icon);
-				this.getInscribe();
-			});
-		},
-		saveEvent: function () {
-			let data = new FormData();
-			data.append("eventname", this.eventName);
-			data.append("eventdate", this.eventDate);
-			data.append("eventtime", this.eventTime);
-			data.append("eventaddress", JSON.stringify(this.eventAddress));
-			data.append("idinscribe", this.inscribeID);
-			if (this.crud == "c") {
-				axios(process.env.VUE_APP_URL + "createEventCustomers", {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getEvent();
-				});
-			} else if (this.crud == "u") {
-				axios(process.env.VUE_APP_URL + "updateEventCustomers/" + this.eventID, {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getEvent();
-				});
-			}
-		},
-		saveEngaged: function () {
-			let data = new FormData();
-			data.append("groom_name", this.engagedGroomName);
-			data.append("groom_address", JSON.stringify(this.engagedGroomAddress));
-			data.append("groom_phone", this.engagedGroomPhone);
-			data.append("groom_mobile", this.engagedGroomMobile);
-			data.append("groom_photo", this.engagedGroomPhoto);
-			data.append("groom_cpf", this.engagedGroomCpf);
-			data.append("groom_rg", this.engagedGroomRg);
-			data.append("groom_birthdate", this.engagedGroomBirthdate);
-			data.append("groom_email", this.engagedGroomEmail);
-			data.append("bride_name", this.engagedBrideName);
-			data.append("bride_address", JSON.stringify(this.engagedBrideAddress));
-			data.append("bride_phone", this.engagedBridePhone);
-			data.append("bride_mobile", this.engagedBrideMobile);
-			data.append("bride_photo", this.engagedBridePhoto);
-			data.append("bride_cpf", this.engagedBrideCpf);
-			data.append("bride_rg", this.engagedBrideRg);
-			data.append("bride_birthdate", this.engagedBrideBirthdate);
-			data.append("bride_email", this.engagedBrideEmail);
-			data.append("idinscribe", this.inscribeID);
-			if (this.crud == "c") {
-				axios(process.env.VUE_APP_URL + "createEngagedCustomers", {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getEngaged();
-				});
-			} else if (this.crud == "u") {
-				axios(process.env.VUE_APP_URL + "updateEngagedCustomers/" + this.engagedID, {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getEngaged();
-				});
-			}
-		},
-		saveCommitte: function () {
-			let data = new FormData();
-			data.append(
-				"committe_name",
-				JSON.stringify(this.graduationCommitteMember)
-			);
-			data.append("inscribe_idinscribe", this.inscribeID);
-			if (this.crud == "c") {
-				axios(process.env.VUE_APP_URL + "createCommitteCustomers", {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getCommitte();
-				});
-			} else if (this.crud == "u") {
-				axios(process.env.VUE_APP_URL + "updateCommitteCustomers/" + this.committeID, {
-					method: "POST",
-					data: data,
-				}).then((response) => {
-					this.$swal(response.data.msg, "", response.data.icon);
-					this.getCommitte();
-				});
-			}
-		},
+      let data = new FormData();
+      data.append("accountable", this.inscribeAccountable);
+      data.append("phone", this.inscribePhone);
+      data.append("mobile", this.inscribeMobile);
+      data.append("address", JSON.stringify(this.inscribeAddress));
+      data.append("cpf", this.inscribeCpf);
+      data.append("rg", this.inscribeRg);
+      data.append("idservice", this.inscribeService.idservice);
+      data.append("idformation", this.inscribeFormation.idformation);
+      axios(
+        process.env.VUE_APP_URL + "updateInscribeCustomers/" + this.inscribeID,
+        {
+          method: "POST",
+          data: data,
+        }
+      ).then((response) => {
+        this.$swal(response.data.msg, "", response.data.icon);
+        this.getInscribe();
+      });
+    },
+    saveEvent: function () {
+      let data = new FormData();
+      data.append("eventname", this.eventName);
+      data.append("eventdate", this.eventDate);
+      data.append("eventtime", this.eventTime);
+      data.append("eventaddress", JSON.stringify(this.eventAddress));
+      data.append("idinscribe", this.inscribeID);
+      if (this.crud == "c") {
+        axios(process.env.VUE_APP_URL + "createEventCustomers", {
+          method: "POST",
+          data: data,
+        }).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getEvent();
+        });
+      } else if (this.crud == "u") {
+        axios(
+          process.env.VUE_APP_URL + "updateEventCustomers/" + this.eventID,
+          {
+            method: "POST",
+            data: data,
+          }
+        ).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getEvent();
+        });
+      }
+    },
+    saveEngaged: function () {
+      let data = new FormData();
+      data.append("groom_name", this.engagedGroomName);
+      data.append("groom_address", JSON.stringify(this.engagedGroomAddress));
+      data.append("groom_phone", this.engagedGroomPhone);
+      data.append("groom_mobile", this.engagedGroomMobile);
+      data.append(
+        "groom_photo",
+        this.currentFileGroom
+          ? process.env.VUE_APP_UPLOAD + this.currentFileGroom.name
+          : this.engagedGroomPhoto
+      );
+      data.append("groom_cpf", this.engagedGroomCpf);
+      data.append("groom_rg", this.engagedGroomRg);
+      data.append(
+        "groom_birthdate",
+        FormataStringData(this.engagedGroomBirthdate)
+      );
+      data.append("groom_email", this.engagedGroomEmail);
+      data.append("groom_responsible_for", this.engagedGroomResponsibleFor);
+      data.append("bride_name", this.engagedBrideName);
+      data.append("bride_address", JSON.stringify(this.engagedBrideAddress));
+      data.append("bride_phone", this.engagedBridePhone);
+      data.append("bride_mobile", this.engagedBrideMobile);
+      data.append(
+        "bride_photo",
+        this.currentFileBride
+          ? process.env.VUE_APP_UPLOAD + this.currentFileBride.name
+          : this.engagedBridePhoto
+      );
+      data.append("bride_cpf", this.engagedBrideCpf);
+      data.append("bride_rg", this.engagedBrideRg);
+      data.append(
+        "bride_birthdate",
+        FormataStringData(this.engagedBrideBirthdate)
+      );
+      data.append("bride_email", this.engagedBrideEmail);
+      data.append("bride_responsible_for", this.engagedBrideResponsibleFor);
+      data.append("idinscribe", this.inscribeID);
+
+      if (this.crud == "c") {
+        axios(process.env.VUE_APP_URL + "createEngagedCustomers", {
+          method: "POST",
+          data: data,
+        }).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getEngaged();
+        });
+      } else if (this.crud == "u") {
+        axios(
+          process.env.VUE_APP_URL + "updateEngagedCustomers/" + this.engagedID,
+          {
+            method: "POST",
+            data: data,
+          }
+        ).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getEngaged();
+        });
+      }
+    },
+    saveCommitte: function () {
+      let data = new FormData();
+      data.append(
+        "committe_name",
+        JSON.stringify(this.graduationCommitteMember)
+      );
+      data.append("inscribe_idinscribe", this.inscribeID);
+      if (this.crud == "c") {
+        axios(process.env.VUE_APP_URL + "createCommitteCustomers", {
+          method: "POST",
+          data: data,
+        }).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getCommitte();
+        });
+      } else if (this.crud == "u") {
+        axios(
+          process.env.VUE_APP_URL +
+            "updateCommitteCustomers/" +
+            this.committeID,
+          {
+            method: "POST",
+            data: data,
+          }
+        ).then((response) => {
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getCommitte();
+        });
+      }
+    },
+    saveWeddingService: function(){
+      let data = new FormData()
+      data.append('companyname', this.weddingServiceCompanyName)
+      data.append('address', this.weddingServiceAddress)
+      data.append('phone', this.weddingServicePhone)
+      data.append('contactname', this.weddingServiceContactName)
+      data.append('engaged_idengaged', this.engagedID)
+      axios(process.env.VUE_APP_URL + 'createWeddingService', {
+        method: 'POST',
+        data: data
+      })
+      .then((response) => {
+        this.$swal(response.data.msg, "", response.data.icon)
+        this.weddingServices()
+      })
+    }
   },
 
   computed: {
-    ...mapGetters(['userNow'])
+    ...mapGetters(["userNow"]),
   },
 
-  created: function(){
-    if(this.$session.exists()){
-      this.setUserNow(this.$session.get('userData'))
+  created: function () {
+    if (this.$session.exists()) {
+      this.setUserNow(this.$session.get("userData"));
     }
-    this.getInscribe()
-    this.getServices()
-    this.getFormations()
-  }
+    this.getInscribe();
+    this.getServices();
+    this.getFormations();
+  },
 };
 </script>

@@ -199,7 +199,7 @@ export default {
       data.append(
         "photo",
         this.currentFile
-          ? 'http://localhost/toquedivino/api/assets/uploads/' + this.currentFile.name
+          ? process.env.VUE_APP_UPLOAD + this.currentFile.name
           : this.accountPhoto
       );
       this.loading = true
