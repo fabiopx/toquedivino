@@ -52,6 +52,18 @@ class Engaged extends Crud{
         return $this->create('engaged', $data);
     }
 
+    public function createWeddingServices(){
+        $data = array(
+            'companyname' => $_POST['companyname'],
+            'address' => $_POST['address'],
+            'phone' => $_POST['phone'],
+            'contactname' => $_POST['contactname'],
+            'engaged_idengaged' => $_POST['engaged_idengaged']
+        );
+
+        return $this->create('wedding_services', $data);
+    }
+
     public function readEngaged($where = null){
         if(!is_null($where)){
             return $this->ready('engaged', $where);
@@ -60,11 +72,11 @@ class Engaged extends Crud{
         }
     }
 
-    public function readWeedingServices($where = null){
+    public function readWeddingServices($where = null){
         if(!is_null($where)){
-            return $this->ready('engaged', $where);
+            return $this->ready('wedding_services', $where);
         } else{
-            return $this->ready('engaged');
+            return $this->ready('wedding_services');
         }
     }
 
@@ -95,7 +107,23 @@ class Engaged extends Crud{
         return $this->update('engaged', $where, $data);
     }
 
+    public function updateWeddingServices($where){
+        $data = array(
+            'companyname' => $_POST['companyname'],
+            'address' => $_POST['address'],
+            'phone' => $_POST['phone'],
+            'contactname' => $_POST['contactname'],
+            'engaged_idengaged' => $_POST['engaged_idengaged']
+        );
+
+        return $this->update('wedding_services',$where, $data);
+    }
+
     public function deleteEngaged($where){
         return $this->delete('engaged', $where);
+    }
+
+    public function deleteWeddingService($where){
+        return $this->delete('wedding_services', $where);
     }
 }

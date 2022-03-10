@@ -78,7 +78,7 @@ export default {
       {
         icon: "mdi-home",
         text: "Home",
-        link: "/customer",
+        link: "/customer/home",
       },
       {
         icon: "mdi-account",
@@ -97,7 +97,7 @@ export default {
       },
       {
         icon: "mdi-file-document-edit",
-        text: "Contrato",
+        text: "Orçamento",
         link: "/customer/agreement",
       },
     ],

@@ -87,7 +87,7 @@ export default {
         this.$session.set("userData", response.data.userNow);
         this.setUserNow(this.$session.get('userData'));
         this.getInscribeID()
-        this.$router.push("/customer");
+        this.$router.push("/customer/home");
       } else {
         this.alertLogin = response.data.alert;
         setInterval(() => {
