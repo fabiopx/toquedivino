@@ -17,10 +17,10 @@
             <v-tab @click="activeTabInscribe('events')">
               <v-icon>mdi-folder-clock</v-icon> Evento
             </v-tab>
-            <v-tab @click="activeTabInscribe('engaged')">
+            <v-tab v-show="isAgreement" @click="activeTabInscribe('engaged')">
               <v-icon>mdi-human-male-female</v-icon> Noivos
             </v-tab>
-            <v-tab @click="activeTabInscribe('committe')">
+            <v-tab v-show="isAgreement" @click="activeTabInscribe('committe')">
               <v-icon>mdi-school</v-icon> Comissão de formatura
             </v-tab>
           </v-tabs>
@@ -218,7 +218,7 @@
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
                             v-model="eventTime"
-                            label="Horário do Evento"
+                            label="Horário oficial do Evento"
                             prepend-icon="mdi-calendar-clock"
                             readonly
                             v-bind="attrs"
@@ -1760,13 +1760,14 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["userNow"]),
+    ...mapGetters(["userNow", "isAgreement"]),
   },
 
   created: function () {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
     }
+    (this.isAgreement) ? this.activeTabInscribe('inscribe') : this.activeTabInscribe('events')
     this.getInscribe();
     this.getServices();
     this.getFormations();

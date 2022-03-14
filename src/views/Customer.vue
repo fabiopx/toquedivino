@@ -113,13 +113,14 @@ export default {
   created: function () {
     if(this.$session.exists()){
       this.getInscribeID()
+      this.verifyIsAgreement()
     }
   },
 
   mounted() {},
 
   methods: {
-    ...mapActions(["setUserNow", "setInscribeID"]),
+    ...mapActions(["setUserNow", "setInscribeID", "setIsAgreement"]),
 
     logout: function () {
       this.setUserNow({
@@ -132,19 +133,20 @@ export default {
       this.$session.destroy();
       this.$router.push("/customer/login");
     },
-    getInscribeID: function () {
-			axios
-				.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
-				.then((response) => {
-					const resp = response.data;
-          this.setInscribeID(resp.idinscribe)
-          console.log(resp.idinscribe)
-				});
+    getInscribeID: async function () {
+      const response = await axios.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
+			const resp = response.data;
+      this.setInscribeID(resp.idinscribe)
 		},
+    verifyIsAgreement: async function(){
+      const response = await axios.get(process.env.VUE_APP_URL + "getAgreement/" + this.inscribeID)
+      const resp = response.data
+      (resp) ? this.setIsAgreement(true): this.setIsAgreement(false)
+    }
   },
 
   computed: {
-    ...mapGetters(['userNow']),
+    ...mapGetters(['userNow', "inscribeID", "isAgreement"]),
   },
 };
 </script>
