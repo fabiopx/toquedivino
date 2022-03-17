@@ -237,12 +237,54 @@
                     </v-col>
                   </v-row>
                   <v-row>
+                    <v-col>
+                      <v-btn
+                        @click="buscarEndereco = !buscarEndereco"
+                        depressed
+                        color="primary"
+                      >
+                        <v-icon>mdi-magnify</v-icon> Buscar endereço
+                      </v-btn>
+                      <v-tooltip v-model="tooltipEndereco" class="ml-3" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            v-show="!buscarEndereco"
+                            @click="tooltipEndereco = !tooltipEndereco"
+                            icon
+                          >
+                            <v-icon
+                              dark
+                              color="grey lighten-1"
+                              v-bind="attrs"
+                              v-on="on"
+                              >mdi-help-circle</v-icon
+                            >
+                          </v-btn>
+                        </template>
+                        <span
+                          >Digite o nome da rua (avenida, alameda, etc) e o
+                          número da residência para preencher automaticamente o
+                          formulário</span
+                        >
+                      </v-tooltip>
+                      <vuetify-google-autocomplete
+                        v-show="buscarEndereco"
+                        outlined
+                        class="mt-2"
+                        ref="address"
+                        id="map"
+                        placeholder="Digite o endereço"
+                        v-on:placechanged="getAddressData"
+                        country="br"
+                      ></vuetify-google-autocomplete>
+                    </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col cols="12" md="4" lg="2">
                       <v-text-field
                         label="CEP"
                         v-model="eventAddress.zipcode"
                         v-mask="maskCep"
-                        @blur="getCEP('eventAddress')"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="8" lg="6">
@@ -1055,6 +1097,8 @@ export default {
     maskMoney: "######.##",
     maskBirthdate: "##/##/####",
     maskCep: "#####-###",
+    buscarEndereco: false,
+    tooltipEndereco: false,
     services: [],
     formation: [],
     loadingInscribeFields: false,
@@ -1188,7 +1232,6 @@ export default {
       switch (tab) {
         case "events":
           this.tabInscribeTitle = "Dados do evento";
-          this.$refs.formEvents.reset();
           this.getEvent();
           break;
         case "inscribe":
@@ -1198,7 +1241,6 @@ export default {
           break;
         case "engaged":
           this.tabInscribeTitle = "Dados dos noivos";
-          this.$refs.formEngaged.reset();
           this.getEngaged();
           break;
         case "committe":
@@ -1289,9 +1331,9 @@ export default {
         return this.maskMobile;
       }
     },
-    is18: function (date){
-      if(getAge(date) < 18){
-        this.$swal('Responsável precisa ter mais que 18 anos')
+    is18: function (date) {
+      if (getAge(date) < 18) {
+        this.$swal("Responsável precisa ter mais que 18 anos");
       }
     },
     openUploadPhoto: function (profile) {
@@ -1405,6 +1447,22 @@ export default {
       this.weddingServicePhone = "";
       this.weddingServiceContactName = "";
       this.formWeddingServices = false;
+    },
+    getAddressData: function (addressData, placeResultData, id) {
+      this.inscribeAddress.street = addressData.route;
+      this.inscribeAddress.number = addressData.street_number
+        ? addressData.street_number
+        : "";
+      const address = placeResultData.formatted_address.split("-");
+      const neighborhood = address[1].split(",");
+      this.inscribeAddress.neighborhood = neighborhood[0];
+      this.inscribeAddress.state = addressData.administrative_area_level_1;
+      this.inscribeAddress.country = addressData.country;
+      this.inscribeAddress.city = addressData.administrative_area_level_2;
+      this.inscribeAddress.zipcode = addressData.postal_code
+        ? addressData.postal_code
+        : "";
+      this.buscarEndereco = false;
     },
     getCEP: function (obj) {
       var cep = this[obj].zipcode.replace(/\D/g, "");
@@ -1767,7 +1825,6 @@ export default {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
     }
-    (this.isAgreement) ? this.activeTabInscribe('inscribe') : this.activeTabInscribe('events')
     this.getInscribe();
     this.getServices();
     this.getFormations();
