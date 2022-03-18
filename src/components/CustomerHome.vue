@@ -301,7 +301,6 @@ export default {
     loadingData1: false,
     loadingData2: false,
     loadingActions: true,
-    isEvent: false,
     dialogEvents: false,
     eventEmpty: true,
     eventID: "",
@@ -330,42 +329,43 @@ export default {
     maskCep: "#####-###",
     buscarEndereco: false,
     tooltipEndereco: false,
+    isEvent: false
   }),
 
   methods: {
     ...mapActions(["setInscribeID", "setUserNow"]),
-    getInscribe: function () {
+    getInscribe: async function () {
       this.loadingData1 = true;
       this.loadingData2 = true;
-      axios
-        .get(
-          process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id
-        )
-        .then((response) => {
-          this.inscribe = response.data;
-          this.loadingData1 = false;
-          this.loadingData2 = false;
-        });
+      const response = await axios.get(
+        process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id
+      );
+      this.inscribe = response.data;
+      console.log(this.inscribe.idinscribe)
+      this.setInscribeID(this.inscribe.idinscribe)
+      this.loadingData1 = false;
+      this.loadingData2 = false;
     },
-    verifyEvent: function () {
-      axios
-        .get(process.env.VUE_APP_URL + "getEventCustomers/" + this.inscribeID)
-        .then((response) => {
-          const resp = response.data;
-          if (resp) {
-            this.isEvent = true;
-            this.eventID = resp.idevent;
-            this.eventName = resp.name;
-            this.eventDate = resp.date;
-            this.eventTime = resp.time;
-            this.eventAddress = resp.address;
-            this.eventEmpty = false;
-            this.loadingActions = false;
-          } else {
-            this.isEvent = false;
-            this.loadingActions = false;
-          }
-        });
+    verifyEvent: async function () {
+      this.loadingActions = true;
+      await this.getInscribe();
+      const response = await axios.get(
+        process.env.VUE_APP_URL + "getEventCustomers/" + this.inscribeID
+      );
+      const resp = response.data;
+      if (resp) {
+        this.isEvent = true;
+        this.eventID = resp.idevent;
+        this.eventName = resp.name;
+        this.eventDate = resp.date;
+        this.eventTime = resp.time;
+        this.eventAddress = resp.address;
+        this.eventEmpty = false;
+        this.loadingActions = false;
+      } else {
+        this.loadingActions = false;
+      }
+      console.log(this.isEvent)
     },
     getAddressData: function (addressData, placeResultData, id) {
       this.eventAddress.street = addressData.route;
@@ -406,6 +406,7 @@ export default {
         this.verifyEvent();
       });
     },
+
   },
 
   computed: {
@@ -415,9 +416,9 @@ export default {
   created: function () {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
+      this.verifyEvent();
     }
-    this.getInscribe();
-    this.verifyEvent();
+    
   },
 };
 </script>
