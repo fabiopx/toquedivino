@@ -1076,6 +1076,7 @@ function convertToMMDDYYYY(date) {
 
 export default {
   data: () => ({
+    apiURL: process.env.VUE_APP_URL,
     crud: "c",
     inputLoading: false,
     showTabInscribe: "inscribe",
@@ -1354,7 +1355,7 @@ export default {
         data.append("file", file);
 
         axios
-          .post(process.env.VUE_APP_URL + "uploadPhoto", data, {
+          .post(this.apiURL + "/api/uploadPhoto", data, {
             onUploadProgress: (event) => {
               const totalLength = event.lengthComputable
                 ? event.total
@@ -1503,14 +1504,14 @@ export default {
     },
     getServices: function () {
       this.loadingAgreementService = true;
-      axios.get(process.env.VUE_APP_URL + "getServices").then((response) => {
+      axios.get(this.apiURL + "/api/getServices").then((response) => {
         this.services = response.data;
         this.loadingAgreementService = false;
       });
     },
     getFormations: function () {
       this.loadingAgreementFormation = true;
-      axios.get(process.env.VUE_APP_URL + "getFormation").then((response) => {
+      axios.get(this.apiURL + "/api/getFormation").then((response) => {
         this.formation = response.data;
         this.loadingAgreementFormation = false;
       });
@@ -1519,7 +1520,7 @@ export default {
       this.loadingInscribeFields = true;
       axios
         .get(
-          process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id
+          this.apiURL + "/api/getInscribeCustomers/" + this.userNow.id
         )
         .then((response) => {
           const resp = response.data;
@@ -1544,7 +1545,7 @@ export default {
       this.loadingEventFields = true;
       this.loadingAgreementEvent = true;
       axios
-        .get(process.env.VUE_APP_URL + "getEventCustomers/" + this.inscribeID)
+        .get(this.apiURL + "/api/getEventCustomers/" + this.inscribeID)
         .then((response) => {
           const resp = response.data;
           if (resp) {
@@ -1567,7 +1568,7 @@ export default {
     getEngaged: async function () {
       this.loadingEngagedFields = true;
       const response = await axios.get(
-        process.env.VUE_APP_URL + "getEngagedCustomers/" + this.inscribeID
+        this.apiURL + "/api/getEngagedCustomers/" + this.inscribeID
       );
       const resp = response.data;
       if (resp) {
@@ -1610,7 +1611,7 @@ export default {
       this.loadingCommitteFields = true;
       axios
         .get(
-          process.env.VUE_APP_URL + "getCommitteCustomers/" + this.inscribeID
+          this.apiURL + "/api/getCommitteCustomers/" + this.inscribeID
         )
         .then((response) => {
           const resp = response.data;
@@ -1628,7 +1629,7 @@ export default {
     getWeddingServices: async function (id) {
       this.loadingWeddingServices = true;
       const response = await axios.get(
-        process.env.VUE_APP_URL + "getWeddingServices/" + id
+        this.apiURL + "/api/getWeddingServices/" + id
       );
       this.weddingServices = response.data;
       this.loadingWeddingServices = false;
@@ -1644,7 +1645,7 @@ export default {
       data.append("idservice", this.inscribeService.idservice);
       data.append("idformation", this.inscribeFormation.idformation);
       axios(
-        process.env.VUE_APP_URL + "updateInscribeCustomers/" + this.inscribeID,
+        this.apiURL + "/api/updateInscribeCustomers/" + this.inscribeID,
         {
           method: "POST",
           data: data,
@@ -1662,7 +1663,7 @@ export default {
       data.append("eventaddress", JSON.stringify(this.eventAddress));
       data.append("idinscribe", this.inscribeID);
       if (this.crud == "c") {
-        axios(process.env.VUE_APP_URL + "createEventCustomers", {
+        axios(this.apiURL + "/api/createEventCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1671,7 +1672,7 @@ export default {
         });
       } else if (this.crud == "u") {
         axios(
-          process.env.VUE_APP_URL + "updateEventCustomers/" + this.eventID,
+          this.apiURL + "/api/updateEventCustomers/" + this.eventID,
           {
             method: "POST",
             data: data,
@@ -1723,7 +1724,7 @@ export default {
       data.append("idinscribe", this.inscribeID);
 
       if (this.crud == "c") {
-        axios(process.env.VUE_APP_URL + "createEngagedCustomers", {
+        axios(this.apiURL + "/api/createEngagedCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1732,7 +1733,7 @@ export default {
         });
       } else if (this.crud == "u") {
         axios(
-          process.env.VUE_APP_URL + "updateEngagedCustomers/" + this.engagedID,
+          this.apiURL + "/api/updateEngagedCustomers/" + this.engagedID,
           {
             method: "POST",
             data: data,
@@ -1751,7 +1752,7 @@ export default {
       );
       data.append("inscribe_idinscribe", this.inscribeID);
       if (this.crud == "c") {
-        axios(process.env.VUE_APP_URL + "createCommitteCustomers", {
+        axios(this.apiURL + "/api/createCommitteCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1760,8 +1761,8 @@ export default {
         });
       } else if (this.crud == "u") {
         axios(
-          process.env.VUE_APP_URL +
-            "updateCommitteCustomers/" +
+          this.apiURL +
+            "/api/updateCommitteCustomers/" +
             this.committeID,
           {
             method: "POST",
@@ -1781,7 +1782,7 @@ export default {
       data.append("contactname", this.weddingServiceContactName);
       data.append("engaged_idengaged", this.engagedID);
       if (this.crud == "c") {
-        axios(process.env.VUE_APP_URL + "createWeddingServices", {
+        axios(this.apiURL + "/api/createWeddingServices", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1791,8 +1792,8 @@ export default {
         });
       } else if (this.crud == "u") {
         axios(
-          process.env.VUE_APP_URL +
-            "updateWeddingServices/" +
+          this.apiURL +
+            "/api/updateWeddingServices/" +
             this.weddingServiceID,
           {
             method: "POST",
@@ -1808,7 +1809,7 @@ export default {
     deleteWeddingService: function (id) {
       this.loading = true;
       axios
-        .get(process.env.VUE_APP_URL + "deleteWeddingService/" + id)
+        .get(this.apiURL + "/api/deleteWeddingService/" + id)
         .then((response) => {
           this.loading = false;
           this.$swal(response.data.msg, "", response.data.icon);

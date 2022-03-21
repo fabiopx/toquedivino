@@ -112,6 +112,7 @@ import { mapGetters, mapActions } from "vuex";
 var imgPath = "assets/";
 export default {
   data: () => ({
+    apiURL: process.env.VUE_APP_URL,
     userData: {},
     accountName: "",
     accountEmail: "",
@@ -135,7 +136,7 @@ export default {
     getAccount: function () {
       this.loadingAccountFields = true;
       axios
-        .get(process.env.VUE_APP_URL + "getUsers/" + this.userNow.id)
+        .get(this.apiURL + "/user/get/" + this.userNow.id)
         .then((response) => {
           this.accountName = response.data.name;
           this.accountEmail = response.data.email;
@@ -162,7 +163,7 @@ export default {
         data.append("file", file);
 
         axios
-          .post(process.env.VUE_APP_URL + "uploadPhoto", data, {
+          .post(this.apiURL + "/uploads/uploadPhoto", data, {
             onUploadProgress: (event) => {
               const totalLength = event.lengthComputable
                 ? event.total
@@ -211,8 +212,8 @@ export default {
       );
       this.loading = true
       axios(
-        process.env.VUE_APP_URL +
-          "updateUserCustomers/" +
+        this.apiURL +
+          "/user/updateCustomer/" +
           this.userNow.id,
         {
           method: "POST",

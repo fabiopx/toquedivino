@@ -106,9 +106,10 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
+    apiURL: process.env.VUE_APP_URL,
     formation: {},
     service: {},
-    events:{},
+    events:{ address: {}},
     formationChecked: false,
     serviceChecked: false,
     eventChecked: false,
@@ -141,19 +142,19 @@ export default {
     },
     getInscribe: async function () {
       const response = await axios.get(
-        process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id
+        this.apiURL + "/api/getInscribeCustomers/" + this.userNow.id
       );
       this.formation = response.data.formation;
       this.service = response.data.service;
       this.getServiceTax();
     },
     getEvent: async function(){
-      const response = await axios.get(process.env.VUE_APP_URL + "getEventCustomers/" + this.inscribeID);
+      const response = await axios.get(this.apiURL + "/api/getEventCustomers/" + this.inscribeID);
       this.events = response.data;
       this.getDistance();
     },
     getServiceTax: async function(){
-      const response = await axios.get(process.env.VUE_APP_URL + "getServices/" + this.service.idservice);
+      const response = await axios.get(this.apiURL + "/api/getServices/" + this.service.idservice);
       console.log(response.data.taxas)
       this.tax = response.data.taxas
     },
@@ -178,5 +179,8 @@ export default {
   computed: {
     ...mapGetters(["inscribeID", "userNow", "isAgreement"]),
   },
+  isBudget: async function(){
+    const response = await axios.get(this.apiURL + "/api/isBudget/")
+  }
 };
 </script>

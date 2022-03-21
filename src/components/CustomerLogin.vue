@@ -58,6 +58,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
+    apiURL: process.env.VUE_APP_URL,
     showPassword: false,
     alertLogin: { status: false, msg: "" },
     inputLoading: false,
@@ -77,7 +78,7 @@ export default {
       let data = new FormData();
       data.append("email", this.loginData.email);
       data.append("password", this.loginData.password);
-      const response = await axios(process.env.VUE_APP_URL + "loginCustomer", {
+      const response = await axios(this.apiURL + "/user/loginCustomer", {
         method: "POST",
         data: data,
       });

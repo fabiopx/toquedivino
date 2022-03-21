@@ -70,7 +70,7 @@ export default {
   name: "customer",
 
   data: () => ({
-    urlApi: process.env.VUE_APP_URL,
+    apiURL: process.env.VUE_APP_URL,
     drawer: false,
     colorToolbar: "grey darken-4",
     inscribe: null,
@@ -134,12 +134,12 @@ export default {
       this.$router.push("/customer/login");
     },
     getInscribeID: async function () {
-      const response = await axios.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
+      const response = await axios.get(this.apiURL + "/api/getInscribeCustomers/" + this.userNow.id)
 			const resp = response.data;
       this.setInscribeID(resp.idinscribe)
 		},
     verifyIsAgreement: async function(){
-      const response = await axios.get(process.env.VUE_APP_URL + "getAgreement/" + this.inscribeID)
+      const response = await axios.get(this.apiURL + "/api/getAgreement/" + this.inscribeID)
       const resp = response.data
       (resp) ? this.setIsAgreement(true): this.setIsAgreement(false)
     }
