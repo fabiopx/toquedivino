@@ -339,7 +339,7 @@ export default {
       this.loadingData1 = true;
       this.loadingData2 = true;
       const response = await axios.get(
-        this.apiURL + "/api/getInscribeCustomers/" + this.userNow.id
+        this.apiURL + "/inscribe/getCustomers/" + this.userNow.id
       );
       this.inscribe = response.data;
       console.log(this.inscribe.idinscribe)
@@ -351,7 +351,7 @@ export default {
       this.loadingActions = true;
       await this.getInscribe();
       const response = await axios.get(
-        this.apiURL + "/api/getEventCustomers/" + this.inscribeID
+        this.apiURL + "/events/getCustomers/" + this.inscribeID
       );
       const resp = response.data;
       if (resp) {
@@ -398,7 +398,7 @@ export default {
       data.append("eventtime", this.eventTime);
       data.append("eventaddress", JSON.stringify(this.eventAddress));
       data.append("idinscribe", this.inscribeID);
-      axios(this.apiURL + "/api/createEventCustomers", {
+      axios(this.apiURL + "/events/createCustomers", {
         method: "POST",
         data: data,
       }).then((response) => {
