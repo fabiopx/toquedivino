@@ -5,7 +5,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS'); 
 header('Access-Control-Allow-Headers: X-Requested-With, content-type, X-Token, x-token');
 
-class Music extends CI_Controller{
+class Musics extends CI_Controller{
     public function index(){
         echo json_encode('API :: Toque Divino :: Music');
     }

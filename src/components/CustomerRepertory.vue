@@ -15,11 +15,7 @@
               <v-toolbar-title>Gerenciar repertório</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-toolbar-items>
-                <v-btn
-                  text
-                  v-show="!startedRepertory"
-                  @click="startRepertory()"
-                >
+                <v-btn text v-show="!startedRepertory" @click="startRepertory()">
                   <v-icon>mdi-play</v-icon> iniciar
                 </v-btn>
               </v-toolbar-items>
@@ -29,14 +25,9 @@
                 <v-row>
                   <v-col></v-col>
                   <v-col class="align-center">
-                    <v-img
-                      src="../assets/undraw_media_player_ylg8.svg"
-                      max-width="600"
-                    >
+                    <v-img src="../assets/undraw_media_player_ylg8.svg" max-width="600">
                     </v-img>
-                    <span class="text-h4 ma-4"
-                      >Ainda não há repertório inicializado</span
-                    >
+                    <span class="text-h4 ma-4">Ainda não há repertório inicializado</span>
                   </v-col>
                   <v-col></v-col>
                 </v-row>
@@ -47,10 +38,7 @@
                 <v-row>
                   <v-col>
                     <v-form ref="formAddRepertoryItem">
-                      <v-skeleton-loader
-                        v-if="loadingSelectFields"
-                        type="text@2, button"
-                      >
+                      <v-skeleton-loader v-if="loadingSelectFields" type="text@2, button">
                       </v-skeleton-loader>
                       <v-autocomplete
                         v-model="repertoryMusic"
@@ -115,7 +103,9 @@
                         <v-icon>mdi-plus</v-icon> Adicionar Música
                       </v-btn>
                     </v-form>
-                    <v-alert v-if="alert" color="red" border="left" dark>Selecione uma música e um momento</v-alert>
+                    <v-alert v-if="alert" color="red" border="left" dark
+                      >Selecione uma música e um momento</v-alert
+                    >
                   </v-col>
                 </v-row>
                 <v-row>
@@ -179,9 +169,7 @@
                                   icon
                                   color="red"
                                   dark
-                                  @click="
-                                    delRepertoryItem(item.id, item.sequence)
-                                  "
+                                  @click="delRepertoryItem(item.id, item.sequence)"
                                 >
                                   <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -200,9 +188,13 @@
       </v-row>
     </v-container>
     <v-container v-show="!isAgreement">
-      <p class="white--text">Esta função estará liberarda após a assinatura do contrato.</p>
+      <p class="white--text">
+        Esta função estará liberarda após a assinatura do contrato.
+      </p>
       <p>
-        <v-btn depressed color="grey darken-4" dark class="mr-2">Faça seu orçamento</v-btn>
+        <v-btn depressed color="grey darken-4" dark class="mr-2"
+          >Faça seu orçamento</v-btn
+        >
         <v-btn depressed color="grey darken-4" dark>Revise seu cadastro</v-btn>
       </p>
     </v-container>
@@ -216,6 +208,7 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
+    apiURL: process.env.VUE_APP_URL,
     loadingSelectFields: false,
     loadingListRepertory: false,
     alert: false,
@@ -240,7 +233,7 @@ export default {
     startRepertory: function () {
       let data = new FormData();
       data.append("idinscribe", this.inscribeID);
-      axios(process.env.VUE_APP_URL + "startRepertory", {
+      axios(this.apiURL + "/repertories/start", {
         method: "POST",
         data: data,
       }).then((response) => {
@@ -251,9 +244,7 @@ export default {
     getRepertory: function () {
       this.loadingListRepertory = true;
       axios
-        .get(
-          process.env.VUE_APP_URL + "getRepertoryCustomers/" + this.inscribeID
-        )
+        .get(this.apiURL + "/repertories/getCustomers/" + this.inscribeID)
         .then((response) => {
           const resp = response.data;
           if (resp) {
@@ -277,7 +268,7 @@ export default {
         // console.log("Music: " + this.repertoryMusic.idmusic)
         // console.log("Repertory: " + this.repertoryID)
         // console.log("Sequence: " + this.repertorySequence)
-        axios(process.env.VUE_APP_URL + "addRepertoryItem", {
+        axios(this.apiURL + "/repertories/addItem", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -292,9 +283,7 @@ export default {
     },
     delRepertoryItem: function (id, sequence) {
       axios
-        .get(
-          process.env.VUE_APP_URL + "deleteRepertoryItem/" + id + "/" + sequence
-        )
+        .get(this.apiURL + "/repertories/deleteItem/" + id + "/" + sequence)
         .then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
           this.getMaxSequence(this.repertoryID);
@@ -306,7 +295,7 @@ export default {
       let data = new FormData();
       data.append("repertory", repertory);
       data.append("sequence", sequence);
-      axios(process.env.VUE_APP_URL + "sequenceUp/" + id, {
+      axios(this.apiURL + "/repertories/sequenceUp/" + id, {
         method: "POST",
         data: data,
       }).then((response) => {
@@ -319,7 +308,7 @@ export default {
       let data = new FormData();
       data.append("repertory", repertory);
       data.append("sequence", sequence);
-      axios(process.env.VUE_APP_URL + "sequenceDown/" + id, {
+      axios(this.apiURL + "/repertories/sequenceDown/" + id, {
         method: "POST",
         data: data,
       }).then((response) => {
@@ -329,7 +318,7 @@ export default {
     },
     getRepertoryID: async function () {
       let response = await axios.get(
-        process.env.VUE_APP_URL + "getRepertoryCustomersID/" + this.inscribeID
+        this.apiURL + "/repertories/getCustomersID/" + this.inscribeID
       );
       this.repertoryID = response.data;
       await this.getMaxSequence(response.data);
@@ -338,7 +327,7 @@ export default {
     getMoments: function () {
       this.loadingSelectFields = true;
       axios
-        .get(process.env.VUE_APP_URL + "getMomentsCustomers")
+        .get(this.apiURL + "/repertories/getMomentsCustomers")
         .then((response) => {
           this.moments = response.data;
           this.loadingSelectFields = false;
@@ -347,16 +336,14 @@ export default {
     getMusic: function (id) {
       this.loadingSelectFields = true;
       axios
-        .get(process.env.VUE_APP_URL + "getMusicCustomers/")
+        .get(this.apiURL + "/repertories/getMusicCustomers/")
         .then((response) => {
           this.music = response.data;
           this.loadingSelectFields = false;
         });
     },
     getMaxSequence: async function (id) {
-      let response = await axios.get(
-        process.env.VUE_APP_URL + "getMaxSequence/" + id
-      );
+      let response = await axios.get(this.apiURL + "/repertories/getMaxSequence/" + id);
       this.maxSequence = response.data;
       // console.log("Max Sequence:" + response.data)
     },

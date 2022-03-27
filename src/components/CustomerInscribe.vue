@@ -32,11 +32,7 @@
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text v-show="showTabInscribe == 'inscribe'">
-              <v-skeleton-loader
-                v-if="loadingInscribeFields"
-                type="text@5"
-                loading
-              >
+              <v-skeleton-loader v-if="loadingInscribeFields" type="text@5" loading>
               </v-skeleton-loader>
               <v-form v-show="!loadingInscribeFields" ref="formInscribe">
                 <v-container>
@@ -66,17 +62,11 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="8" lg="6">
-                      <v-text-field
-                        label="Logradouro"
-                        v-model="inscribeAddress.street"
-                      >
+                      <v-text-field label="Logradouro" v-model="inscribeAddress.street">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        label="Número"
-                        v-model="inscribeAddress.number"
-                      >
+                      <v-text-field label="Número" v-model="inscribeAddress.number">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
@@ -89,48 +79,30 @@
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="Bairro"
-                        v-model="inscribeAddress.neighborhood"
-                      >
+                      <v-text-field label="Bairro" v-model="inscribeAddress.neighborhood">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="Cidade"
-                        v-model="inscribeAddress.city"
-                      >
+                      <v-text-field label="Cidade" v-model="inscribeAddress.city">
                       </v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="Estado"
-                        v-model="inscribeAddress.state"
-                      >
+                      <v-text-field label="Estado" v-model="inscribeAddress.state">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="País"
-                        v-model="inscribeAddress.country"
-                      >
+                      <v-text-field label="País" v-model="inscribeAddress.country">
                       </v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="CPF"
-                        v-model="inscribeCpf"
-                      ></v-text-field>
+                      <v-text-field label="CPF" v-model="inscribeCpf"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="RG"
-                        v-model="inscribeRg"
-                      ></v-text-field>
+                      <v-text-field label="RG" v-model="inscribeRg"></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -161,20 +133,13 @@
               </v-form>
             </v-card-text>
             <v-card-text v-show="showTabInscribe == 'events'">
-              <v-skeleton-loader
-                v-if="loadingEventFields"
-                type="text@4"
-                loading
-              >
+              <v-skeleton-loader v-if="loadingEventFields" type="text@4" loading>
               </v-skeleton-loader>
               <v-form v-show="!loadingEventFields" ref="formEvents">
                 <v-container>
                   <v-row>
                     <v-col cols="12" lg="4">
-                      <v-text-field
-                        label="Evento"
-                        v-model="eventName"
-                      ></v-text-field>
+                      <v-text-field label="Evento" v-model="eventName"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="4">
                       <v-menu
@@ -196,10 +161,7 @@
                           >
                           </v-text-field>
                         </template>
-                        <v-date-picker
-                          v-model="eventDate"
-                          @input="pickDateEvent = false"
-                        >
+                        <v-date-picker v-model="eventDate" @input="pickDateEvent = false">
                         </v-date-picker>
                       </v-menu>
                     </v-col>
@@ -252,19 +214,14 @@
                             @click="tooltipEndereco = !tooltipEndereco"
                             icon
                           >
-                            <v-icon
-                              dark
-                              color="grey lighten-1"
-                              v-bind="attrs"
-                              v-on="on"
+                            <v-icon dark color="grey lighten-1" v-bind="attrs" v-on="on"
                               >mdi-help-circle</v-icon
                             >
                           </v-btn>
                         </template>
                         <span
-                          >Digite o nome da rua (avenida, alameda, etc) e o
-                          número da residência para preencher automaticamente o
-                          formulário</span
+                          >Digite o nome da rua (avenida, alameda, etc) e o número da
+                          residência para preencher automaticamente o formulário</span
                         >
                       </v-tooltip>
                       <vuetify-google-autocomplete
@@ -288,33 +245,21 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="8" lg="6">
-                      <v-text-field
-                        label="Logradouro"
-                        v-model="eventAddress.street"
-                      >
+                      <v-text-field label="Logradouro" v-model="eventAddress.street">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        label="Número"
-                        v-model="eventAddress.number"
-                      >
+                      <v-text-field label="Número" v-model="eventAddress.number">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        label="Complemento"
-                        v-model="eventAddress.complement"
-                      >
+                      <v-text-field label="Complemento" v-model="eventAddress.complement">
                       </v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field
-                        label="Bairro"
-                        v-model="eventAddress.neighborhood"
-                      >
+                      <v-text-field label="Bairro" v-model="eventAddress.neighborhood">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
@@ -359,11 +304,7 @@
                         @click="openUploadPhoto('engagedBrideUploadPhoto')"
                       >
                         <v-img
-                          :src="
-                            engagedBrideBlob
-                              ? engagedBrideBlob
-                              : engagedBridePhoto
-                          "
+                          :src="engagedBrideBlob ? engagedBrideBlob : engagedBridePhoto"
                         ></v-img>
                       </v-avatar>
                     </v-col>
@@ -539,11 +480,7 @@
                         @click="openUploadPhoto('engagedGroomUploadPhoto')"
                       >
                         <v-img
-                          :src="
-                            engagedGroomBlob
-                              ? engagedGroomBlob
-                              : engagedGroomPhoto
-                          "
+                          :src="engagedGroomBlob ? engagedGroomBlob : engagedGroomPhoto"
                         ></v-img>
                       </v-avatar>
                     </v-col>
@@ -708,14 +645,10 @@
                 <v-container v-if="selectEngaged">
                   <v-row>
                     <v-col>
-                      <v-sheet
-                        elevation="1"
-                        color="grey lighten-4"
-                        class="pa-4"
-                      >
+                      <v-sheet elevation="1" color="grey lighten-4" class="pa-4">
                         <h2>Serviços do casamento</h2>
-                        Saber os demais serviços do casamento nos ajuda a
-                        alinhar horários, posição da banda etc.
+                        Saber os demais serviços do casamento nos ajuda a alinhar
+                        horários, posição da banda etc.
                         <v-btn
                           text
                           color="grey darken-4"
@@ -745,15 +678,11 @@
                                 <v-btn
                                   icon
                                   @click="
-                                    deleteWeddingService(
-                                      wservice.idwedding_services
-                                    )
+                                    deleteWeddingService(wservice.idwedding_services)
                                   "
                                   ><v-icon>mdi-delete</v-icon></v-btn
                                 >
-                                <v-btn
-                                  icon
-                                  @click="formWeddingServicesEdit(wservice)"
+                                <v-btn icon @click="formWeddingServicesEdit(wservice)"
                                   ><v-icon>mdi-pencil</v-icon></v-btn
                                 >
                               </v-list-item-action>
@@ -773,17 +702,13 @@
                 persistent
               >
                 <v-card>
-                  <v-toolbar color="primary" dark>
-                    Upload de foto da noiva
-                  </v-toolbar>
+                  <v-toolbar color="primary" dark> Upload de foto da noiva </v-toolbar>
                   <v-card-text>
                     <v-file-input
                       v-model="currentFileBride"
                       label="Foto"
                       chips
-                      @change="
-                        readEngagedPhoto(currentFileBride, 'engagedBrideBlob')
-                      "
+                      @change="readEngagedPhoto(currentFileBride, 'engagedBrideBlob')"
                     >
                     </v-file-input>
                     <v-progress-linear
@@ -828,17 +753,13 @@
                 persistent
               >
                 <v-card>
-                  <v-toolbar color="primary" dark>
-                    Upload de foto do noivo
-                  </v-toolbar>
+                  <v-toolbar color="primary" dark> Upload de foto do noivo </v-toolbar>
                   <v-card-text>
                     <v-file-input
                       v-model="currentFileGroom"
                       label="Foto"
                       chips
-                      @change="
-                        readEngagedPhoto(currentFileGroom, 'engagedGroomBlob')
-                      "
+                      @change="readEngagedPhoto(currentFileGroom, 'engagedGroomBlob')"
                     >
                     </v-file-input>
                     <v-progress-linear
@@ -921,9 +842,7 @@
                             @click="saveWeddingService()"
                             >Salvar</v-btn
                           >
-                          <v-btn
-                            color="secondary"
-                            @click="closeFormWeddingServices()"
+                          <v-btn color="secondary" @click="closeFormWeddingServices()"
                             >Fechar</v-btn
                           >
                         </v-col>
@@ -938,10 +857,7 @@
                 v-if="loadingCommitteFields"
                 type="text, button"
               ></v-skeleton-loader>
-              <v-form
-                v-show="!loadingCommitteFields"
-                ref="formGraduationCommitte"
-              >
+              <v-form v-show="!loadingCommitteFields" ref="formGraduationCommitte">
                 <v-row>
                   <v-col>
                     <v-text-field
@@ -986,49 +902,25 @@
             </v-card-text>
             <v-card-actions v-show="showTabInscribe == 'inscribe'">
               <v-spacer></v-spacer>
-              <v-btn
-                depressed
-                dark
-                large
-                color="grey darken-4"
-                @click="saveInscribe()"
-              >
+              <v-btn depressed dark large color="grey darken-4" @click="saveInscribe()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'events'">
               <v-spacer></v-spacer>
-              <v-btn
-                depressed
-                dark
-                large
-                color="grey darken-4"
-                @click="saveEvent()"
-              >
+              <v-btn depressed dark large color="grey darken-4" @click="saveEvent()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'engaged'">
               <v-spacer></v-spacer>
-              <v-btn
-                depressed
-                dark
-                large
-                color="grey darken-4"
-                @click="saveEngaged()"
-              >
+              <v-btn depressed dark large color="grey darken-4" @click="saveEngaged()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
             <v-card-actions v-show="showTabInscribe == 'committe'">
               <v-spacer></v-spacer>
-              <v-btn
-                depressed
-                dark
-                large
-                color="grey darken-4"
-                @click="saveCommitte()"
-              >
+              <v-btn depressed dark large color="grey darken-4" @click="saveCommitte()">
                 <v-icon>mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
@@ -1166,13 +1058,9 @@ export default {
     },
     engagedBrideAddressRules: [(v) => !!v || "Este campo é requerido"],
     engagedBridePhone: "",
-    engagedBridePhoneRules: [
-      (v) => !!v || "O campo TELEFONE DA NOIVA é requerido",
-    ],
+    engagedBridePhoneRules: [(v) => !!v || "O campo TELEFONE DA NOIVA é requerido"],
     engagedBrideMobile: "",
-    engagedBrideMobileRules: [
-      (v) => !!v || "O campo CELULAR DA NOIVA é requerido",
-    ],
+    engagedBrideMobileRules: [(v) => !!v || "O campo CELULAR DA NOIVA é requerido"],
     engagedBrideCpf: "",
     engagedBrideRg: "",
     engagedBrideBirthdate: "",
@@ -1194,13 +1082,9 @@ export default {
     },
     engagedGroomAddressRules: [(v) => !!v || "Este campo é requerido"],
     engagedGroomPhone: "",
-    engagedGroomPhoneRules: [
-      (v) => !!v || "O campo TELEFONE DO NOIVO é requerido",
-    ],
+    engagedGroomPhoneRules: [(v) => !!v || "O campo TELEFONE DO NOIVO é requerido"],
     engagedGroomMobile: "",
-    engagedGroomMobileRules: [
-      (v) => !!v || "O campo CELULAR DO NOIVO é requerido",
-    ],
+    engagedGroomMobileRules: [(v) => !!v || "O campo CELULAR DO NOIVO é requerido"],
     engagedGroomCpf: "",
     engagedGroomRg: "",
     engagedGroomBirthdate: "",
@@ -1321,8 +1205,7 @@ export default {
       this.engagedGroomCpf = "";
       (this.engagedGroomRg = ""), (this.engagedGroomBirthdate = "");
       this.engagedGroomEmail = "";
-      (this.engagedGroomResponsibleFor = false),
-        (this.graduationCommitteName = "");
+      (this.engagedGroomResponsibleFor = false), (this.graduationCommitteName = "");
       this.graduationCommitteMember = [];
     },
     maskTel: function (phone) {
@@ -1355,19 +1238,15 @@ export default {
         data.append("file", file);
 
         axios
-          .post(this.apiURL + "/api/uploadPhoto", data, {
+          .post(this.apiURL + "/uploads/uploadPhoto", data, {
             onUploadProgress: (event) => {
               const totalLength = event.lengthComputable
                 ? event.total
                 : event.target.getResponseHeader("content-length") ||
-                  event.target.getResponseHeader(
-                    "x-decompressed-content-length"
-                  );
+                  event.target.getResponseHeader("x-decompressed-content-length");
               console.log("onUploadProgress", totalLength);
               if (totalLength !== null) {
-                this.progressUpload = Math.round(
-                  (event.loaded * 100) / totalLength
-                );
+                this.progressUpload = Math.round((event.loaded * 100) / totalLength);
               }
             },
           })
@@ -1504,14 +1383,14 @@ export default {
     },
     getServices: function () {
       this.loadingAgreementService = true;
-      axios.get(this.apiURL + "/api/getServices").then((response) => {
+      axios.get(this.apiURL + "/services/get").then((response) => {
         this.services = response.data;
         this.loadingAgreementService = false;
       });
     },
     getFormations: function () {
       this.loadingAgreementFormation = true;
-      axios.get(this.apiURL + "/api/getFormation").then((response) => {
+      axios.get(this.apiURL + "/formations/get").then((response) => {
         this.formation = response.data;
         this.loadingAgreementFormation = false;
       });
@@ -1519,9 +1398,7 @@ export default {
     getInscribe: function () {
       this.loadingInscribeFields = true;
       axios
-        .get(
-          this.apiURL + "/api/getInscribeCustomers/" + this.userNow.id
-        )
+        .get(this.apiURL + "/inscribes/getCustomers/" + this.userNow.id)
         .then((response) => {
           const resp = response.data;
           if (resp) {
@@ -1545,7 +1422,7 @@ export default {
       this.loadingEventFields = true;
       this.loadingAgreementEvent = true;
       axios
-        .get(this.apiURL + "/api/getEventCustomers/" + this.inscribeID)
+        .get(this.apiURL + "/events/getCustomers/" + this.inscribeID)
         .then((response) => {
           const resp = response.data;
           if (resp) {
@@ -1568,7 +1445,7 @@ export default {
     getEngaged: async function () {
       this.loadingEngagedFields = true;
       const response = await axios.get(
-        this.apiURL + "/api/getEngagedCustomers/" + this.inscribeID
+        this.apiURL + "/engaged/getCustomers/" + this.inscribeID
       );
       const resp = response.data;
       if (resp) {
@@ -1610,9 +1487,7 @@ export default {
     getCommitte: function () {
       this.loadingCommitteFields = true;
       axios
-        .get(
-          this.apiURL + "/api/getCommitteCustomers/" + this.inscribeID
-        )
+        .get(this.apiURL + "/committe/getCustomers/" + this.inscribeID)
         .then((response) => {
           const resp = response.data;
           if (resp) {
@@ -1628,9 +1503,7 @@ export default {
     },
     getWeddingServices: async function (id) {
       this.loadingWeddingServices = true;
-      const response = await axios.get(
-        this.apiURL + "/api/getWeddingServices/" + id
-      );
+      const response = await axios.get(this.apiURL + "/engaged/getWeddingServices/" + id);
       this.weddingServices = response.data;
       this.loadingWeddingServices = false;
     },
@@ -1644,13 +1517,10 @@ export default {
       data.append("rg", this.inscribeRg);
       data.append("idservice", this.inscribeService.idservice);
       data.append("idformation", this.inscribeFormation.idformation);
-      axios(
-        this.apiURL + "/api/updateInscribeCustomers/" + this.inscribeID,
-        {
-          method: "POST",
-          data: data,
-        }
-      ).then((response) => {
+      axios(this.apiURL + "/inscribe/updateCustomers/" + this.inscribeID, {
+        method: "POST",
+        data: data,
+      }).then((response) => {
         this.$swal(response.data.msg, "", response.data.icon);
         this.getInscribe();
       });
@@ -1663,7 +1533,7 @@ export default {
       data.append("eventaddress", JSON.stringify(this.eventAddress));
       data.append("idinscribe", this.inscribeID);
       if (this.crud == "c") {
-        axios(this.apiURL + "/api/createEventCustomers", {
+        axios(this.apiURL + "/events/createCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1671,13 +1541,10 @@ export default {
           this.getEvent();
         });
       } else if (this.crud == "u") {
-        axios(
-          this.apiURL + "/api/updateEventCustomers/" + this.eventID,
-          {
-            method: "POST",
-            data: data,
-          }
-        ).then((response) => {
+        axios(this.apiURL + "/events/updateCustomers/" + this.eventID, {
+          method: "POST",
+          data: data,
+        }).then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
           this.getEvent();
         });
@@ -1697,10 +1564,7 @@ export default {
       );
       data.append("groom_cpf", this.engagedGroomCpf);
       data.append("groom_rg", this.engagedGroomRg);
-      data.append(
-        "groom_birthdate",
-        FormataStringData(this.engagedGroomBirthdate)
-      );
+      data.append("groom_birthdate", FormataStringData(this.engagedGroomBirthdate));
       data.append("groom_email", this.engagedGroomEmail);
       data.append("groom_responsible_for", this.engagedGroomResponsibleFor);
       data.append("bride_name", this.engagedBrideName);
@@ -1715,16 +1579,13 @@ export default {
       );
       data.append("bride_cpf", this.engagedBrideCpf);
       data.append("bride_rg", this.engagedBrideRg);
-      data.append(
-        "bride_birthdate",
-        FormataStringData(this.engagedBrideBirthdate)
-      );
+      data.append("bride_birthdate", FormataStringData(this.engagedBrideBirthdate));
       data.append("bride_email", this.engagedBrideEmail);
       data.append("bride_responsible_for", this.engagedBrideResponsibleFor);
       data.append("idinscribe", this.inscribeID);
 
       if (this.crud == "c") {
-        axios(this.apiURL + "/api/createEngagedCustomers", {
+        axios(this.apiURL + "/engaged/createCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1732,13 +1593,10 @@ export default {
           this.getEngaged();
         });
       } else if (this.crud == "u") {
-        axios(
-          this.apiURL + "/api/updateEngagedCustomers/" + this.engagedID,
-          {
-            method: "POST",
-            data: data,
-          }
-        ).then((response) => {
+        axios(this.apiURL + "/engaged/updateCustomers/" + this.engagedID, {
+          method: "POST",
+          data: data,
+        }).then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
           this.getEngaged();
         });
@@ -1746,13 +1604,10 @@ export default {
     },
     saveCommitte: function () {
       let data = new FormData();
-      data.append(
-        "committe_name",
-        JSON.stringify(this.graduationCommitteMember)
-      );
+      data.append("committe_name", JSON.stringify(this.graduationCommitteMember));
       data.append("inscribe_idinscribe", this.inscribeID);
       if (this.crud == "c") {
-        axios(this.apiURL + "/api/createCommitteCustomers", {
+        axios(this.apiURL + "/committe/createCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1760,15 +1615,10 @@ export default {
           this.getCommitte();
         });
       } else if (this.crud == "u") {
-        axios(
-          this.apiURL +
-            "/api/updateCommitteCustomers/" +
-            this.committeID,
-          {
-            method: "POST",
-            data: data,
-          }
-        ).then((response) => {
+        axios(this.apiURL + "/committe/updateCustomers/" + this.committeID, {
+          method: "POST",
+          data: data,
+        }).then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
           this.getCommitte();
         });
@@ -1782,7 +1632,7 @@ export default {
       data.append("contactname", this.weddingServiceContactName);
       data.append("engaged_idengaged", this.engagedID);
       if (this.crud == "c") {
-        axios(this.apiURL + "/api/createWeddingServices", {
+        axios(this.apiURL + "/engaged/createWeddingServices", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1791,15 +1641,10 @@ export default {
           this.getWeddingServices(this.engagedID);
         });
       } else if (this.crud == "u") {
-        axios(
-          this.apiURL +
-            "/api/updateWeddingServices/" +
-            this.weddingServiceID,
-          {
-            method: "POST",
-            data: data,
-          }
-        ).then((response) => {
+        axios(this.apiURL + "/engaged/updateWeddingServices/" + this.weddingServiceID, {
+          method: "POST",
+          data: data,
+        }).then((response) => {
           this.closeFormWeddingServices();
           this.$swal(response.data.msg, "", response.data.icon);
           this.getWeddingServices(this.engagedID);
@@ -1808,13 +1653,11 @@ export default {
     },
     deleteWeddingService: function (id) {
       this.loading = true;
-      axios
-        .get(this.apiURL + "/api/deleteWeddingService/" + id)
-        .then((response) => {
-          this.loading = false;
-          this.$swal(response.data.msg, "", response.data.icon);
-          this.getWeddingServices(this.engagedID);
-        });
+      axios.get(this.apiURL + "/engaged/deleteWeddingService/" + id).then((response) => {
+        this.loading = false;
+        this.$swal(response.data.msg, "", response.data.icon);
+        this.getWeddingServices(this.engagedID);
+      });
     },
   },
 

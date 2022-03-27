@@ -98,7 +98,7 @@ export default {
     },
     getInscribeID: function () {
 			axios
-				.get(process.env.VUE_APP_URL + "getInscribeCustomers/" + this.userNow.id)
+				.get(this.apiURL + "/inscribes/getCustomers/" + this.userNow.id)
 				.then((response) => {
 					const resp = response.data;
           this.setInscribeID(resp.idinscribe)

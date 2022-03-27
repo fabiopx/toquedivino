@@ -44,5 +44,6 @@
             "state": "opened",
             "noItemText": "The project has no merge requests"
         }
-    ]
+    ],
+    "vue3snippets.enable-compile-vue-file-on-did-save-code": false
 }

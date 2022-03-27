@@ -339,7 +339,7 @@ export default {
       this.loadingData1 = true;
       this.loadingData2 = true;
       const response = await axios.get(
-        this.apiURL + "/inscribe/getCustomers/" + this.userNow.id
+        this.apiURL + "/inscribes/getCustomers/" + this.userNow.id
       );
       this.inscribe = response.data;
       console.log(this.inscribe.idinscribe)
