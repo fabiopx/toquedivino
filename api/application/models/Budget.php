@@ -20,7 +20,7 @@ class Budget extends Crud{
         $this->addition = $this->input->post('addition');
         $this->expires_in = $this->input->post('expires_in');
         $this->status = $this->input->post('status');
-        $this->inscribe_idinscribe = $this->input->post('idinscribe');
+        $this->inscribe_idinscribe = $this->input->post('inscribe_idinscribe');
         $data = $this;
 
         return $this->create('budget', $data);

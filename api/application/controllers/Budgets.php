@@ -17,12 +17,23 @@ class Budgets extends CI_Controller{
         } else{
             $resp = array('msg' => "Não foi possível gerar o orçamento", 'icon' => 'error');
         }
+
+        echo json_encode($resp);
+    }
+
+    public function get($id = null){
+        $this->load->model('budget');
+        $where = is_null($id) ? $id : array('idbudget' => $id);
+        $budget = $this->budget->readBudget($where);
+        $resp = is_null($id) ? $budget->result() : $budget->row();
+        echo json_encode($resp);
+
     }
 
     public function isBudget($id){
         $this->load->model('budget');
         $where = array('inscribe_idinscribe' => $id);
         $budget = $this->budget->readBudget($where);
-        return (is_null($budget)) ? false : true;
+        echo json_encode(!empty($budget->result()));
     }
 }
