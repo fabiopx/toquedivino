@@ -4,7 +4,7 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar color="grey darken-4" dark> Orçamento </v-toolbar>
+            <v-toolbar color="grey darken-4" dark> Orçamento em <span class="ml-2">{{new Date() | moment("DD/MM/YYYY")}}</span></v-toolbar>
             <v-card-text>
               <v-sheet class="pa-4" outlined elevation="1">
                 <v-banner single-line>
@@ -179,22 +179,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-function adicionaZero(numero) {
-  if (numero <= 9) return "0" + numero;
-  else return numero;
-}
-
-function dateNow() {
-  var date = new Date();
-  return (
-    date.getFullYear() +
-    "-" +
-    adicionaZero(date.getMonth() + 1).toString() +
-    "-" +
-    adicionaZero(date.getDate().toString())
-  );
-}
-
 export default {
   data: () => ({
     apiURL: process.env.VUE_APP_URL,
@@ -214,6 +198,25 @@ export default {
   }),
   methods: {
     ...mapActions(["setInscribeID", "setUserNow"]),
+    adicionaZero: function (numero) {
+      if (numero <= 9) return "0" + numero;
+      else return numero;
+    },
+    dateNow: function () {
+      var date = new Date();
+      return (
+        date.getFullYear() +
+        "-" +
+        this.adicionaZero(date.getMonth() + 1).toString() +
+        "-" +
+        this.adicionaZero(date.getDate().toString())
+      );
+    },
+    addDays: function (days) {
+      date = new Date();
+      date.setDate(date.getDate() + days);
+      return date.getDate();
+    },
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
     },

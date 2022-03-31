@@ -23,6 +23,7 @@ Vue.use(VuetifyGoogleAutocomplete, {
   apiKey: 'AIzaSyCDfEljw9VcN0G4EiejU2QZDBwrINuNdTQ'
 })
 Vue.use(VueSweetalert2)
+Vue.use(require('vue-moment'))
 
 Vue.config.productionTip = false
 
