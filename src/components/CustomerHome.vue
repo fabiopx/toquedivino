@@ -8,10 +8,7 @@
         <v-card-text>
           <p class="ml-5">Confira abaixo os dados que reunimos até aqui.</p>
           <v-sheet v-show="!loadingData2" class="ml-4 mt-4" outlined>
-            <v-skeleton-loader
-              v-show="loadingData1"
-              type="sentences"
-            ></v-skeleton-loader>
+            <v-skeleton-loader v-show="loadingData1" type="sentences"></v-skeleton-loader>
             <v-list v-show="!loadingData1">
               <v-list-item>
                 <v-list-item-content>
@@ -28,10 +25,7 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-            <v-skeleton-loader
-              v-show="loadingData2"
-              type="article"
-            ></v-skeleton-loader>
+            <v-skeleton-loader v-show="loadingData2" type="article"></v-skeleton-loader>
             <v-list>
               <v-list-item>
                 <v-list-item-content>
@@ -50,10 +44,8 @@
                           ? ", " + inscribe.address.complement + ","
                           : ""
                       }}
-                      {{ inscribe.address.neighborhood }},
-                      {{ inscribe.address.city }} -
-                      {{ inscribe.address.state }},
-                      {{ inscribe.address.zipcode }},
+                      {{ inscribe.address.neighborhood }}, {{ inscribe.address.city }} -
+                      {{ inscribe.address.state }}, {{ inscribe.address.zipcode }},
                       {{ inscribe.address.country }}
                     </p>
                   </v-list-item-subtitle>
@@ -62,12 +54,12 @@
             </v-list>
           </v-sheet>
           <p class="ml-5 mt-3" v-show="!isEvent">
-            O próximo passo é oferecer maiores informações sobre o evento e
-            realizar o orçamento.
+            O próximo passo é oferecer maiores informações sobre o evento e realizar o
+            orçamento.
           </p>
           <p class="ml-5 mt-3" v-show="isEvent">
-            Seu evento foi cadastrado como sucesso! Agora você pode realizar o
-            orçamento Toque Divino.
+            Seu evento foi cadastrado como sucesso! Agora você pode realizar o orçamento
+            Toque Divino.
           </p>
         </v-card-text>
         <v-card-actions>
@@ -107,9 +99,7 @@
       >
         <v-card>
           <v-toolbar color="grey darken-4" dark>
-            <v-btn @click="closeDialogEvents" icon dark
-              ><v-icon>mdi-close</v-icon></v-btn
-            >
+            <v-btn @click="closeDialogEvents" icon dark><v-icon>mdi-close</v-icon></v-btn>
             <v-toolbar-title>Cadastrar evento</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
@@ -123,10 +113,7 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" lg="4">
-                    <v-text-field
-                      v-model="eventName"
-                      label="Evento"
-                    ></v-text-field>
+                    <v-text-field v-model="eventName" label="Evento"></v-text-field>
                   </v-col>
                   <v-col cols="12" md="6" lg="4">
                     <v-menu
@@ -148,10 +135,7 @@
                         >
                         </v-text-field>
                       </template>
-                      <v-date-picker
-                        v-model="eventDate"
-                        @input="pickDateEvent = false"
-                      >
+                      <v-date-picker v-model="eventDate" @input="pickDateEvent = false">
                       </v-date-picker>
                     </v-menu>
                   </v-col>
@@ -204,19 +188,14 @@
                           @click="tooltipEndereco = !tooltipEndereco"
                           icon
                         >
-                          <v-icon
-                            dark
-                            color="grey lighten-1"
-                            v-bind="attrs"
-                            v-on="on"
+                          <v-icon dark color="grey lighten-1" v-bind="attrs" v-on="on"
                             >mdi-help-circle</v-icon
                           >
                         </v-btn>
                       </template>
                       <span
-                        >Digite o nome da rua (avenida, alameda, etc) e o número
-                        da residência para preencher automaticamente o
-                        formulário</span
+                        >Digite o nome da rua (avenida, alameda, etc) e o número da
+                        residência para preencher automaticamente o formulário</span
                       >
                     </v-tooltip>
                     <vuetify-google-autocomplete
@@ -240,10 +219,7 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="8" lg="6">
-                    <v-text-field
-                      label="Logradouro"
-                      v-model="eventAddress.street"
-                    >
+                    <v-text-field label="Logradouro" v-model="eventAddress.street">
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" md="6" lg="2">
@@ -251,19 +227,13 @@
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" md="6" lg="2">
-                    <v-text-field
-                      label="Complemento"
-                      v-model="eventAddress.complement"
-                    >
+                    <v-text-field label="Complemento" v-model="eventAddress.complement">
                     </v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12" md="6">
-                    <v-text-field
-                      label="Bairro"
-                      v-model="eventAddress.neighborhood"
-                    >
+                    <v-text-field label="Bairro" v-model="eventAddress.neighborhood">
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" md="6">
@@ -330,7 +300,7 @@ export default {
     maskCep: "#####-###",
     buscarEndereco: false,
     tooltipEndereco: false,
-    isEvent: false
+    isEvent: false,
   }),
 
   methods: {
@@ -342,8 +312,8 @@ export default {
         this.apiURL + "/inscribes/getCustomers/" + this.userNow.id
       );
       this.inscribe = response.data;
-      console.log(this.inscribe.idinscribe)
-      this.setInscribeID(this.inscribe.idinscribe)
+      // console.log(this.inscribe.idinscribe)
+      this.setInscribeID(this.inscribe.idinscribe);
       this.loadingData1 = false;
       this.loadingData2 = false;
     },
@@ -366,7 +336,7 @@ export default {
       } else {
         this.loadingActions = false;
       }
-      console.log(this.isEvent)
+      // console.log(this.isEvent);
     },
     getAddressData: function (addressData, placeResultData, id) {
       this.eventAddress.street = addressData.route;
@@ -379,9 +349,7 @@ export default {
       this.eventAddress.state = addressData.administrative_area_level_1;
       this.eventAddress.country = addressData.country;
       this.eventAddress.city = addressData.administrative_area_level_2;
-      this.eventAddress.zipcode = addressData.postal_code
-        ? addressData.postal_code
-        : "";
+      this.eventAddress.zipcode = addressData.postal_code ? addressData.postal_code : "";
       this.buscarEndereco = false;
     },
     openDialogEvents: function () {
@@ -407,7 +375,6 @@ export default {
         this.verifyEvent();
       });
     },
-
   },
 
   computed: {
@@ -419,7 +386,6 @@ export default {
       this.setUserNow(this.$session.get("userData"));
       this.verifyEvent();
     }
-    
   },
 };
 </script>

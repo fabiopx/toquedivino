@@ -4,7 +4,7 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar color="grey darken-4" dark> Orçamento em <span class="ml-2">{{new Date() | moment("DD/MM/YYYY")}}</span></v-toolbar>
+            <v-toolbar color="grey darken-4" dark> Orçamento</v-toolbar>
             <v-card-text>
               <v-sheet class="pa-4" outlined elevation="1">
                 <v-banner single-line>
@@ -45,8 +45,7 @@
                     <p>
                       Origem: Americana-SP<br />
                       Destino:
-                      {{ events.address.city + "-" + events.address.state
-                      }}<br />
+                      {{ events.address.city + "-" + events.address.state }}<br />
                       Distância total (ida e volta):
                       {{ (distance / 1000).toFixed("2") }} km
                     </p>
@@ -57,9 +56,7 @@
                           currency: "BRL",
                         })
                       }}
-                      <span v-if="t.type == '2'" class="ml-2">{{
-                        t.multiplied
-                      }}</span>
+                      <span v-if="t.type == '2'" class="ml-2">{{ t.multiplied }}</span>
                     </v-chip>
                   </div>
                   <v-skeleton-loader
@@ -74,12 +71,13 @@
                     class="mt-2"
                     >Total:
                     {{
-                      parseFloat(
-                        multipliedTaxValue.toFixed("2")
-                      ).toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })
+                      parseFloat(multipliedTaxValue.toFixed("2")).toLocaleString(
+                        "pt-BR",
+                        {
+                          style: "currency",
+                          currency: "BRL",
+                        }
+                      )
                     }}</v-chip
                   >
                   <template v-slot:actions>
@@ -93,9 +91,7 @@
                       <v-icon v-show="!serviceChecked"
                         >mdi-checkbox-blank-circle-outline</v-icon
                       >
-                      <v-icon v-show="serviceChecked"
-                        >mdi-checkbox-marked-circle</v-icon
-                      >
+                      <v-icon v-show="serviceChecked">mdi-checkbox-marked-circle</v-icon>
                       <span class="ml-2">Confirmar</span>
                     </v-btn>
                   </template>
@@ -108,12 +104,10 @@
                     Endereço: {{ events.address.street }},
                     {{ events.address.number }}
                     {{
-                      events.address.complement
-                        ? ", " + events.address.complement
-                        : ""
+                      events.address.complement ? ", " + events.address.complement : ""
                     }}
-                    {{ events.address.neigborhood }},
-                    {{ events.address.city }} - {{ events.address.state }},
+                    {{ events.address.neigborhood }}, {{ events.address.city }} -
+                    {{ events.address.state }},
                     {{ events.address.zipcode }}
                   </p>
                   <template v-slot:actions>
@@ -127,14 +121,16 @@
                       <v-icon v-show="!eventChecked"
                         >mdi-checkbox-blank-circle-outline</v-icon
                       >
-                      <v-icon v-show="eventChecked"
-                        >mdi-checkbox-marked-circle</v-icon
-                      >
+                      <v-icon v-show="eventChecked">mdi-checkbox-marked-circle</v-icon>
                       <span class="ml-2">Confirmar</span>
                     </v-btn>
                   </template>
                 </v-banner>
                 <v-banner>
+                  <v-skeleton-loader
+                    v-show="loadingSomaBudget"
+                    type="text"
+                  ></v-skeleton-loader>
                   <b class="text-uppercase"
                     >Total:
                     {{
@@ -195,6 +191,7 @@ export default {
     tax: [],
     multipliedTaxValue: 0,
     loadingTotalTax: true,
+    loadingSomaBudget: false,
   }),
   methods: {
     ...mapActions(["setInscribeID", "setUserNow"]),
@@ -281,7 +278,7 @@ export default {
             travelMode: "DRIVING",
           })
           .then((response) => {
-            console.log(response.rows[0].elements[0].distance.value * 2);
+            // console.log(response.rows[0].elements[0].distance.value * 2);
             resolve(response.rows[0].elements[0].distance.value * 2);
           })
           .catch((error) => {
@@ -306,15 +303,14 @@ export default {
         this.apiURL + "/budgets/isBudget/" + this.inscribeID
       );
       this.isBudget = response.data;
-      console.log(response.data);
     },
-    saveBudget: async function () {
+    createBudget: async function () {
       var data = new FormData();
-      data.append("date", dateNow());
+      data.append("date", this.$moment().format("YYYY-MM-DD"));
       data.append("value", this.budgetSoma);
       data.append("discount", null);
       data.append("addition", null);
-      data.append("expires_in", null);
+      data.append("expires_in", this.$moment().add(15, "days").format("YYYY/MM/DD"));
       data.append("status", 0);
       data.append("inscribe_idinscribe", this.inscribeID);
       const response = await axios({
@@ -323,9 +319,15 @@ export default {
         data: data,
       });
       this.$swal(response.data.msg, "", response.data.icon);
+      this.verifyBudget();
+      this.getBudget();
     },
     getBudget: function () {
-      axios.get(this.apiURL + "/budgets/get");
+      this.loadingSomaBudget = true;
+      axios.get(this.apiURL + "/budgets/get/" + this.inscribeID).then((response) => {
+        this.budgetSoma = response.data.value ? response.data.value : 0;
+        this.loadingSomaBudget = false;
+      });
     },
   },
   created: function () {
@@ -335,6 +337,7 @@ export default {
       this.getInscribe();
       this.calculateTaxValue();
       this.verifyBudget();
+      this.getBudget();
     }
   },
   computed: {
