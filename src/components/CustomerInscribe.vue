@@ -17,10 +17,10 @@
             <v-tab @click="activeTabInscribe('events')">
               <v-icon>mdi-folder-clock</v-icon> Evento
             </v-tab>
-            <v-tab v-show="isAgreement" @click="activeTabInscribe('engaged')">
+            <v-tab @click="activeTabInscribe('engaged')">
               <v-icon>mdi-human-male-female</v-icon> Noivos
             </v-tab>
-            <v-tab v-show="isAgreement" @click="activeTabInscribe('committe')">
+            <v-tab @click="activeTabInscribe('committe')">
               <v-icon>mdi-school</v-icon> Comissão de formatura
             </v-tab>
           </v-tabs>
