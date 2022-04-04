@@ -57,7 +57,7 @@
             O próximo passo é oferecer maiores informações sobre o evento e realizar o
             orçamento.
           </p>
-          <p class="ml-5 mt-3" v-show="isEvent">
+          <p class="ml-5 mt-3" v-show="isEvent" v-if="!isBudget">
             Seu evento foi cadastrado como sucesso! Agora você pode realizar o orçamento
             Toque Divino.
           </p>
@@ -70,7 +70,7 @@
           ></v-skeleton-loader>
           <v-btn
             v-show="!loadingActions"
-            v-if="isEvent"
+            v-if="!isBudget"
             color="red darken-4"
             depressed
             dark
@@ -81,7 +81,7 @@
           >
           <v-btn
             v-show="!loadingActions"
-            v-else
+            v-if="!isEvent"
             color="red darken-4"
             depressed
             dark
@@ -301,6 +301,7 @@ export default {
     buscarEndereco: false,
     tooltipEndereco: false,
     isEvent: false,
+    isBudget: false,
   }),
 
   methods: {
@@ -337,6 +338,15 @@ export default {
         this.loadingActions = false;
       }
       // console.log(this.isEvent);
+    },
+    verifyBudget: async function () {
+      this.loadingActions = true;
+      const response = await axios.get(
+        this.apiURL + "/budgets/isBudget/" + this.inscribeID
+      );
+      this.isBudget = response.data;
+      console.log(response.data);
+      this.loadingActions = false;
     },
     getAddressData: function (addressData, placeResultData, id) {
       this.eventAddress.street = addressData.route;
@@ -385,6 +395,7 @@ export default {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
       this.verifyEvent();
+      this.verifyBudget();
     }
   },
 };

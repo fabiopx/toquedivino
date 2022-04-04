@@ -7,144 +7,192 @@
             <v-toolbar color="grey darken-4" dark> Orçamento</v-toolbar>
             <v-card-text>
               <v-sheet class="pa-4" outlined elevation="1">
-                <v-banner single-line>
-                  <h3>Formação</h3>
-                  <p class="font-italic">{{ formation.name }}</p>
-                  <p>{{ formation.description }}</p>
-                  <v-chip color="grey darken-4" dark>{{
-                    parseFloat(formation.price).toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })
-                  }}</v-chip>
-                  <template v-slot:actions>
-                    <v-btn
-                      v-show="!isBudget"
-                      depressed
-                      dark
-                      color="grey darken-4"
-                      @click="checkedFormation(), addFormation()"
+                <v-simple-table>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <v-skeleton-loader
+                          v-show="loadingDatas"
+                          type="article"
+                        ></v-skeleton-loader>
+                        <div v-show="!loadingDatas">
+                          <h3>Formação</h3>
+                          <div class="font-italic">{{ formation.name }}</div>
+                          <div class="pa-3 mb-3 rounded grey lighten-4">
+                            {{ formation.description }}
+                          </div>
+                          <v-chip class="mb-2" color="grey darken-4" dark
+                            >(+)
+                            {{
+                              parseFloat(formation.price).toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })
+                            }}</v-chip
+                          >
+                        </div>
+                      </td>
+                      <td>
+                        <v-switch
+                          v-model="formationChecked"
+                          v-show="!isBudget"
+                          inset
+                          color="grey darken-4"
+                          @change="addFormation()"
+                        ></v-switch>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <v-skeleton-loader
+                          v-show="loadingDatas"
+                          type="article"
+                        ></v-skeleton-loader>
+                        <div v-show="!loadingDatas">
+                          <h3>Serviço</h3>
+                          <div class="font-italic">{{ service.name }}</div>
+                          <div class="mb-3 pa-3 rounded grey lighten-4">
+                            {{ service.description }}
+                          </div>
+                          <div
+                            class="pa-3 grey lighten-4"
+                            v-show="tax"
+                            v-for="t in tax"
+                            :key="t.idtax"
+                          >
+                            <h4>Taxa: {{ t.name }}</h4>
+                            <p>{{ t.description }}</p>
+                            <p>
+                              Origem: Americana-SP<br />
+                              Destino:
+                              {{ events.address.city + "-" + events.address.state }}<br />
+                              Distância total (ida e volta):
+                              {{ (distance / 1000).toFixed("2") }} km
+                            </p>
+                            <v-chip color="grey darken-4" dark
+                              >{{
+                                parseFloat(t.value).toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })
+                              }}
+                              x
+                              <span v-if="t.type == '2'" class="ml-2"
+                                >{{ (distance / 1000).toFixed("2") }} km</span
+                              >
+                            </v-chip>
+                          </div>
+                          <v-skeleton-loader
+                            v-show="loadingTotalTax"
+                            type="chip"
+                            class="mt-2"
+                          ></v-skeleton-loader>
+                          <v-chip
+                            v-show="!loadingTotalTax"
+                            color="grey darken-4"
+                            dark
+                            class="mt-2 mb-2"
+                            >(+)
+                            {{
+                              parseFloat(multipliedTaxValue.toFixed("2")).toLocaleString(
+                                "pt-BR",
+                                {
+                                  style: "currency",
+                                  currency: "BRL",
+                                }
+                              )
+                            }}</v-chip
+                          >
+                        </div>
+                      </td>
+                      <td>
+                        <v-switch
+                          v-model="serviceChecked"
+                          v-show="!isBudget"
+                          inset
+                          color="grey darken-4"
+                          @change="addTax()"
+                        >
+                        </v-switch>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <v-skeleton-loader
+                          v-show="loadingDatas"
+                          type="article"
+                        ></v-skeleton-loader>
+                        <div v-show="!loadingDatas">
+                          <h3>Evento</h3>
+                          <div>Data: {{ $moment(events.date).format("DD/MM/YYYY") }}</div>
+                          <div>Horário: {{ events.time }}</div>
+                          <div>
+                            Endereço: {{ events.address.street }},
+                            {{ events.address.number }}
+                            {{
+                              events.address.complement
+                                ? ", " + events.address.complement
+                                : ""
+                            }}
+                            {{ events.address.neigborhood }}, {{ events.address.city }} -
+                            {{ events.address.state }},
+                            {{ events.address.zipcode }}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <v-switch
+                          v-model="eventChecked"
+                          v-show="!isBudget"
+                          inset
+                          color="grey darken-4"
+                        >
+                        </v-switch>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <v-skeleton-loader
+                          v-show="loadingSomaBudget"
+                          type="text"
+                        ></v-skeleton-loader>
+                        <v-chip v-show="!loadingSomaBudget" class="grey darken-4" dark>
+                          <b class="text-uppercase">
+                            (=)
+                            {{
+                              parseFloat(budgetSoma).toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })
+                            }}</b
+                          >
+                        </v-chip>
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+                <div
+                  class="mt-3 pa-3 red darken-4 white--text rounded"
+                  v-show="!loadingSomaBudget"
+                  v-if="isBudget"
+                >
+                  Orçamento válido até
+                  {{ $moment(budget.expires_in).format("DD/MM/YYYY") }}
+                  <span class="ml-4"
+                    >Status do orçamento:
+                    <span v-if="budget.status == 0"
+                      >Iniciado: aguardando validação da Equipe Toque Divino</span
                     >
-                      <v-icon v-show="!formationChecked"
-                        >mdi-checkbox-blank-circle-outline</v-icon
-                      >
-                      <v-icon v-show="formationChecked"
-                        >mdi-checkbox-marked-circle</v-icon
-                      >
-                      <span class="ml-2">Confirmar</span>
-                    </v-btn>
-                  </template>
-                </v-banner>
-                <v-banner single-line>
-                  <h3>Serviço</h3>
-                  <p class="font-italic">{{ service.name }}</p>
-                  <p>{{ service.description }}</p>
-                  <div v-show="tax" v-for="t in tax" :key="t.idtax">
-                    <h4>Taxa: {{ t.name }}</h4>
-                    <p>{{ t.description }}</p>
-                    <p>
-                      Origem: Americana-SP<br />
-                      Destino:
-                      {{ events.address.city + "-" + events.address.state }}<br />
-                      Distância total (ida e volta):
-                      {{ (distance / 1000).toFixed("2") }} km
-                    </p>
-                    <v-chip color="grey darken-4" dark
-                      >{{
-                        parseFloat(t.value).toLocaleString("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        })
-                      }}
-                      <span v-if="t.type == '2'" class="ml-2">{{ t.multiplied }}</span>
-                    </v-chip>
-                  </div>
-                  <v-skeleton-loader
-                    v-show="loadingTotalTax"
-                    type="chip"
-                    class="mt-2"
-                  ></v-skeleton-loader>
-                  <v-chip
-                    v-show="!loadingTotalTax"
-                    color="grey darken-4"
-                    dark
-                    class="mt-2"
-                    >Total:
-                    {{
-                      parseFloat(multipliedTaxValue.toFixed("2")).toLocaleString(
-                        "pt-BR",
-                        {
-                          style: "currency",
-                          currency: "BRL",
-                        }
-                      )
-                    }}</v-chip
-                  >
-                  <template v-slot:actions>
-                    <v-btn
-                      v-show="!isBudget"
-                      depressed
-                      dark
-                      color="grey darken-4"
-                      @click="checkedService(), addTax()"
-                    >
-                      <v-icon v-show="!serviceChecked"
-                        >mdi-checkbox-blank-circle-outline</v-icon
-                      >
-                      <v-icon v-show="serviceChecked">mdi-checkbox-marked-circle</v-icon>
-                      <span class="ml-2">Confirmar</span>
-                    </v-btn>
-                  </template>
-                </v-banner>
-                <v-banner single-line>
-                  <h3>Evento</h3>
-                  <p>Data: {{ events.date }}</p>
-                  <p>Horário: {{ events.time }}</p>
-                  <p>
-                    Endereço: {{ events.address.street }},
-                    {{ events.address.number }}
-                    {{
-                      events.address.complement ? ", " + events.address.complement : ""
-                    }}
-                    {{ events.address.neigborhood }}, {{ events.address.city }} -
-                    {{ events.address.state }},
-                    {{ events.address.zipcode }}
-                  </p>
-                  <template v-slot:actions>
-                    <v-btn
-                      v-show="!isBudget"
-                      depressed
-                      dark
-                      color="grey darken-4"
-                      @click="checkedEvent()"
-                    >
-                      <v-icon v-show="!eventChecked"
-                        >mdi-checkbox-blank-circle-outline</v-icon
-                      >
-                      <v-icon v-show="eventChecked">mdi-checkbox-marked-circle</v-icon>
-                      <span class="ml-2">Confirmar</span>
-                    </v-btn>
-                  </template>
-                </v-banner>
-                <v-banner>
-                  <v-skeleton-loader
-                    v-show="loadingSomaBudget"
-                    type="text"
-                  ></v-skeleton-loader>
-                  <b class="text-uppercase"
-                    >Total:
-                    {{
-                      budgetSoma.toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })
-                    }}</b
-                  >
-                </v-banner>
+                    <span v-if="budget.status == 1">Validado</span>
+                    <span v-if="budget.status == 2">Finalizado</span>
+                    <span v-if="budget.status == 3">Expirado</span>
+                    <span v-if="budget.status == 4">Cancelado</span>
+                  </span>
+                </div>
               </v-sheet>
             </v-card-text>
             <v-card-actions>
-              <div class="ml-3">
+              <div class="ml-3" v-show="!loadingDatas">
                 <v-btn
                   v-show="!isBudget"
                   color="red darken-4"
@@ -184,36 +232,20 @@ export default {
     formationChecked: false,
     serviceChecked: false,
     eventChecked: false,
+    budget: "",
     budgetItems: [],
     budgetSoma: 0,
     isBudget: false,
     distance: "",
     tax: [],
     multipliedTaxValue: 0,
+    loadingDatas: false,
     loadingTotalTax: true,
     loadingSomaBudget: false,
   }),
   methods: {
     ...mapActions(["setInscribeID", "setUserNow"]),
-    adicionaZero: function (numero) {
-      if (numero <= 9) return "0" + numero;
-      else return numero;
-    },
-    dateNow: function () {
-      var date = new Date();
-      return (
-        date.getFullYear() +
-        "-" +
-        this.adicionaZero(date.getMonth() + 1).toString() +
-        "-" +
-        this.adicionaZero(date.getDate().toString())
-      );
-    },
-    addDays: function (days) {
-      date = new Date();
-      date.setDate(date.getDate() + days);
-      return date.getDate();
-    },
+
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
     },
@@ -230,15 +262,6 @@ export default {
         ? this.somaBudget(this.multipliedTaxValue)
         : this.subtractBudget(this.multipliedTaxValue);
     },
-    checkedFormation: function () {
-      this.formationChecked = !this.formationChecked;
-    },
-    checkedService: function () {
-      this.serviceChecked = !this.serviceChecked;
-    },
-    checkedEvent: function () {
-      this.eventChecked = !this.eventChecked;
-    },
     verifyAllChecked: function () {
       if (this.formationChecked && this.serviceChecked && this.eventChecked) {
         this.createBudget();
@@ -247,19 +270,23 @@ export default {
       }
     },
     getInscribe: async function () {
+      this.loadingDatas = true;
       const response = await axios.get(
         this.apiURL + "/inscribes/getCustomers/" + this.userNow.id
       );
       this.formation = response.data.formation;
       this.service = response.data.service;
       await this.getServiceTax();
+      this.loadingDatas = false;
     },
     getEvent: async function () {
+      this.loadingDatas = true;
       const response = await axios.get(
         this.apiURL + "/events/getCustomers/" + this.inscribeID
       );
       this.events = response.data;
       this.distance = await this.getDistance();
+      this.loadingDatas = false;
     },
     getServiceTax: async function () {
       const response = await axios.get(
@@ -325,7 +352,8 @@ export default {
     getBudget: function () {
       this.loadingSomaBudget = true;
       axios.get(this.apiURL + "/budgets/get/" + this.inscribeID).then((response) => {
-        this.budgetSoma = response.data.value ? response.data.value : 0;
+        this.budgetSoma = response.data ? response.data.value : 0;
+        this.budget = response.data;
         this.loadingSomaBudget = false;
       });
     },
@@ -342,6 +370,11 @@ export default {
   },
   computed: {
     ...mapGetters(["inscribeID", "userNow", "isAgreement"]),
+  },
+  formationChecked: function () {
+    this.formationChecked
+      ? this.somaBudget(this.formation.price)
+      : this.subtractBudget(this.formation.price);
   },
 };
 </script>

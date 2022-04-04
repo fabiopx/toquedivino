@@ -20,7 +20,7 @@ Vue.use(VueSession)
 //   bind: true
 // })
 Vue.use(VuetifyGoogleAutocomplete, {
-  apiKey: 'AIzaSyCDfEljw9VcN0G4EiejU2QZDBwrINuNdTQ'
+  apiKey: process.env.VUE_APP_API_KEY
 })
 Vue.use(VueSweetalert2)
 Vue.use(require('vue-moment'))
