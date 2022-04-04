@@ -181,7 +181,7 @@
                   <span class="ml-4"
                     >Status do orçamento:
                     <span v-if="budget.status == 0"
-                      >Iniciado: aguardando validação da Equipe Toque Divino</span
+                      >Iniciado (aguardando validação da Equipe Toque Divino)</span
                     >
                     <span v-if="budget.status == 1">Validado</span>
                     <span v-if="budget.status == 2">Finalizado</span>
@@ -235,7 +235,6 @@ export default {
     budget: "",
     budgetItems: [],
     budgetSoma: 0,
-    isBudget: false,
     distance: "",
     tax: [],
     multipliedTaxValue: 0,
@@ -325,12 +324,7 @@ export default {
         this.loadingTotalTax = false;
       }, 1000);
     },
-    verifyBudget: async function () {
-      const response = await axios.get(
-        this.apiURL + "/budgets/isBudget/" + this.inscribeID
-      );
-      this.isBudget = response.data;
-    },
+    
     createBudget: async function () {
       var data = new FormData();
       data.append("date", this.$moment().format("YYYY-MM-DD"));
@@ -364,12 +358,11 @@ export default {
       this.getEvent();
       this.getInscribe();
       this.calculateTaxValue();
-      this.verifyBudget();
       this.getBudget();
     }
   },
   computed: {
-    ...mapGetters(["inscribeID", "userNow", "isAgreement"]),
+    ...mapGetters(["inscribeID", "userNow", "isAgreement", "isBudget"]),
   },
   formationChecked: function () {
     this.formationChecked

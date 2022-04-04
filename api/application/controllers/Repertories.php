@@ -71,7 +71,8 @@ class Repertories extends CI_Controller{
     public function getCustomersID($id){
         $this->load->model('repertory');
         $repertory = $this->repertory->readRepertory($id);
-        echo json_encode($repertory->row()->idrepertory);
+        $repertory = ($repertory->row()) ? $repertory->row()->idrepertory : $repertory->row();
+        echo json_encode($repertory);
     }
 
     public function deleteItem($id, $sequence){

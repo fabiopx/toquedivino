@@ -5,14 +5,16 @@ const state = {
   alert: { status: false, msg: "" },
   inscribeID: null,
   startedRepertory: false,
-  isAgreement: false
+  isAgreement: false,
+  isBudget: false,
 };
 
 const getters = {
   userNow: (state) => state.userNow,
   inscribeID: (state) => state.inscribeID,
   startedRepertory: (state) => state.startedRepertory,
-  isAgreement: (state) => state.isAgreement
+  isAgreement: (state) => state.isAgreement,
+  isBudget: (state) => state.isBudget
 };
 
 const actions = {
@@ -31,6 +33,10 @@ const actions = {
 
   setIsAgreement({commit}, payload){
     commit('setIsAgreement', payload)
+  },
+
+  setIsBudget({commit}, payload){
+    commit('setIsBudget', payload)
   }
   
 };
@@ -40,7 +46,8 @@ const mutations = {
   setAlertLogin: (state, alertLogin) => (state.alert = alertLogin),
   setInscribeID: (state, inscribeID) => (state.inscribeID = inscribeID),
   setStartedRepertory: (state, startedRepertory) => (state.startedRepertory = startedRepertory),
-  setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement)
+  setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement),
+  setIsBudget: (state, isBudget) => (state.isBudget = isBudget),
 };
 
 export default {

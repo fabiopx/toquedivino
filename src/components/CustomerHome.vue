@@ -62,15 +62,14 @@
             Toque Divino.
           </p>
         </v-card-text>
-        <v-card-actions>
-          <v-skeleton-loader
+        <v-skeleton-loader
             v-show="loadingActions"
-            type="button"
+            type="actions"
             class="ml-5"
           ></v-skeleton-loader>
+        <v-card-actions v-show="!loadingActions">
           <v-btn
-            v-show="!loadingActions"
-            v-if="!isBudget"
+            v-show="!isBudget"
             color="red darken-4"
             depressed
             dark
@@ -80,8 +79,7 @@
             orçamento</v-btn
           >
           <v-btn
-            v-show="!loadingActions"
-            v-if="!isEvent"
+            v-show="!isEvent"
             color="red darken-4"
             depressed
             dark
@@ -301,11 +299,10 @@ export default {
     buscarEndereco: false,
     tooltipEndereco: false,
     isEvent: false,
-    isBudget: false,
   }),
 
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow"]),
+    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget"]),
     getInscribe: async function () {
       this.loadingData1 = true;
       this.loadingData2 = true;
@@ -319,7 +316,6 @@ export default {
       this.loadingData2 = false;
     },
     verifyEvent: async function () {
-      this.loadingActions = true;
       await this.getInscribe();
       const response = await axios.get(
         this.apiURL + "/events/getCustomers/" + this.inscribeID
@@ -333,19 +329,14 @@ export default {
         this.eventTime = resp.time;
         this.eventAddress = resp.address;
         this.eventEmpty = false;
-        this.loadingActions = false;
-      } else {
-        this.loadingActions = false;
-      }
+      } 
       // console.log(this.isEvent);
     },
     verifyBudget: async function () {
-      this.loadingActions = true;
       const response = await axios.get(
         this.apiURL + "/budgets/isBudget/" + this.inscribeID
       );
-      this.isBudget = response.data;
-      console.log(response.data);
+      this.setIsBudget(response.data);
       this.loadingActions = false;
     },
     getAddressData: function (addressData, placeResultData, id) {
@@ -388,14 +379,14 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["inscribeID", "userNow", "isAgreement"]),
+    ...mapGetters(["inscribeID", "userNow", "isAgreement", "isBudget"]),
   },
 
-  created: function () {
+  created: async function () {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
-      this.verifyEvent();
-      this.verifyBudget();
+      await this.verifyEvent();
+      await this.verifyBudget();
     }
   },
 };

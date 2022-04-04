@@ -1445,7 +1445,7 @@ export default {
     getEngaged: async function () {
       this.loadingEngagedFields = true;
       const response = await axios.get(
-        this.apiURL + "/engaged/getCustomers/" + this.inscribeID
+        this.apiURL + "/engagedes/getCustomers/" + this.inscribeID
       );
       const resp = response.data;
       if (resp) {
@@ -1503,7 +1503,9 @@ export default {
     },
     getWeddingServices: async function (id) {
       this.loadingWeddingServices = true;
-      const response = await axios.get(this.apiURL + "/engaged/getWeddingServices/" + id);
+      const response = await axios.get(
+        this.apiURL + "/engagedes/getWeddingServices/" + id
+      );
       this.weddingServices = response.data;
       this.loadingWeddingServices = false;
     },
@@ -1517,7 +1519,7 @@ export default {
       data.append("rg", this.inscribeRg);
       data.append("idservice", this.inscribeService.idservice);
       data.append("idformation", this.inscribeFormation.idformation);
-      axios(this.apiURL + "/inscribe/updateCustomers/" + this.inscribeID, {
+      axios(this.apiURL + "/inscribes/updateCustomers/" + this.inscribeID, {
         method: "POST",
         data: data,
       }).then((response) => {
@@ -1585,7 +1587,7 @@ export default {
       data.append("idinscribe", this.inscribeID);
 
       if (this.crud == "c") {
-        axios(this.apiURL + "/engaged/createCustomers", {
+        axios(this.apiURL + "/engagedes/createCustomers", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1593,7 +1595,7 @@ export default {
           this.getEngaged();
         });
       } else if (this.crud == "u") {
-        axios(this.apiURL + "/engaged/updateCustomers/" + this.engagedID, {
+        axios(this.apiURL + "/engagedes/updateCustomers/" + this.engagedID, {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1632,7 +1634,7 @@ export default {
       data.append("contactname", this.weddingServiceContactName);
       data.append("engaged_idengaged", this.engagedID);
       if (this.crud == "c") {
-        axios(this.apiURL + "/engaged/createWeddingServices", {
+        axios(this.apiURL + "/engagedes/createWeddingServices", {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1641,7 +1643,7 @@ export default {
           this.getWeddingServices(this.engagedID);
         });
       } else if (this.crud == "u") {
-        axios(this.apiURL + "/engaged/updateWeddingServices/" + this.weddingServiceID, {
+        axios(this.apiURL + "/engagedes/updateWeddingServices/" + this.weddingServiceID, {
           method: "POST",
           data: data,
         }).then((response) => {
@@ -1653,7 +1655,7 @@ export default {
     },
     deleteWeddingService: function (id) {
       this.loading = true;
-      axios.get(this.apiURL + "/engaged/deleteWeddingService/" + id).then((response) => {
+      axios.get(this.apiURL + "/engagedes/deleteWeddingService/" + id).then((response) => {
         this.loading = false;
         this.$swal(response.data.msg, "", response.data.icon);
         this.getWeddingServices(this.engagedID);

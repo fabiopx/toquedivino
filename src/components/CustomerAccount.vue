@@ -98,7 +98,7 @@
       <p class="white--text">Esta função estará liberarda após a assinatura do contrato.</p>
       <p>
         <v-btn depressed color="grey darken-4" dark class="mr-2">Faça seu orçamento</v-btn>
-        <v-btn depressed color="grey darken-4" dark>Revise seu cadastro</v-btn>
+        <v-btn depressed color="grey darken-4" dark @click="$router.push('/customer/inscribe')">Revise seu cadastro</v-btn>
       </p>
     </v-container>
     <v-overlay v-show="loading">
