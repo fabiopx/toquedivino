@@ -598,7 +598,7 @@ export default {
   name: "AppFrontendSteppers",
 
   data: () => ({
-    urlApi: "http://localhost/toquedivino/api/api/",
+    urlApi: process.env.VUE_APP_URL,
     active: false,
     buscarEndereco: false,
     tooltipEndereco: false,
@@ -800,7 +800,7 @@ export default {
       data.append("mobile", this.inscribeMobile);
       data.append("email", this.inscribeEmail);
       data.append("flag", 0);
-      axios(this.urlApi + "createLead", {
+      axios(this.urlApi + "/leads/create", {
         method: "POST",
         data: data,
       }).then((response) => {
@@ -812,7 +812,7 @@ export default {
       data.append("ip", this.setIP.id);
       data.append("email", this.inscribeEmail);
       data.append("mobile", this.inscribeMobile);
-      axios(this.urlApi + "deleteLead", {
+      axios(this.urlApi + "/leads/delete", {
         method: "POST",
         data: data,
       }).then((response) => {
@@ -833,7 +833,7 @@ export default {
       data.append("service_idservice", this.selectedService.idservice);
       data.append("formation_idformation", this.selectedFormation.idformation);
       data.append("ip", this.setIP.id);
-      axios(this.urlApi + "createInscribeApp", {
+      axios(this.urlApi + "/inscribes/createApp", {
         method: "POST",
         data: data,
       }).then((response) => {

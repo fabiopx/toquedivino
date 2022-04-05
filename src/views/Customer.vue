@@ -98,8 +98,13 @@ export default {
       {
         icon: "mdi-file-document-edit",
         text: "Orçamento",
-        link: "/customer/agreement",
+        link: "/customer/budget",
       },
+      {
+        icon: "mdi-file-sign",
+        text: "Contrato",
+        link: "/customer/agreement",
+      }
     ],
     
   }),
@@ -110,10 +115,10 @@ export default {
     }
   },
 
-  created: function () {
+  created: async function () {
     if(this.$session.exists()){
-      this.getInscribeID()
-      this.verifyIsAgreement()
+      await this.getInscribeID()
+      await this.verifyIsAgreement()
     }
   },
 
@@ -134,12 +139,12 @@ export default {
       this.$router.push("/customer/login");
     },
     getInscribeID: async function () {
-      const response = await axios.get(this.apiURL + "/api/getInscribeCustomers/" + this.userNow.id)
+      const response = await axios.get(this.apiURL + "/inscribes/getCustomers/" + this.userNow.id)
 			const resp = response.data;
       this.setInscribeID(resp.idinscribe)
 		},
     verifyIsAgreement: async function(){
-      const response = await axios.get(this.apiURL + "/api/getAgreement/" + this.inscribeID)
+      const response = await axios.get(this.apiURL + "/agreements/get/" + this.inscribeID)
       const resp = response.data
       (resp) ? this.setIsAgreement(true): this.setIsAgreement(false)
     }

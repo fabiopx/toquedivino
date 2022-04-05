@@ -193,9 +193,9 @@
       </p>
       <p>
         <v-btn depressed color="grey darken-4" dark class="mr-2"
-          >Faça seu orçamento</v-btn
+          @click="$router.push('/customer/budget')">Acesse o orçamento</v-btn
         >
-        <v-btn depressed color="grey darken-4" dark>Revise seu cadastro</v-btn>
+        <v-btn depressed color="grey darken-4" dark @click="$router.push('/customer/inscribe')">Revise seu cadastro</v-btn>
       </p>
     </v-container>
     <v-overlay v-show="loading">

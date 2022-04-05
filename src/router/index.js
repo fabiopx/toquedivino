@@ -6,6 +6,7 @@ import CustomerHome from '../components/CustomerHome.vue'
 import CustomerAccount from '../components/CustomerAccount.vue'
 import CustomerInscribe from '../components/CustomerInscribe.vue'
 import CustomerRepertoy from '../components/CustomerRepertory.vue'
+import CustomerBudget from '../components/CustomerBudget.vue'
 import CustomerAgreement from '../components/CustomerAgreement.vue'
 import CustomerLogin from '../components/CustomerLogin.vue'
 
@@ -37,6 +38,10 @@ const routes = [
       {
         path: 'repertory',
         component: CustomerRepertoy
+      },
+      {
+        path: 'budget',
+        component: CustomerBudget
       },
       {
         path: 'agreement',

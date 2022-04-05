@@ -5,7 +5,7 @@ Especificar na parte evento que os endereços são do evento (>>OK<<)
 Mudar dashboard no primeiro acesso (customers)
 Destacar cadastro de noivos e de formatura (>>OK<<)
 Alterar nomenclatura de contrato para orçamento (>>OK<<)
-Separar senha de login e assinatura
+Separar senha de login e assinatura (>>OK<<)
 Possibilidades dos noivos: não responsáveis pelo contrato, os dois responsáveis, só um responsável (>>OK<<)
 Verificar se o responsável (noivos ou não) tem maioridade
 Colocar prazo na possibilidade de excluir (faltando 90 dias) - permitir desbloquear com tempo - emitir aviso com 5 dias de 

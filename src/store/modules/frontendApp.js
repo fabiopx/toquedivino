@@ -22,13 +22,13 @@ const getters = {
 
 const actions = {
     async getServices({commit}){
-        const response = await axios.get(process.env.VUE_APP_URL + 'getServices')
+        const response = await axios.get(process.env.VUE_APP_URL + '/services/get')
 
         commit('setServices', response.data)
     },
 
     async getInstruments({commit}){
-        const response = await axios.get(process.env.VUE_APP_URL + 'getInstrument')
+        const response = await axios.get(process.env.VUE_APP_URL + '/instruments/get')
 
         commit('setInstruments', response.data)
     },
@@ -36,7 +36,7 @@ const actions = {
     async getFormations({commit}, payload){
         const data = new FormData()
         data.append('instruments', JSON.stringify(payload))
-        const response = await axios(process.env.VUE_APP_URL + 'getFormationByInstruments', {method: 'POST', data: data})
+        const response = await axios(process.env.VUE_APP_URL + '/formations/getByInstruments', {method: 'POST', data: data})
 
         commit('setFormations', response.data)
     },
