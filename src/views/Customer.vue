@@ -34,12 +34,15 @@
             <v-list-item-icon>
               <v-icon v-text="nav.icon"></v-icon>
             </v-list-item-icon>
-            <v-list-item-content>
+            <v-list-item-content v-show="!nav.sub">
               <v-list-item-title
                 v-text="nav.text"
                 @click="$router.push({ path: nav.link })"
               >
               </v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content v-show="nav.sub">
+              <v-list-item-title v-text="nav.text"></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -52,10 +55,7 @@
       ></v-app-bar-nav-icon>
 
       <v-toolbar-title>
-        <v-img
-          :src="require('../assets/logotipo.png')"
-          width="120"
-        ></v-img>
+        <v-img :src="require('../assets/logotipo.png')" width="120"></v-img>
       </v-toolbar-title>
     </v-app-bar>
     <v-main>
@@ -86,9 +86,24 @@ export default {
         link: "/customer/account",
       },
       {
-        icon: "mdi-folder-information",
+        icon: "mdi-file-document-multiple",
         text: "Cadastro",
         link: "/customer/inscribe",
+      },
+      {
+        icon: "mdi-calendar-check",
+        text: "Evento",
+        link: "/customer/event",
+      },
+      {
+        icon: "mdi-heart-circle",
+        text: "Noivos",
+        link: "/customer/engaged",
+      },
+      {
+        icon: "mdi-account-school",
+        text: "Comitê de Formatura",
+        link: "/customer/committe",
       },
       {
         icon: "mdi-music-circle",
@@ -104,9 +119,8 @@ export default {
         icon: "mdi-file-sign",
         text: "Contrato",
         link: "/customer/agreement",
-      }
+      },
     ],
-    
   }),
 
   beforeCreate: function () {
@@ -116,9 +130,9 @@ export default {
   },
 
   created: async function () {
-    if(this.$session.exists()){
-      await this.getInscribeID()
-      await this.verifyIsAgreement()
+    if (this.$session.exists()) {
+      await this.getInscribeID();
+      await this.verifyIsAgreement();
     }
   },
 
@@ -139,19 +153,24 @@ export default {
       this.$router.push("/customer/login");
     },
     getInscribeID: async function () {
-      const response = await axios.get(this.apiURL + "/inscribes/getCustomers/" + this.userNow.id)
-			const resp = response.data;
-      this.setInscribeID(resp.idinscribe)
-		},
-    verifyIsAgreement: async function(){
-      const response = await axios.get(this.apiURL + "/agreements/get/" + this.inscribeID)
-      const resp = response.data
-      (resp) ? this.setIsAgreement(true): this.setIsAgreement(false)
-    }
+      const response = await axios.get(
+        this.apiURL + "/inscribes/getCustomers/" + this.userNow.id
+      );
+      const resp = response.data;
+      this.setInscribeID(resp.idinscribe);
+    },
+    verifyIsAgreement: async function () {
+      const response = await axios.get(
+        this.apiURL + "/agreements/get/" + this.inscribeID
+      );
+      const resp = response.data(resp)
+        ? this.setIsAgreement(true)
+        : this.setIsAgreement(false);
+    },
   },
 
   computed: {
-    ...mapGetters(['userNow', "inscribeID", "isAgreement"]),
+    ...mapGetters(["userNow", "inscribeID", "isAgreement"]),
   },
 };
 </script>

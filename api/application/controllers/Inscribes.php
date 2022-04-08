@@ -205,7 +205,7 @@ class Inscribes extends CI_Controller{
         echo json_encode($this->inscribe->updateInscribe($id));
     }
 
-    public function updateInscribeCustomers($id){
+    public function updateCustomers($id){
         $this->load->model('inscribe');
         echo json_encode($this->inscribe->updateInscribeCustomers($id));
     }

@@ -1,64 +1,79 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Customer from '../views/Customer.vue'
-import CustomerHome from '../components/CustomerHome.vue'
-import CustomerAccount from '../components/CustomerAccount.vue'
-import CustomerInscribe from '../components/CustomerInscribe.vue'
-import CustomerRepertoy from '../components/CustomerRepertory.vue'
-import CustomerBudget from '../components/CustomerBudget.vue'
-import CustomerAgreement from '../components/CustomerAgreement.vue'
-import CustomerLogin from '../components/CustomerLogin.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+import Customer from "../views/Customer.vue";
+import CustomerHome from "../components/CustomerHome.vue";
+import CustomerAccount from "../components/CustomerAccount.vue";
+import CustomerInscribe from "../components/CustomerInscribe.vue";
+import CustomerEvent from "../components/CustomerEvent.vue";
+import CustomerEngaged from "../components/CustomerEngaged.vue";
+import CustomerCommitte from "../components/CustomerCommitte.vue";
+import CustomerRepertoy from "../components/CustomerRepertory.vue";
+import CustomerBudget from "../components/CustomerBudget.vue";
+import CustomerAgreement from "../components/CustomerAgreement.vue";
+import CustomerLogin from "../components/CustomerLogin.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
+    path: "/",
+    name: "Home",
     component: Home,
   },
   {
-    path: '/customer',
-    name: 'Customer',
+    path: "/customer",
+    name: "Customer",
     component: Customer,
     children: [
       {
-        path: 'home',
-        component: CustomerHome
+        path: "home",
+        component: CustomerHome,
       },
       {
-        path: 'account',
-        component: CustomerAccount
+        path: "account",
+        component: CustomerAccount,
       },
       {
-        path: 'inscribe',
-        component: CustomerInscribe
+        path: "inscribe",
+        component: CustomerInscribe,
       },
       {
-        path: 'repertory',
-        component: CustomerRepertoy
+        path: "event",
+        component: CustomerEvent,
       },
       {
-        path: 'budget',
-        component: CustomerBudget
+        path: "engaged",
+        component: CustomerEngaged
       },
       {
-        path: 'agreement',
-        component: CustomerAgreement
+        path: "committe",
+        component: CustomerCommitte
       },
       {
-        path: 'login',
-        component: CustomerLogin
-      }
-    ]
-  }
-]
+        path: "repertory",
+        component: CustomerRepertoy,
+      },
+      {
+        path: "budget",
+        component: CustomerBudget,
+      },
+      {
+        path: "agreement",
+        component: CustomerAgreement,
+      },
+      {
+        path: "login",
+        component: CustomerLogin,
+      },
+    ],
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
