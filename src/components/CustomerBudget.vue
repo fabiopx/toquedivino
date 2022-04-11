@@ -308,6 +308,7 @@ export default {
     budgetEdit: false,
     budgetSoma: 0,
     budgetOpen: false,
+    budgetCancel: false,
     distance: "",
     tax: [],
     multipliedTaxValue: 0,
@@ -321,7 +322,6 @@ export default {
       "setInscribeID",
       "setUserNow",
       "setIsBudget",
-      "setBudgetCancel",
     ]),
 
     somaBudget: function (item) {
@@ -422,6 +422,7 @@ export default {
         data: data,
       });
       this.$swal(response.data.msg, "", response.data.icon);
+      
       await this.getBudget();
     },
     getBudget: async function () {
@@ -433,9 +434,10 @@ export default {
         this.budgetItems = response.data;
         this.setIsBudget(true);
         await this.verifyBudgetCancel();
+      } else{
+        this.setIsBudget(false);
       }
       this.budgetOpen = !this.isBudget || this.budgetCancel ? true : false;
-      console.log("open:" + this.budgetOpen)
       this.loadingBudget = false;
     },
     cancelBudget: async function (id) {
@@ -448,8 +450,7 @@ export default {
       const response = await axios.get(
         this.apiURL + "/budgets/verifyBudgetCancel/" + this.inscribeID
       );
-      this.setBudgetCancel(response.data);
-      console.log("Existe cancelado:" + this.budgetCancel)
+      this.budgetCancel = response.data;
     },
   },
   created: async function () {
@@ -468,7 +469,6 @@ export default {
       "userNow",
       "isAgreement",
       "isBudget",
-      "budgetCancel",
     ]),
   },
   formationChecked: function () {
