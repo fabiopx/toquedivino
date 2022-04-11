@@ -25,7 +25,7 @@ class Budgets extends CI_Controller{
         $this->load->model('budget');
         $where = is_null($id) ? $id : array('inscribe_idinscribe' => $id);
         $budget = $this->budget->readBudget($where);
-        $resp = is_null($id) ? $budget->result() : $budget->row();
+        $resp = empty($budget->result()) ? null : $budget->result();
         echo json_encode($resp);
 
     }
@@ -35,5 +35,27 @@ class Budgets extends CI_Controller{
         $where = array('inscribe_idinscribe' => $id);
         $budget = $this->budget->readBudget($where);
         echo json_encode(!empty($budget->result()));
+    }
+
+    public function verifyBudgetCancel($id){
+        $this->load->model('budget');
+        $where = array('inscribe_idinscribe' => $id, 'status !=' => 4);
+        $budget = $this->budget->readBudget($where);
+        $resp = ($budget->num_rows() == 0) ? true : false;
+
+        echo json_encode($resp);
+    }
+
+    public function cancel($id){
+        $this->load->model('budget');
+        $where = array('idbudget' => $id);
+        $data = array('status' => 4);
+        if($this->budget->updateBudget($where, $data)){
+            $resp = array('msg' => 'Orçamento cancelado com sucesso', 'icon' => 'success');
+        } else{
+            $resp = array('msg' => 'Orçamento não pode ser cancelado', 'icon' => 'error');
+        }
+
+        echo json_encode($resp);
     }
 }

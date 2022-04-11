@@ -74,7 +74,7 @@
             depressed
             dark
             class="ml-5 pa-8"
-            @click="$router.push('/customer/agreement')"
+            @click="$router.push('/customer/budget')"
             ><v-icon class="mr-2">mdi-account-cash</v-icon> Realizar<br />
             orçamento</v-btn
           >

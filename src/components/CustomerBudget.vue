@@ -6,12 +6,8 @@
           <v-card>
             <v-toolbar color="grey darken-4" dark>
               <h2>Orçamento</h2>
-              <v-spacer></v-spacer>
-              <v-toolbar-items>
-                <v-btn v-show="isBudget" depressed> <v-icon class="mr-2">mdi-file-sign</v-icon> Contrato </v-btn>
-              </v-toolbar-items>
             </v-toolbar>
-            <v-card-text>
+            <v-card-text v-show="budgetOpen">
               <v-sheet class="pa-4" outlined elevation="1">
                 <v-simple-table>
                   <tbody>
@@ -22,7 +18,14 @@
                           type="article"
                         ></v-skeleton-loader>
                         <div v-show="!loadingDatas">
-                          <h3>Formação</h3>
+                          <h3>
+                            Formação
+                            <v-btn
+                              icon
+                              @click="$router.push('/customer/inscribe')"
+                              ><v-icon>mdi-pencil</v-icon></v-btn
+                            >
+                          </h3>
                           <div class="font-italic">{{ formation.name }}</div>
                           <div class="pa-3 mb-3 rounded grey lighten-4">
                             {{ formation.description }}
@@ -44,7 +47,6 @@
                       <td>
                         <v-switch
                           v-model="formationChecked"
-                          v-show="!isBudget"
                           inset
                           color="grey darken-4"
                           @change="addFormation()"
@@ -58,7 +60,14 @@
                           type="article"
                         ></v-skeleton-loader>
                         <div v-show="!loadingDatas">
-                          <h3>Serviço</h3>
+                          <h3>
+                            Serviço
+                            <v-btn
+                              icon
+                              @click="$router.push('/customer/inscribe')"
+                              ><v-icon>mdi-pencil</v-icon></v-btn
+                            >
+                          </h3>
                           <div class="font-italic">{{ service.name }}</div>
                           <div class="mb-3 pa-3 rounded grey lighten-4">
                             {{ service.description }}
@@ -120,7 +129,6 @@
                       <td>
                         <v-switch
                           v-model="serviceChecked"
-                          v-show="!isBudget"
                           inset
                           color="grey darken-4"
                           @change="addTax()"
@@ -135,7 +143,12 @@
                           type="article"
                         ></v-skeleton-loader>
                         <div v-show="!loadingDatas">
-                          <h3>Evento</h3>
+                          <h3>
+                            Evento
+                            <v-btn icon @click="$router.push('/customer/event')"
+                              ><v-icon>mdi-pencil</v-icon></v-btn
+                            >
+                          </h3>
                           <div>
                             Data:
                             {{ $moment(events.date).format("DD/MM/YYYY") }}
@@ -159,7 +172,6 @@
                       <td>
                         <v-switch
                           v-model="eventChecked"
-                          v-show="!isBudget"
                           inset
                           color="grey darken-4"
                         >
@@ -169,11 +181,11 @@
                     <tr>
                       <td>
                         <v-skeleton-loader
-                          v-show="loadingSomaBudget"
-                          type="text"
+                          v-show="loadingDatas"
+                          type="chip"
                         ></v-skeleton-loader>
                         <v-chip
-                          v-show="!loadingSomaBudget"
+                          v-show="!loadingDatas"
                           class="grey darken-4"
                           dark
                         >
@@ -191,31 +203,9 @@
                     </tr>
                   </tbody>
                 </v-simple-table>
-                <div
-                  class="mt-3 pa-3 red darken-4 white--text rounded"
-                  v-show="!loadingSomaBudget"
-                  v-if="isBudget"
-                >
-                  Orçamento válido até
-                  {{ $moment(budget.expires_in).format("DD/MM/YYYY") }}
-                  <span class="ml-4"
-                    >Status do orçamento:
-                    <span v-if="budget.status == 0"
-                      >Iniciado (aguardando validação da Equipe Toque
-                      Divino)</span
-                    >
-                    <span v-if="budget.status == 1">Validado</span>
-                    <span v-if="budget.status == 2">Finalizado</span>
-                    <span v-if="budget.status == 3">Expirado</span>
-                    <span v-if="budget.status == 4">Cancelado</span>
-                  </span>
-                </div>
-              </v-sheet>
-            </v-card-text>
-            <v-card-actions>
-              <div class="ml-3" v-show="!loadingDatas">
+                <div class="ml-3" v-show="!loadingDatas">
                 <v-btn
-                  v-show="!isBudget"
+                  v-show="budgetOpen"
                   color="red darken-4"
                   class="mt-3 pa-4"
                   dark
@@ -223,17 +213,77 @@
                 >
                   <v-icon class="mr-2">mdi-content-save</v-icon>Salvar orçamento
                 </v-btn>
-                <v-btn
-                  v-show="!isBudget"
-                  color="red darken-4"
-                  class="mt-3 ml-2 pa-4"
-                  dark
-                  @click="$router.push('/customer/inscribe')"
-                >
-                  <v-icon class="mr-2">mdi-pencil</v-icon>Alterar o cadastro
-                </v-btn>
               </div>
-            </v-card-actions>
+              </v-sheet>
+            </v-card-text>
+            <v-card-text v-show="isBudget">
+              <v-sheet>
+                <v-skeleton-loader
+                  type="table-thead, table-row"
+                  v-show="loadingBudget"
+                ></v-skeleton-loader>
+                <v-simple-table v-show="!loadingBudget">
+                  <thead>
+                    <tr>
+                      <th>Nº do Orçamento</th>
+                      <th>Data</th>
+                      <th>Expira em...</th>
+                      <th>Valor</th>
+                      <th>Status</th>
+                      <th>Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="budget in budgetItems" :key="budget.idbudget">
+                      <td>{{ budget.code }}</td>
+                      <td>{{ $moment(budget.date).format("DD/MM/YYYY") }}</td>
+                      <td>
+                        {{ $moment(budget.expires_in).format("DD/MM/YYYY") }}
+                      </td>
+                      <td>
+                        {{
+                          parseFloat(budget.value).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                      </td>
+                      <td>
+                        <v-chip color="primary" v-show="budget.status == 0"
+                          >Iniciado</v-chip
+                        >
+                        <v-chip color="green" dark v-show="budget.status == 1"
+                          >Validado</v-chip
+                        >
+                        <v-chip color="blue" dark v-show="budget.status == 2"
+                          >Finalizado</v-chip
+                        >
+                        <v-chip color="orange" dark v-show="budget.status == 3"
+                          >Expirado</v-chip
+                        >
+                        <v-chip color="red" dark v-show="budget.status == 4"
+                          >Cancelado</v-chip
+                        >
+                      </td>
+                      <td>
+                        <v-btn
+                          v-show="budget.status == 0 || budget.status == 1"
+                          icon
+                          @click="cancelBudget(budget.idbudget)"
+                          ><v-icon>mdi-cancel</v-icon></v-btn
+                        >
+                        <v-btn
+                          v-show="budget.status == 1"
+                          icon
+                          @click="$router.push('/customer/agreement')"
+                          ><v-icon>mdi-file-sign</v-icon></v-btn
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+              </v-sheet>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -255,16 +305,24 @@ export default {
     eventChecked: false,
     budget: "",
     budgetItems: [],
+    budgetEdit: false,
     budgetSoma: 0,
+    budgetOpen: false,
     distance: "",
     tax: [],
     multipliedTaxValue: 0,
     loadingDatas: false,
     loadingTotalTax: true,
     loadingSomaBudget: false,
+    loadingBudget: true,
   }),
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow"]),
+    ...mapActions([
+      "setInscribeID",
+      "setUserNow",
+      "setIsBudget",
+      "setBudgetCancel",
+    ]),
 
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
@@ -343,7 +401,7 @@ export default {
           }
         });
         this.loadingTotalTax = false;
-      }, 1000);
+      }, 2000);
     },
 
     createBudget: async function () {
@@ -364,31 +422,54 @@ export default {
         data: data,
       });
       this.$swal(response.data.msg, "", response.data.icon);
-      this.verifyBudget();
-      this.getBudget();
+      await this.getBudget();
     },
-    getBudget: function () {
-      this.loadingSomaBudget = true;
-      axios
-        .get(this.apiURL + "/budgets/get/" + this.inscribeID)
-        .then((response) => {
-          this.budgetSoma = response.data ? response.data.value : 0;
-          this.budget = response.data;
-          this.loadingSomaBudget = false;
-        });
+    getBudget: async function () {
+      this.loadingBudget = true;
+      const response = await axios.get(
+        this.apiURL + "/budgets/get/" + this.inscribeID
+      );
+      if (response.data) {
+        this.budgetItems = response.data;
+        this.setIsBudget(true);
+        await this.verifyBudgetCancel();
+      }
+      this.budgetOpen = !this.isBudget || this.budgetCancel ? true : false;
+      console.log("open:" + this.budgetOpen)
+      this.loadingBudget = false;
+    },
+    cancelBudget: async function (id) {
+      const response = await axios.get(this.apiURL + "/budgets/cancel/" + id);
+      this.$swal(response.data.msg, "", response.data.icon);
+      await this.verifyBudgetCancel();
+      await this.getBudget();
+    },
+    verifyBudgetCancel: async function () {
+      const response = await axios.get(
+        this.apiURL + "/budgets/verifyBudgetCancel/" + this.inscribeID
+      );
+      this.setBudgetCancel(response.data);
+      console.log("Existe cancelado:" + this.budgetCancel)
     },
   },
-  created: function () {
+  created: async function () {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
-      this.getEvent();
-      this.getInscribe();
-      this.calculateTaxValue();
-      this.getBudget();
+      await this.getEvent();
+      await this.getInscribe();
+      await this.calculateTaxValue();
+      await this.getBudget();
+      await this.verifyBudgetCancel();
     }
   },
   computed: {
-    ...mapGetters(["inscribeID", "userNow", "isAgreement", "isBudget"]),
+    ...mapGetters([
+      "inscribeID",
+      "userNow",
+      "isAgreement",
+      "isBudget",
+      "budgetCancel",
+    ]),
   },
   formationChecked: function () {
     this.formationChecked

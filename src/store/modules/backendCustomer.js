@@ -7,6 +7,7 @@ const state = {
   startedRepertory: false,
   isAgreement: false,
   isBudget: false,
+  cancelBudget: false
 };
 
 const getters = {
@@ -14,7 +15,8 @@ const getters = {
   inscribeID: (state) => state.inscribeID,
   startedRepertory: (state) => state.startedRepertory,
   isAgreement: (state) => state.isAgreement,
-  isBudget: (state) => state.isBudget
+  isBudget: (state) => state.isBudget,
+  budgetCancel: (state) => state.budgetCancel
 };
 
 const actions = {
@@ -37,6 +39,10 @@ const actions = {
 
   setIsBudget({commit}, payload){
     commit('setIsBudget', payload)
+  },
+
+  setBudgetCancel({commit}, payload){
+    commit('setBudgetCancel', payload)
   }
   
 };
@@ -48,6 +54,7 @@ const mutations = {
   setStartedRepertory: (state, startedRepertory) => (state.startedRepertory = startedRepertory),
   setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement),
   setIsBudget: (state, isBudget) => (state.isBudget = isBudget),
+  setBudgetCancel: (state, budgetCancel) => (state.budgetCancel = budgetCancel)
 };
 
 export default {
