@@ -822,7 +822,7 @@ export default {
     saveInscribe: function () {
       this.loading = true;
       let data = new FormData();
-      data.append("datetime", new Date().toMysqlFormat());
+      data.append("datetime", this.$moment().format("YYYY-MM-DD"));
       data.append("email", this.inscribeEmail);
       data.append("accountable", this.inscribeAccountable);
       data.append("phone", this.inscribePhone);

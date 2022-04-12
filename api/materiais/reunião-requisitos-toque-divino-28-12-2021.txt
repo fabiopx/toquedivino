@@ -14,7 +14,8 @@ Incluir redes sociais dos noivos
 Incluir valor na tabela instrumento para adicionar um instrumento à formação
 Incluir quantidade de membros da formação para cálculo de carros necessários
 Mudar ênfase de intermediador de contrato para orçamento online
-Acrescentar tabela <<orçamento>>, para registrar o orçamento (incluir validade - 15 dias) - disparar e-mail avisando que está expirando nos 2 dias anteriores
+Acrescentar tabela <<orçamento>>, para registrar o orçamento (incluir validade - 15 dias) (>>OK<<)
+Disparar e-mail avisando que Orçamento está expirando nos 2 dias anteriores
 Liberar as funções após aceite de contrato (>>OK<<)
 Salvar contrato em pdf
 Criar financeiro (lançar pagamentos)

@@ -34,9 +34,22 @@ class Inscribe extends Crud{
             'pin' => code_generate(),
             'access' => 2
         );
+
+        
         if($this->create('account', $dAccount)){
             $idAccount = $this->db->insert_id();
             $data->account_idaccount = $idAccount;
+            
+            $dSign = array(
+                'name' => $data->accountable,
+                'type' => 1,
+                'font' => 'gf-fuggles',
+                'status' => 1,
+                'inuse' => 0,
+                'account_idaccount' => $idAccount
+            );
+            $this->create('signature', $dSign);
+
             if($this->create('inscribe', $data)){
                 $idInscribe = $this->db->insert_id();
                 if(isset($_POST['flag'])){

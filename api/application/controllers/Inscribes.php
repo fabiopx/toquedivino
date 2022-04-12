@@ -75,16 +75,6 @@ class Inscribes extends CI_Controller{
         
         $resp = $this->inscribe->createInscribe();
         if($resp['icon'] == 'success'){
-
-            // $data = array(
-            //     'name' => $_POST['eventname'],
-            //     'date' => $_POST['eventdate'],
-            //     'time' => $_POST['eventtime'],
-            //     'address' => $_POST['eventaddress'],
-            //     'inscribe_idinscribe' => $resp['idInscribe']
-            // );
-
-            // $this->event->createEventApp($data);
             
             $account = $this->account->readAccount(array('idaccount' => $resp['idAccount']));
             $account = $account->row();
