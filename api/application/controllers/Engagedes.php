@@ -93,19 +93,36 @@ class Engagedes extends CI_Controller{
         echo json_encode($resp);
     }
 
-    public function createSocialNetworks($id){
-        //
+    public function createSocialNetworks(){
+        $this->load->model('engaged');
+        ($this->createSocialNetworks()) 
+        ? $resp = ['msg' => 'Rede social incluída com sucesso!', 'icon' => 'sucess'] 
+        : $resp = ['msg' => 'Rede Social não pode ser incluída', 'icon' => 'error']; 
+        echo json_encode($resp);
     }
 
-    public function getSocialNetworks($id){
-        //
+    public function getSocialNetworks($engaged){
+        $this->load->model('engaged');
+        $where = ['engaged_idengaged' => $engaged];
+        $socialNetworks = $this->engaged->readSocialNetWorks($where);
+        echo json_encode($socialNetworks->result());
     }
 
-    public function UpdateSocialNetworks($id){
-        //
+    public function updateSocialNetworks($id){
+        $this->load->model('engaged');
+        $where = ['id' => $id];
+        ($this->engaged->updateSocialNetworks($where))
+        ? $resp = ['msg' => 'Rede Social editada com sucesso', 'icon' => 'success']
+        : $resp = ['msg' => 'Rede Socialnão pode ser editada', 'icon' => 'error'];
+        echo json_encode($resp);
     }
 
     public function deleteSocialNetworks($id){
-        //
+        $this->load->model('engaged');
+        $where = ['id' => $id];
+        ($this->engeged->deleteSocialNetworks($where))
+        ? $resp = ['msg' => 'Rede Social excluída com sucesso', 'icon' => 'success']
+        : $resp = ['msg' => 'Rede Social não pode ser excluída', 'icon' => 'error'];
+        echo json_encode($resp);
     }
 }
