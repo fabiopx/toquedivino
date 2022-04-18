@@ -64,6 +64,16 @@ class Engaged extends Crud{
         return $this->create('wedding_services', $data);
     }
 
+    public function createSocialNetworks(){
+        $data = [
+            'name' => $_POST['name'],
+            'engaged' => $_POST['engaged'],
+            'icon' => $_POST['icon'],
+            'link' => $_POST['link'],
+            'engaged_idengaged' => $_POST['engaged_idengaged']
+        ];
+    }
+
     public function readEngaged($where = null){
         if(!is_null($where)){
             return $this->ready('engaged', $where);

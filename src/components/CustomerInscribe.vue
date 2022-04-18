@@ -6,24 +6,40 @@
           <v-card>
             <v-toolbar color="grey darken-4" dark>
               <v-toolbar-title>
-                <span class="small">Cadastro</span>
+                <h2>
+                  <v-icon class="mr-3">mdi-file-document-multiple</v-icon
+                  >Cadastro
+                </h2>
               </v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
-              <v-skeleton-loader v-if="loadingInscribeFields" type="text@5" loading>
+              <v-skeleton-loader
+                v-if="loadingInscribeFields"
+                type="text@5"
+                loading
+              >
               </v-skeleton-loader>
               <v-form v-show="!loadingInscribeFields" ref="formInscribe">
                 <v-container>
                   <v-row>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
                       <v-text-field
                         label="Nome do Responsável"
                         v-model="inscribeAccountable"
                       >
                       </v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
+                      <v-text-field
+                        v-model="inscribeBirthdate"
+                        v-mask="maskBirthdate"
+                        label="Data de nascimento"
+                        @change="is18(inscribeBirthdate)"
+                      >
+                      </v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
                       <v-text-field
                         label="Telefone"
                         v-model="inscribePhone"
@@ -41,11 +57,17 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="8" lg="6">
-                      <v-text-field label="Logradouro" v-model="inscribeAddress.street">
+                      <v-text-field
+                        label="Logradouro"
+                        v-model="inscribeAddress.street"
+                      >
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
-                      <v-text-field label="Número" v-model="inscribeAddress.number">
+                      <v-text-field
+                        label="Número"
+                        v-model="inscribeAddress.number"
+                      >
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
@@ -58,30 +80,48 @@
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field label="Bairro" v-model="inscribeAddress.neighborhood">
+                      <v-text-field
+                        label="Bairro"
+                        v-model="inscribeAddress.neighborhood"
+                      >
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field label="Cidade" v-model="inscribeAddress.city">
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <v-text-field label="Estado" v-model="inscribeAddress.state">
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <v-text-field label="País" v-model="inscribeAddress.country">
+                      <v-text-field
+                        label="Cidade"
+                        v-model="inscribeAddress.city"
+                      >
                       </v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field label="CPF" v-model="inscribeCpf"></v-text-field>
+                      <v-text-field
+                        label="Estado"
+                        v-model="inscribeAddress.state"
+                      >
+                      </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field label="RG" v-model="inscribeRg"></v-text-field>
+                      <v-text-field
+                        label="País"
+                        v-model="inscribeAddress.country"
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" md="6">
+                      <v-text-field
+                        label="CPF"
+                        v-model="inscribeCpf"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-text-field
+                        label="RG"
+                        v-model="inscribeRg"
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -113,8 +153,15 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn depressed dark large color="grey darken-4" @click="saveInscribe()">
-                <v-icon>mdi-content-save</v-icon> Salvar
+              <v-btn
+                depressed
+                dark
+                large
+                color="red darken-4"
+                class="pa-8"
+                @click="saveInscribe()"
+              >
+                <v-icon class="mr-3">mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -144,15 +191,40 @@ function FormataStringData(data) {
   return ano + "-" + ("0" + mes).slice(-2) + "-" + ("0" + dia).slice(-2);
 }
 
-function getAge(date) {
-  var today = new Date();
-  var birthdate = new Date(convertToMMDDYYYY(date.split("/")));
-  var year = today.getFullYear() - birthdate.getFullYear();
-  var month = today.getMonth() - birthdate.getMonth();
-  if (month < 0 || (month === 0 && today.getDate() < birthdate.getDate())) {
-    year--;
+function getAge(dataNasc) {
+  var dataAtual = new Date();
+
+  var anoAtual = dataAtual.getFullYear();
+
+  var anoNascParts = dataNasc.split("/");
+
+  var diaNasc = anoNascParts[0];
+
+  var mesNasc = anoNascParts[1];
+
+  var anoNasc = anoNascParts[2];
+
+  var idade = anoAtual - anoNasc;
+
+  var mesAtual = dataAtual.getMonth() + 1;
+
+  //Se mes atual for menor que o nascimento, nao fez aniversario ainda;
+
+  if (mesAtual < mesNasc) {
+    idade--;
+  } else {
+    //Se estiver no mes do nascimento, verificar o dia
+
+    if (mesAtual == mesNasc) {
+      if (new Date().getDate() < diaNasc) {
+        //Se a data atual for menor que o dia de nascimento ele ainda nao fez aniversario
+
+        idade--;
+      }
+    }
   }
-  return year;
+
+  return idade;
 }
 
 function convertToMMDDYYYY(date) {
@@ -181,6 +253,7 @@ export default {
     loadingInscribeFields: false,
     inscribeID: "",
     inscribeAccountable: "",
+    inscribeBirthdate: "",
     inscribePhone: "",
     inscribeMobile: "",
     inscribeAddress: {
@@ -204,7 +277,7 @@ export default {
 
   methods: {
     ...mapActions(["setUserNow"]),
-    
+
     resetAllVars: function () {
       this.inscribeAccountable = "";
       this.inscribePhone = "";
@@ -238,6 +311,7 @@ export default {
       if (getAge(date) < 18) {
         this.$swal("Responsável precisa ter mais que 18 anos");
       }
+      // console.log(getAge(date));
     },
     getAddressData: function (addressData, placeResultData, id) {
       this.inscribeAddress.street = addressData.route;
@@ -332,6 +406,12 @@ export default {
     saveInscribe: function () {
       let data = new FormData();
       data.append("accountable", this.inscribeAccountable);
+      data.append(
+        "birthdate",
+        this.$moment(FormataStringData(this.inscribeBirthdate)).format(
+          "YYYY-MM-DD"
+        )
+      );
       data.append("phone", this.inscribePhone);
       data.append("mobile", this.inscribeMobile);
       data.append("address", JSON.stringify(this.inscribeAddress));
@@ -346,6 +426,7 @@ export default {
         this.$swal(response.data.msg, "", response.data.icon);
         this.getInscribe();
       });
+      // console.log(this.$moment(FormataStringData(this.inscribeBirthdate)).format("YYYY-MM-DD"));
     },
   },
 

@@ -92,4 +92,20 @@ class Engagedes extends CI_Controller{
 
         echo json_encode($resp);
     }
+
+    public function createSocialNetworks($id){
+        //
+    }
+
+    public function getSocialNetworks($id){
+        //
+    }
+
+    public function UpdateSocialNetworks($id){
+        //
+    }
+
+    public function deleteSocialNetworks($id){
+        //
+    }
 }

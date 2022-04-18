@@ -3,7 +3,7 @@
     <v-container v-show="!isAgreement">
       <v-card>
         <v-toolbar color="grey darken-4" dark>
-          <h2>Seja bem-vindo!</h2>
+          <v-toolbar-title><h2>Seja bem-vindo!</h2></v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <p class="ml-5">Confira abaixo os dados que reunimos até aqui.</p>
@@ -69,13 +69,13 @@
           ></v-skeleton-loader>
         <v-card-actions v-show="!loadingActions">
           <v-btn
-            v-show="!isBudget"
+            v-show="isEvent && !isBudget"
             color="red darken-4"
             depressed
             dark
             class="ml-5 pa-8"
             @click="$router.push('/customer/budget')"
-            ><v-icon class="mr-2">mdi-account-cash</v-icon> Realizar<br />
+            ><v-icon class="mr-2">mdi-account-cash</v-icon> Realizar
             orçamento</v-btn
           >
           <v-btn
@@ -84,178 +84,11 @@
             depressed
             dark
             class="ml-5 pa-8"
-            @click="openDialogEvents"
-            >Cadastrar<br />evento</v-btn
+            @click="$router.push('/customer/event')"
+            ><v-icon class="mr-3">mdi-calendar-check</v-icon>Cadastrar evento</v-btn
           >
         </v-card-actions>
       </v-card>
-      <v-dialog
-        v-model="dialogEvents"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
-      >
-        <v-card>
-          <v-toolbar color="grey darken-4" dark>
-            <v-btn @click="closeDialogEvents" icon dark><v-icon>mdi-close</v-icon></v-btn>
-            <v-toolbar-title>Cadastrar evento</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn color="red darken-4" depressed @click="saveEvent()"
-                ><v-icon class="mr-2">mdi-content-save</v-icon>Salvar</v-btn
-              >
-            </v-toolbar-items>
-          </v-toolbar>
-          <v-card-text>
-            <v-form ref="formEvents">
-              <v-container>
-                <v-row>
-                  <v-col cols="12" lg="4">
-                    <v-text-field v-model="eventName" label="Evento"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6" lg="4">
-                    <v-menu
-                      v-model="pickDateEvent"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="eventDate"
-                          label="Data do evento"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                        </v-text-field>
-                      </template>
-                      <v-date-picker v-model="eventDate" @input="pickDateEvent = false">
-                      </v-date-picker>
-                    </v-menu>
-                  </v-col>
-                  <v-col cols="12" md="6" lg="4">
-                    <v-menu
-                      ref="menu"
-                      v-model="pickTimeEvent"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      :return-value.sync="eventTime"
-                      transition="scale-transition"
-                      offset-y
-                      max-width="290px"
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="eventTime"
-                          label="Horário oficial do Evento"
-                          prepend-icon="mdi-calendar-clock"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                        >
-                        </v-text-field>
-                      </template>
-                      <v-time-picker
-                        v-if="pickTimeEvent"
-                        v-model="eventTime"
-                        full-width
-                        @click:minute="$refs.menu.save(eventTime)"
-                      >
-                      </v-time-picker>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-btn
-                      @click="buscarEndereco = !buscarEndereco"
-                      depressed
-                      color="primary"
-                    >
-                      <v-icon>mdi-magnify</v-icon> Buscar endereço
-                    </v-btn>
-                    <v-tooltip v-model="tooltipEndereco" class="ml-3" bottom>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          v-show="!buscarEndereco"
-                          @click="tooltipEndereco = !tooltipEndereco"
-                          icon
-                        >
-                          <v-icon dark color="grey lighten-1" v-bind="attrs" v-on="on"
-                            >mdi-help-circle</v-icon
-                          >
-                        </v-btn>
-                      </template>
-                      <span
-                        >Digite o nome da rua (avenida, alameda, etc) e o número da
-                        residência para preencher automaticamente o formulário</span
-                      >
-                    </v-tooltip>
-                    <vuetify-google-autocomplete
-                      v-show="buscarEndereco"
-                      outlined
-                      class="mt-2"
-                      ref="address"
-                      id="map"
-                      placeholder="Digite o endereço"
-                      v-on:placechanged="getAddressData"
-                      country="br"
-                    ></vuetify-google-autocomplete>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" md="4" lg="2">
-                    <v-text-field
-                      label="CEP"
-                      v-model="eventAddress.zipcode"
-                      v-mask="maskCep"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="8" lg="6">
-                    <v-text-field label="Logradouro" v-model="eventAddress.street">
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6" lg="2">
-                    <v-text-field label="Número" v-model="eventAddress.number">
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6" lg="2">
-                    <v-text-field label="Complemento" v-model="eventAddress.complement">
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" md="6">
-                    <v-text-field label="Bairro" v-model="eventAddress.neighborhood">
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6">
-                    <v-text-field
-                      label="Cidade"
-                      v-model="eventAddress.city"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" md="6">
-                    <v-text-field label="Estado" v-model="eventAddress.state">
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6">
-                    <v-text-field label="País" v-model="eventAddress.country">
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
     </v-container>
   </div>
 </template>

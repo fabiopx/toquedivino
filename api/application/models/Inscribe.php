@@ -5,6 +5,7 @@ require_once(APPPATH.'models/Crud.php');
 class Inscribe extends Crud{
     public $datetime;
     public $accountable;
+    public $birthdate;
     public $phone;
     public $mobile;
     public $address;
@@ -17,6 +18,7 @@ class Inscribe extends Crud{
     public function createInscribe(){
         $this->datetime = $_POST['datetime'];
         $this->accountable = $_POST['accountable'];
+        $this->birthdate = $_POST['birthdate'];
         $this->phone = $_POST['phone'];
         $this->mobile = $_POST['mobile'];
         $this->address = $_POST['address'];
@@ -128,6 +130,7 @@ class Inscribe extends Crud{
     public function updateInscribe($id){
         $this->datetime = $_POST['datetime'];
         $this->accountable = $_POST['accountable'];
+        $this->birthdate = $_POST['birthdate'];
         $this->phone = $_POST['phone'];
         $this->mobile = $_POST['mobile'];
         $this->address = $_POST['address'];
@@ -158,6 +161,7 @@ class Inscribe extends Crud{
     public function updateInscribeCustomers($id){
         $data = array(
             'accountable' => $_POST['accountable'],
+            'birthdate' => $_POST['birthdate'],
             'phone' => $_POST['phone'],
             'address' => $_POST['address'],
             'cpf' => $_POST['cpf'],

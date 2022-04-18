@@ -723,6 +723,7 @@ export default {
     },
     finish: function () {
       if (this.$refs.formInscribePartTwo.validate()) {
+        this.deleteLead();
         this.saveInscribe();
         this.next();
       }

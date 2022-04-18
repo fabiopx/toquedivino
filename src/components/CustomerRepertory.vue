@@ -15,7 +15,11 @@
               <v-toolbar-title>Gerenciar repertório</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-toolbar-items>
-                <v-btn text v-show="!startedRepertory" @click="startRepertory()">
+                <v-btn
+                  text
+                  v-show="!startedRepertory"
+                  @click="startRepertory()"
+                >
                   <v-icon>mdi-play</v-icon> iniciar
                 </v-btn>
               </v-toolbar-items>
@@ -25,9 +29,14 @@
                 <v-row>
                   <v-col></v-col>
                   <v-col class="align-center">
-                    <v-img src="../assets/undraw_media_player_ylg8.svg" max-width="600">
+                    <v-img
+                      src="../assets/undraw_media_player_ylg8.svg"
+                      max-width="600"
+                    >
                     </v-img>
-                    <span class="text-h4 ma-4">Ainda não há repertório inicializado</span>
+                    <span class="text-h4 ma-4"
+                      >Ainda não há repertório inicializado</span
+                    >
                   </v-col>
                   <v-col></v-col>
                 </v-row>
@@ -38,7 +47,10 @@
                 <v-row>
                   <v-col>
                     <v-form ref="formAddRepertoryItem">
-                      <v-skeleton-loader v-if="loadingSelectFields" type="text@2, button">
+                      <v-skeleton-loader
+                        v-if="loadingSelectFields"
+                        type="text@2, button"
+                      >
                       </v-skeleton-loader>
                       <v-autocomplete
                         v-model="repertoryMusic"
@@ -169,7 +181,9 @@
                                   icon
                                   color="red"
                                   dark
-                                  @click="delRepertoryItem(item.id, item.sequence)"
+                                  @click="
+                                    delRepertoryItem(item.id, item.sequence)
+                                  "
                                 >
                                   <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -188,15 +202,32 @@
       </v-row>
     </v-container>
     <v-container v-show="!isAgreement">
-      <p class="white--text">
-        Esta função estará liberarda após a assinatura do contrato.
-      </p>
-      <p>
-        <v-btn depressed color="grey darken-4" dark class="mr-2"
-          @click="$router.push('/customer/budget')">Acesse o orçamento</v-btn
-        >
-        <v-btn depressed color="grey darken-4" dark @click="$router.push('/customer/inscribe')">Revise seu cadastro</v-btn>
-      </p>
+      <v-card>
+        <v-toolbar color="grey darken-4" dark>
+          <h3>Ops!</h3>
+        </v-toolbar>
+        <v-card-text>
+          <p>Esta função estará liberarda após a assinatura do contrato.</p>
+          <p>
+            <v-btn
+              depressed
+              color="red darken-4"
+              dark
+              class="mr-2 pa-8"
+              @click="$router.push('/customer/budget')"
+              ><v-icon class="mr-3">mdi-file-document-edit</v-icon>Acesse o orçamento</v-btn
+            >
+            <v-btn
+              depressed
+              color="red darken-4"
+              dark
+              class="pa-8"
+              @click="$router.push('/customer/inscribe')"
+              ><v-icon class="mr-3">mdi-file-document-multiple</v-icon>Revise seu cadastro</v-btn
+            >
+          </p>
+        </v-card-text>
+      </v-card>
     </v-container>
     <v-overlay v-show="loading">
       <v-progress-circular indeterminate></v-progress-circular>
@@ -343,7 +374,9 @@ export default {
         });
     },
     getMaxSequence: async function (id) {
-      let response = await axios.get(this.apiURL + "/repertories/getMaxSequence/" + id);
+      let response = await axios.get(
+        this.apiURL + "/repertories/getMaxSequence/" + id
+      );
       this.maxSequence = response.data;
       // console.log("Max Sequence:" + response.data)
     },

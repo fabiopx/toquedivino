@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'models/Crud.php');
 
-class Leads extends Crud{
+class Lead extends Crud{
     public $datetime;
     public $ip;
     public $origin;

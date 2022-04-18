@@ -7,7 +7,7 @@ const state = {
   startedRepertory: false,
   isAgreement: false,
   isBudget: false,
-  cancelBudget: false
+  isEvent: false,
 };
 
 const getters = {
@@ -16,7 +16,7 @@ const getters = {
   startedRepertory: (state) => state.startedRepertory,
   isAgreement: (state) => state.isAgreement,
   isBudget: (state) => state.isBudget,
-  budgetCancel: (state) => state.budgetCancel
+  isEvent: (state) => state.isEvent
 };
 
 const actions = {
@@ -41,9 +41,11 @@ const actions = {
     commit('setIsBudget', payload)
   },
 
-  setBudgetCancel({commit}, payload){
-    commit('setBudgetCancel', payload)
-  }
+  async setIsEvent({commit}){
+    const response = await axios.get(process.env.VUE_APP_URL + "/events/getCustomers/" + state.inscribeID)
+    const resp = (response.data) ? true : false
+    commit('setIsEvent', resp)
+  },
   
 };
 
@@ -54,7 +56,7 @@ const mutations = {
   setStartedRepertory: (state, startedRepertory) => (state.startedRepertory = startedRepertory),
   setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement),
   setIsBudget: (state, isBudget) => (state.isBudget = isBudget),
-  setBudgetCancel: (state, budgetCancel) => (state.budgetCancel = budgetCancel)
+  setIsEvent: (state, isEvent) => (state.isEvent = isEvent)
 };
 
 export default {

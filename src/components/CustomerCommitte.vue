@@ -29,7 +29,7 @@
                     >
                     </v-text-field>
                     <v-btn
-                      color="grey darken-4"
+                      color="red darken-4"
                       class="white--text"
                       depressed
                       @click="addMemberGraduationCommitte()"
@@ -67,10 +67,11 @@
                 depressed
                 dark
                 large
-                color="grey darken-4"
+                color="red darken-4"
+                class="pa-8"
                 @click="saveCommitte()"
               >
-                <v-icon>mdi-content-save</v-icon> Salvar
+                <v-icon class="mr-3">mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
           </v-card>

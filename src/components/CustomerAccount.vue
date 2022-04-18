@@ -1,24 +1,12 @@
 <template>
   <div>
-    <v-container v-show="isAgreement" fluid>
-      <v-row>
-        <v-col>
-          <p class="text-h4 white--text">
-            <v-icon color="white">mdi-account</v-icon> Dados de acesso
-          </p>
-        </v-col>
-      </v-row>
+    <v-container fluid>
       <v-row>
         <v-col>
           <v-card>
             <v-toolbar color="grey darken-4" dark>
-              <v-toolbar-title>Gerenciar dados</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-items>
-                <v-btn text @click="saveAccount()">
-                  <v-icon>mdi-content-save</v-icon> Salvar
-                </v-btn>
-              </v-toolbar-items>
+              <v-toolbar-title>
+                <h2><v-icon class="mr-3">mdi-account</v-icon>Gerenciar dados</h2></v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-skeleton-loader
@@ -83,24 +71,26 @@
                   </v-col>
                   <v-col>
                     <v-avatar class="mr-2">
-                      <v-img :src="accountBlob ? accountBlob : accountPhoto"></v-img>
+                      <v-img
+                        :src="accountBlob ? accountBlob : accountPhoto"
+                      ></v-img>
                     </v-avatar>
                     <span>{{ accountName }}</span>
                   </v-col>
                 </v-row>
               </v-form>
             </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn depressed color="red darken-4" dark class="pa-8" @click="saveAccount()">
+                  <v-icon>mdi-content-save</v-icon> Salvar
+                </v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-    <v-container v-show="!isAgreement">
-      <p class="white--text">Esta função estará liberarda após a assinatura do contrato.</p>
-      <p>
-        <v-btn depressed color="grey darken-4" dark class="mr-2" @click="$router.push('/customer/budget')">Acesse o orçamento</v-btn>
-        <v-btn depressed color="grey darken-4" dark @click="$router.push('/customer/inscribe')">Revise seu cadastro</v-btn>
-      </p>
-    </v-container>
+    
     <v-overlay v-show="loading">
       <v-progress-circular indeterminate></v-progress-circular>
     </v-overlay>
@@ -128,11 +118,11 @@ export default {
     uploadMsg: "",
     photo: "",
     loadingAccountFields: false,
-    loading: false
+    loading: false,
   }),
 
   methods: {
-    ...mapActions(['setUserNow']),
+    ...mapActions(["setUserNow"]),
     getAccount: function () {
       this.loadingAccountFields = true;
       axios
@@ -145,12 +135,12 @@ export default {
             ? response.data.photo
             : process.env.VUE_APP_IMGPATH + "profile.svg";
           this.loadingAccountFields = false;
-          this.userData = this.$session.get('userData')
-          this.userData.photo = this.accountPhoto
-          this.userData.name = this.accountName
-          this.$session.remove('userData')
-          this.$session.set('userData', this.userData)
-          this.setUserNow(this.$session.get('userData'))
+          this.userData = this.$session.get("userData");
+          this.userData.photo = this.accountPhoto;
+          this.userData.name = this.accountName;
+          this.$session.remove("userData");
+          this.$session.set("userData", this.userData);
+          this.setUserNow(this.$session.get("userData"));
         });
     },
 
@@ -210,25 +200,20 @@ export default {
           ? process.env.VUE_APP_UPLOAD + this.currentFile.name
           : this.accountPhoto
       );
-      this.loading = true
-      axios(
-        this.apiURL +
-          "/user/updateCustomer/" +
-          this.userNow.id,
-        {
-          method: "POST",
-          data: data,
-        }
-      ).then((response) => {
-        this.loading = false
+      this.loading = true;
+      axios(this.apiURL + "/user/updateCustomer/" + this.userNow.id, {
+        method: "POST",
+        data: data,
+      }).then((response) => {
+        this.loading = false;
         this.getAccount();
       });
     },
   },
 
   created() {
-    if(this.$session.exists()){
-      this.setUserNow(this.$session.get('userData'))
+    if (this.$session.exists()) {
+      this.setUserNow(this.$session.get("userData"));
     }
     this.getAccount();
   },

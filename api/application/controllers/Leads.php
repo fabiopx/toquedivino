@@ -11,19 +11,19 @@ class Leads extends CI_Controller{
     }
 
     public function create(){
-        $this->load->model('leads');
-        echo json_encode($this->leads->createLead());
+        $this->load->model('lead');
+        echo json_encode($this->lead->createLead());
     }
 
     public function get($id = null){
-        $this->load->model('leads');
+        $this->load->model('lead');
         $where = (!is_null($id)) ? array('idpre_inscribe' => $id) : $id;
-        $leads = $this->leads->readLead($where);
-        echo json_encode($leads->result());
+        $lead = $this->lead->readLead($where);
+        echo json_encode($lead->result());
     }
 
     public function sendEmail(){
-        $this->load->model('leads');
+        $this->load->model('lead');
         $this->load->library('email');
         $data = array(
             'action' => 1,
@@ -31,7 +31,7 @@ class Leads extends CI_Controller{
             'pre_inscribe_idpre_inscribe' => $_POST['idpre_inscribe']
         );
 
-        $this->leads->createLogMarketing($data);
+        $this->lead->createLogMarketing($data);
 
         $config['mailtype'] = 'html';
         $this->email->initialize($config);
@@ -51,23 +51,23 @@ class Leads extends CI_Controller{
     }
 
     public function sendWhatsapp(){
-        $this->load->model('leads');
+        $this->load->model('lead');
         $data = array(
             'action' => 2,
             'datetime' => $_POST['datetime'],
             'pre_inscribe_idpre_inscribe' => $_POST['idpre_inscribe']
         );
 
-        echo json_encode($this->leads->createLogMarketing($data));
+        echo json_encode($this->lead->createLogMarketing($data));
     }
 
     public function getLogMarketing($id){
-        $this->load->model('leads');
+        $this->load->model('lead');
         $where = array('pre_inscribe_idpre_inscribe' => $id, 'action' => 1);
-        $email = $this->leads->readLogMarketing($where);
+        $email = $this->lead->readLogMarketing($where);
         $emailCount = ['E-mail', $email->num_rows()];
         $where = array('pre_inscribe_idpre_inscribe' => $id, 'action' => 2);
-        $whats = $this->leads->readLogMarketing($where);
+        $whats = $this->lead->readLogMarketing($where);
         $whatsCount = ['WhatsApp', $whats->num_rows()];
         $head = ['Tipo de Marketing', 'Valor'];
         $resp = array(
@@ -78,11 +78,11 @@ class Leads extends CI_Controller{
     }
 
     public function delete(){
-        $this->load->model('leads');
-        $ip = $_POST['ip'];
+        $this->load->model('lead');
         $mobile = $_POST['mobile'];
-        $where = array('ip' => $ip, 'mobile' => $mobile);
-        $resp = ($this->leads->deleteLead($where)) ? 'Lead excluída com sucesso' : 'Lead não pode ser excluída';
+        $email = $_POST['email'];
+        $where = array('email' => $email, 'mobile' => $mobile);
+        $resp = ($this->lead->deleteLead($where)) ? 'Lead excluída com sucesso' : 'Lead não pode ser excluída';
 
         echo json_encode($resp);
     }

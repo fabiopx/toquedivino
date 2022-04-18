@@ -6,7 +6,9 @@
           <v-card>
             <v-toolbar color="grey darken-4" dark>
               <v-toolbar-title>
-                <span class="small">Evento</span>
+                <span class="small"
+                  ><v-icon class="mr-3">mdi-calendar-check</v-icon>Evento</span
+                >
               </v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
@@ -38,6 +40,7 @@
                             readonly
                             v-bind="attrs"
                             v-on="on"
+                            :rules="eventDateRule"
                           >
                           </v-text-field>
                         </template>
@@ -68,6 +71,7 @@
                             readonly
                             v-bind="attrs"
                             v-on="on"
+                            :rules="eventTimeRule"
                           >
                           </v-text-field>
                         </template>
@@ -86,7 +90,8 @@
                       <v-btn
                         @click="buscarEndereco = !buscarEndereco"
                         depressed
-                        color="primary"
+                        color="red darken-4"
+                        dark
                       >
                         <v-icon>mdi-magnify</v-icon> Buscar endereço
                       </v-btn>
@@ -129,20 +134,20 @@
                       <v-text-field
                         label="CEP"
                         v-model="eventAddress.zipcode"
-                        v-mask="maskCep"
+                        v-mask="maskCep" :rules="eventAddressRule"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="8" lg="6">
                       <v-text-field
                         label="Logradouro"
-                        v-model="eventAddress.street"
+                        v-model="eventAddress.street" :rules="eventAddressRule"
                       >
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" lg="2">
                       <v-text-field
                         label="Número"
-                        v-model="eventAddress.number"
+                        v-model="eventAddress.number" :rules="eventAddressRule"
                       >
                       </v-text-field>
                     </v-col>
@@ -158,24 +163,24 @@
                     <v-col cols="12" md="6">
                       <v-text-field
                         label="Bairro"
-                        v-model="eventAddress.neighborhood"
+                        v-model="eventAddress.neighborhood" :rules="eventAddressRule"
                       >
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                       <v-text-field
                         label="Cidade"
-                        v-model="eventAddress.city"
+                        v-model="eventAddress.city" :rules="eventAddressRule"
                       ></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col cols="12" md="6">
-                      <v-text-field label="Estado" v-model="eventAddress.state">
+                      <v-text-field label="Estado" v-model="eventAddress.state" :rules="eventAddressRule">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <v-text-field label="País" v-model="eventAddress.country">
+                      <v-text-field label="País" v-model="eventAddress.country" :rules="eventAddressRule">
                       </v-text-field>
                     </v-col>
                   </v-row>
@@ -189,10 +194,11 @@
                 depressed
                 dark
                 large
-                color="grey darken-4"
+                color="red darken-4"
+                class="pa-8"
                 @click="saveEvent()"
               >
-                <v-icon>mdi-content-save</v-icon> Salvar
+                <v-icon class="mr-3">mdi-content-save</v-icon> Salvar
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -283,8 +289,10 @@ export default {
     eventID: "",
     eventName: "",
     eventDate: "",
+    eventDateRule: [(v) => !!v || "O campo Data é requerido"],
     eventDateCountDown: "",
     eventTime: "",
+    eventTimeRule: [(v) => !!v || "O campo Horário é requerido"],
     countDownNow: new Date(),
     countDownTime: undefined,
     eventAddress: {
@@ -297,87 +305,14 @@ export default {
       state: "",
       country: "",
     },
+    eventAddressRule: [(v) => !!v || "Digite o endereço completo"],
     pickDateEvent: false,
     pickTimeEvent: false,
   }),
 
   methods: {
-    ...mapActions(["setUserNow"]),
-    resetAllVars: function () {
-      this.currentFileBride = undefined;
-      this.currentFileGroom = undefined;
-      this.inscribeAccountable = "";
-      this.inscribePhone = "";
-      this.inscribeMobile = "";
-      this.inscribeAddress = {
-        street: "",
-        number: "",
-        complement: "",
-        neighborhood: "",
-        city: "",
-        zipcode: "",
-        state: "",
-        country: "",
-      };
-      this.inscribeCpf = "";
-      this.inscribeRg = "";
-      this.inscribeService = "";
-      this.inscribeFormation = "";
-      this.inscribeServiceTax = "";
-      this.services = [];
-      this.formation = [];
-      this.eventID = "";
-      this.eventName = "";
-      this.eventDate = "";
-      this.eventTime = "";
-      this.eventAddress = {
-        street: "",
-        number: "",
-        complement: "",
-        neighborhood: "",
-        city: "",
-        zipcode: "",
-        state: "",
-        country: "",
-      };
-      this.engagedID = "";
-      this.engagedBrideName = "";
-      this.engagedBrideAddress = {
-        street: "",
-        number: "",
-        complement: "",
-        neighborhood: "",
-        city: "",
-        zipcode: "",
-        state: "",
-        country: "",
-      };
-      this.engagedBridePhone = "";
-      this.engagedBrideMobile = "";
-      this.engagedBrideCpf = "";
-      this.engagedBrideRg = "";
-      this.engagedBrideBirthdate = "";
-      this.engagedBrideEmail = "";
-      (this.engagedBrideResponsibleFor = false), (this.engagedGroomName = "");
-      this.engagedGroomAddress = {
-        street: "",
-        number: "",
-        complement: "",
-        neighborhood: "",
-        city: "",
-        zipcode: "",
-        state: "",
-        country: "",
-      };
-      this.engagedGroomPhone = "";
-      this.engagedGroomMobile = "";
-      this.engagedGroomCpf = "";
-      (this.engagedGroomRg = ""), (this.engagedGroomBirthdate = "");
-      this.engagedGroomEmail = "";
-      (this.engagedGroomResponsibleFor = false),
-        (this.graduationCommitteName = "");
-      this.graduationCommitteMember = [];
-    },
+    ...mapActions(["setUserNow", "setIsEvent"]),
+
     maskTel: function (phone) {
       if (!!phone) {
         return phone.length == 15 ? this.maskMobile : this.maskPhone;
@@ -391,17 +326,17 @@ export default {
       }
     },
     getAddressData: function (addressData, placeResultData, id) {
-      this.inscribeAddress.street = addressData.route;
-      this.inscribeAddress.number = addressData.street_number
+      this.eventAddress.street = addressData.route;
+      this.eventAddress.number = addressData.street_number
         ? addressData.street_number
         : "";
       const address = placeResultData.formatted_address.split("-");
       const neighborhood = address[1].split(",");
-      this.inscribeAddress.neighborhood = neighborhood[0];
-      this.inscribeAddress.state = addressData.administrative_area_level_1;
-      this.inscribeAddress.country = addressData.country;
-      this.inscribeAddress.city = addressData.administrative_area_level_2;
-      this.inscribeAddress.zipcode = addressData.postal_code
+      this.eventAddress.neighborhood = neighborhood[0];
+      this.eventAddress.state = addressData.administrative_area_level_1;
+      this.eventAddress.country = addressData.country;
+      this.eventAddress.city = addressData.administrative_area_level_2;
+      this.eventAddress.zipcode = addressData.postal_code
         ? addressData.postal_code
         : "";
       this.buscarEndereco = false;
@@ -489,42 +424,47 @@ export default {
       this.loadingAgreementEvent = false;
     },
     saveEvent: function () {
-      let data = new FormData();
-      data.append("eventname", this.eventName);
-      data.append("eventdate", this.eventDate);
-      data.append("eventtime", this.eventTime);
-      data.append("eventaddress", JSON.stringify(this.eventAddress));
-      data.append("idinscribe", this.inscribeID);
-      if (this.crud == "c") {
-        axios(this.apiURL + "/events/createCustomers", {
-          method: "POST",
-          data: data,
-        }).then((response) => {
-          this.$swal(response.data.msg, "", response.data.icon);
-          this.getEvent();
-        });
-      } else if (this.crud == "u") {
-        axios(this.apiURL + "/events/updateCustomers/" + this.eventID, {
-          method: "POST",
-          data: data,
-        }).then((response) => {
-          this.$swal(response.data.msg, "", response.data.icon);
-          this.getEvent();
-        });
+      if (this.$refs.formEvents.validate()) {
+        let data = new FormData();
+        data.append("eventname", this.eventName);
+        data.append("eventdate", this.eventDate);
+        data.append("eventtime", this.eventTime);
+        data.append("eventaddress", JSON.stringify(this.eventAddress));
+        data.append("idinscribe", this.inscribeID);
+        if (this.crud == "c") {
+          axios(this.apiURL + "/events/createCustomers", {
+            method: "POST",
+            data: data,
+          }).then((response) => {
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.setIsEvent();
+            this.getEvent();
+          });
+        } else if (this.crud == "u") {
+          axios(this.apiURL + "/events/updateCustomers/" + this.eventID, {
+            method: "POST",
+            data: data,
+          }).then((response) => {
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getEvent();
+          });
+        }
       }
     },
   },
 
   computed: {
-    ...mapGetters(["userNow", "isAgreement"]),
+    ...mapGetters(["userNow", "isAgreement", "isEvent"]),
   },
 
   created: async function () {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
+      await this.setIsEvent();
     }
     await this.getInscribe();
     await this.getEvent();
+    console.log(this.isEvent);
   },
 };
 </script>

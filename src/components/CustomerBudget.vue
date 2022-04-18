@@ -3,9 +3,9 @@
     <v-container>
       <v-row>
         <v-col>
-          <v-card>
+          <v-card v-show="isEvent">
             <v-toolbar color="grey darken-4" dark>
-              <h2>Orçamento</h2>
+              <h2><v-icon class="mr-3">mdi-file-document-edit</v-icon>Orçamento</h2>
             </v-toolbar>
             <v-card-text v-show="budgetOpen">
               <v-sheet class="pa-4" outlined elevation="1">
@@ -204,16 +204,17 @@
                   </tbody>
                 </v-simple-table>
                 <div class="ml-3" v-show="!loadingDatas">
-                <v-btn
-                  v-show="budgetOpen"
-                  color="red darken-4"
-                  class="mt-3 pa-4"
-                  dark
-                  @click="verifyAllChecked()"
-                >
-                  <v-icon class="mr-2">mdi-content-save</v-icon>Salvar orçamento
-                </v-btn>
-              </div>
+                  <v-btn
+                    v-show="budgetOpen"
+                    color="red darken-4"
+                    class="mt-3 pa-4"
+                    dark
+                    @click="verifyAllChecked()"
+                  >
+                    <v-icon class="mr-2">mdi-content-save</v-icon>Salvar
+                    orçamento
+                  </v-btn>
+                </div>
               </v-sheet>
             </v-card-text>
             <v-card-text v-show="isBudget">
@@ -285,6 +286,23 @@
               </v-sheet>
             </v-card-text>
           </v-card>
+          <v-card v-show="!isEvent">
+            <v-toolbar color="grey darken-4" dark><h3>Ops!</h3></v-toolbar>
+            <v-card-text>
+              <p>Você ainda não cadastrou seu evento!</p>
+              <p>
+                <v-btn
+                  depressed
+                  color="red darken-4"
+                  dark
+                  class="pa-8"
+                  @click="$router.push('/customer/event')"
+                  ><v-icon class="mr-3">mdi-calendar-check</v-icon>Cadastrar
+                  evento</v-btn
+                >
+              </p>
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -299,7 +317,7 @@ export default {
     apiURL: process.env.VUE_APP_URL,
     formation: {},
     service: {},
-    events: { address: {} },
+    events: { date: "", time: "", address: {} },
     formationChecked: false,
     serviceChecked: false,
     eventChecked: false,
@@ -318,11 +336,7 @@ export default {
     loadingBudget: true,
   }),
   methods: {
-    ...mapActions([
-      "setInscribeID",
-      "setUserNow",
-      "setIsBudget",
-    ]),
+    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "setIsEvent"]),
 
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
@@ -362,8 +376,10 @@ export default {
       const response = await axios.get(
         this.apiURL + "/events/getCustomers/" + this.inscribeID
       );
-      this.events = response.data;
-      this.distance = await this.getDistance();
+      if (response.data) {
+        this.events = response.data;
+        this.distance = await this.getDistance();
+      }
       this.loadingDatas = false;
     },
     getServiceTax: async function () {
@@ -392,16 +408,16 @@ export default {
       });
     },
     calculateTaxValue: function () {
-      setInterval(() => {
-        var tax = this.tax;
+      var tax = this.tax;
+      if (tax) {
         tax.forEach((t) => {
           if (t.multiplied == "por km") {
             this.multipliedTaxValue =
               parseFloat(t.value) * (parseFloat(this.distance) / 1000);
           }
         });
-        this.loadingTotalTax = false;
-      }, 2000);
+      }
+      this.loadingTotalTax = false;
     },
 
     createBudget: async function () {
@@ -422,7 +438,7 @@ export default {
         data: data,
       });
       this.$swal(response.data.msg, "", response.data.icon);
-      
+
       await this.getBudget();
     },
     getBudget: async function () {
@@ -434,7 +450,7 @@ export default {
         this.budgetItems = response.data;
         this.setIsBudget(true);
         await this.verifyBudgetCancel();
-      } else{
+      } else {
         this.setIsBudget(false);
       }
       this.budgetOpen = !this.isBudget || this.budgetCancel ? true : false;
@@ -456,6 +472,7 @@ export default {
   created: async function () {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
+      await this.setIsEvent();
       await this.getEvent();
       await this.getInscribe();
       await this.calculateTaxValue();
@@ -469,6 +486,7 @@ export default {
       "userNow",
       "isAgreement",
       "isBudget",
+      "isEvent",
     ]),
   },
   formationChecked: function () {
