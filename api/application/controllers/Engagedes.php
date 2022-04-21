@@ -12,6 +12,53 @@ class Engagedes extends CI_Controller{
 
     public function createCustomers(){
         $this->load->model('engaged');
+        $this->load->model('account');
+        $this->load->model('signature');
+        if($_POST['groom_responsible_for']){
+            $account = [
+                'name' => $_POST['groom_name'],
+                'email' => $_POST['groom_email'],
+                'password' => password_generate(),
+                'status' => 1,
+                'pin' => code_generate(),
+                'access' => 4
+            ];
+            $this->account->createAccount($account);
+            $idAccount = $this->db->insert_id();
+            $signature = [
+                'name' => $_POST['groom_name'],
+                'type' => 1,
+                'font' => 'gf_fuggles',
+                'status' => 1,
+                'inuse' => 0,
+                'account_idaccount' => $idAccount
+            ];
+
+            $this->signature->createSignature($signature);
+        }
+        if($_POST['bride_responsible_for']){
+            $account = [
+                'name' => $_POST['bride_name'],
+                'email' => $_POST['bride_email'],
+                'password' => password_generate(),
+                'status' => 1,
+                'pin' => code_generate(),
+                'access' => 4
+            ];
+            $this->account->createAccount($account);
+            $idAccount = $this->db->insert_id();
+            $signature = [
+                'name' => $_POST['bride_name'],
+                'type' => 1,
+                'font' => 'gf_fuggles',
+                'status' => 1,
+                'inuse' => 0,
+                'account_idaccount' => $idAccount
+            ];
+
+            $this->signature->createSignature($signature);
+        }
+        
         if($this->engaged->createEngaged()){
             $resp = array('msg' => 'Noivos cadastrados com sucesso', 'icon' => 'success');
         } else{
@@ -95,9 +142,11 @@ class Engagedes extends CI_Controller{
 
     public function createSocialNetworks(){
         $this->load->model('engaged');
-        ($this->createSocialNetworks()) 
-        ? $resp = ['msg' => 'Rede social incluída com sucesso!', 'icon' => 'sucess'] 
-        : $resp = ['msg' => 'Rede Social não pode ser incluída', 'icon' => 'error']; 
+        if($this->engaged->createSocialNetworks()){
+            $resp = ['msg' => 'Rede social incluída com sucesso!', 'icon' => 'sucess'];
+        } else{
+            $resp = ['msg' => 'Rede Social não pode ser incluída', 'icon' => 'error']; 
+        }
         echo json_encode($resp);
     }
 
@@ -120,9 +169,11 @@ class Engagedes extends CI_Controller{
     public function deleteSocialNetworks($id){
         $this->load->model('engaged');
         $where = ['id' => $id];
-        ($this->engeged->deleteSocialNetworks($where))
-        ? $resp = ['msg' => 'Rede Social excluída com sucesso', 'icon' => 'success']
-        : $resp = ['msg' => 'Rede Social não pode ser excluída', 'icon' => 'error'];
+        if($this->engaged->deleteSocialNetworks($where)){
+            $resp = ['msg' => 'Rede Social excluída com sucesso', 'icon' => 'success'];
+        } else{
+            $resp = ['msg' => 'Rede Social não pode ser excluída', 'icon' => 'error'];
+        }
         echo json_encode($resp);
     }
 }

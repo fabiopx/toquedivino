@@ -12,16 +12,18 @@ class Account extends Crud{
     public $pin;
     public $access;
 
-    public function createAccount(){
-        $this->name = $_POST['name'];
-        $this->email = $_POST['email'];
-        $this->password = $_POST['password'];
-        $this->status = $_POST['status'];
-        $this->phone = $_POST['phone'];
-        $this->photo = $_POST['photo'];
-        $this->pin = code_generate();
-        $this->access = $_POST['access'];
-        $data = $this;
+    public function createAccount($data = null){
+        if(is_null($data)){
+            $this->name = $_POST['name'];
+            $this->email = $_POST['email'];
+            $this->password = $_POST['password'];
+            $this->status = $_POST['status'];
+            $this->phone = $_POST['phone'];
+            $this->photo = $_POST['photo'];
+            $this->pin = code_generate();
+            $this->access = $_POST['access'];
+            $data = $this;
+        }
         
         if($this->create('account', $data)){
             return $this->response('success', 'Conta criada com sucesso');

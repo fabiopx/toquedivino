@@ -391,14 +391,15 @@
                         alinhar horários, posição da banda etc.
                         <v-btn
                           text
-                          color="grey darken-4"
+                          color="red darken-4"
                           dark
+                          rounded
                           @click="formWeddingServicesAdd()"
                         >
-                          <v-icon>mdi-plus-circle</v-icon> Cadastrar
+                          <v-icon class="mr-3">mdi-plus-circle</v-icon>
+                          Cadastrar
                         </v-btn>
-                        <v-divider></v-divider>
-                        <div v-if="weddingServices.lenght != 0">
+                        <div v-if="weddingServices.length != 0">
                           <v-list two-line>
                             <v-list-item
                               v-for="wservice in weddingServices"
@@ -433,7 +434,69 @@
                             </v-list-item>
                           </v-list>
                         </div>
-                        <div v-else>Não existe empresa cadastrada</div>
+                        <div class="pa-5 font-weight-bold" v-else>
+                          Não existe empresa cadastrada
+                        </div>
+                      </v-sheet>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-sheet elevation="1" class="pa-4 grey lighten-4">
+                        <h2>Redes Sociais</h2>
+                        <v-form ref="formSocialNetworks">
+                          <v-select
+                            v-model="socialNetworksSel"
+                            label="Selecione a Rede Social"
+                            :items="socialNetworksItems"
+                            item-text="name"
+                            :rules="socialNetworksSelRule"
+                            return-object
+                          >
+                            <template v-slot:append>
+                              <v-icon>{{ socialNetworksSel.icon }}</v-icon>
+                            </template>
+                          </v-select>
+                          <v-select
+                            v-model="socialNetworksEngaged"
+                            label="De quem é a Rede Social?"
+                            :items="socialNetworksEngagedItems"
+                            item-text="name"
+                            item-value="id"
+                            :rules="socialNetworksEngagedRule"
+                          ></v-select>
+                          <v-text-field
+                            v-model="socialNetworksLink"
+                            label="Link do perfil público"
+                            prefix="https://"
+                            :rules="socialNetworksLinkRule"
+                          ></v-text-field>
+                        </v-form>
+                        <v-btn
+                          text
+                          rounded
+                          color="red darken-4"
+                          @click="saveSocialNetworks()"
+                          ><v-icon class="mr-3">mdi-plus-circle</v-icon
+                          >Adicionar</v-btn
+                        >
+                        <v-divider class="mt-3 mb-3"></v-divider>
+                        <v-chip
+                          v-for="social in socialNetworks"
+                          :key="social.id"
+                          class="pa-5 mr-3"
+                        >
+                          <v-btn icon @click="openLink(social.link)"><v-icon>{{ social.icon }}</v-icon></v-btn>
+                          {{ social.name }}
+                          {{ socialNetworksEngagedReturn(social.engaged) }}
+
+                          <v-btn icon class="ml-3"
+                            ><v-icon>mdi-pencil</v-icon></v-btn
+                          >
+                          <v-btn icon @click="deleteSocialNetworks(social.id)"
+                            ><v-icon>mdi-close</v-icon></v-btn
+                          >
+                        </v-chip>
                       </v-sheet>
                     </v-col>
                   </v-row>
@@ -552,20 +615,27 @@
               <v-dialog v-model="formWeddingServices">
                 <v-card>
                   <v-toolbar color="grey darken-4" dark>
-                    Cadastrar demais serviços do casamento
+                    <v-btn icon @click="closeFormWeddingServices()"
+                      ><v-icon>mdi-close</v-icon></v-btn
+                    >
+                    <v-toolbar-title
+                      >Cadastrar demais serviços do casamento</v-toolbar-title
+                    >
                   </v-toolbar>
-                  <v-form>
+                  <v-form ref="formWeddingService">
                     <v-container>
                       <v-row>
                         <v-col cols="12" md="6">
                           <v-text-field
                             v-model="weddingServiceCompanyName"
+                            :rules="weddingServiceCompanyNameRule"
                             label="Nome da empresa"
                           ></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
                           <v-text-field
                             v-model="weddingServicePhone"
+                            :rules="weddingServicePhoneRule"
                             v-mask="maskTel(weddingServicePhone)"
                             label="Telefone"
                           ></v-text-field>
@@ -581,6 +651,7 @@
                         <v-col cols="12" md="4">
                           <v-text-field
                             v-model="weddingServiceContactName"
+                            :rules="weddingServiceContactNameRule"
                             label="Nome de contato"
                           ></v-text-field>
                         </v-col>
@@ -588,16 +659,12 @@
                       <v-row>
                         <v-col>
                           <v-btn
-                            color="grey darken-4"
-                            class="mr-3"
+                            color="red darken-4"
+                            class="mr-3 pa-8"
                             dark
                             @click="saveWeddingService()"
-                            >Salvar</v-btn
-                          >
-                          <v-btn
-                            color="secondary"
-                            @click="closeFormWeddingServices()"
-                            >Fechar</v-btn
+                            ><v-icon class="mr-3">mdi-check</v-icon
+                            >Cadastrar</v-btn
                           >
                         </v-col>
                       </v-row>
@@ -804,10 +871,62 @@ export default {
     loadingWeddingServices: false,
     weddingServiceID: "",
     weddingServiceCompanyName: "",
+    weddingServiceCompanyNameRule: [
+      (v) => !!v || "O campo NOME DA EMPRESA é requerido",
+    ],
     weddingServiceAddress: "",
     weddingServicePhone: "",
+    weddingServicePhoneRule: [(v) => !!v || "O campo TELEFONE é requerido"],
     weddingServiceContactName: "",
+    weddingServiceContactNameRule: [
+      (v) => !!v || "O campo NOME DE CONTATO é requerido",
+    ],
     weddingServices: [],
+    socialNetworks: [],
+    socialNetworksEdit: false,
+    socialNetworksSel: { name: "", icon: "" },
+    socialNetworksSelRule: [(v) => !!v || "Selecione uma Rede Social"],
+    socialNetworksEngaged: "",
+    socialNetworksEngagedRule: [(v) => !!v || "Diga de quem é a rede social"],
+    socialNetworksEngagedItems: [
+      {
+        id: 1,
+        name: "do Noivo",
+      },
+      {
+        id: 2,
+        name: "da Noiva",
+      },
+      {
+        id: 3,
+        name: "da Noiva e do Noivo",
+      },
+    ],
+    socialNetworksLink: "",
+    socialNetworksLinkRule: [(v) => !!v || "Digite o link da Rede Social"],
+    socialNetworksEngagedID: "",
+    socialNetworksItems: [
+      {
+        name: "Facebook",
+        icon: "mdi-facebook",
+      },
+      {
+        name: "Instagram",
+        icon: "mdi-instagram",
+      },
+      {
+        name: "Twitter",
+        icon: "mdi-twitter",
+      },
+      {
+        name: "LinkedIn",
+        icon: "mdi-linkedin",
+      },
+      {
+        name: "Pinterest",
+        icon: "mdi-pinterest",
+      },
+    ],
   }),
 
   methods: {
@@ -1000,6 +1119,19 @@ export default {
       this.weddingServiceContactName = "";
       this.formWeddingServices = false;
     },
+    socialNetworksEngagedReturn: function (n) {
+      if (n == 1) return "do Noivo";
+      if (n == 2) return "da Noiva";
+      if (n == 3) return "da Noiva e do Noivo";
+    },
+    socialNetworksFormEmpty: function(){
+      this.socialNetworksSel = {name: "", icon:""};
+      this.socialNetworksEngaged = "";
+      this.socialNetworksLink = "";
+    },
+    openLink: function(link){
+      window.open("https://" + link);
+    },
     getAddressData: function (addressData, placeResultData, id) {
       this.inscribeAddress.street = addressData.route;
       this.inscribeAddress.number = addressData.street_number
@@ -1109,7 +1241,8 @@ export default {
         this.engagedBrideEmail = resp.bride_email;
         this.engagedBrideResponsibleFor = resp.bride_responsible_for;
         this.selectEngaged = resp.selectEngaged;
-        this.getWeddingServices(resp.idengaged);
+        await this.getWeddingServices(resp.idengaged);
+        await this.getSocialNetworks(resp.idengaged);
       } else {
         this.crud = "c";
         this.selectEngaged = false;
@@ -1124,6 +1257,12 @@ export default {
       );
       this.weddingServices = response.data;
       this.loadingWeddingServices = false;
+    },
+    getSocialNetworks: async function (id) {
+      const response = await axios.get(
+        this.apiURL + "/engagedes/getSocialNetworks/" + id
+      );
+      this.socialNetworks = response.data;
     },
     saveEngaged: function () {
       let data = new FormData();
@@ -1184,35 +1323,67 @@ export default {
       }
     },
     saveWeddingService: function () {
-      let data = new FormData();
-      data.append("companyname", this.weddingServiceCompanyName);
-      data.append("address", this.weddingServiceAddress);
-      data.append("phone", this.weddingServicePhone);
-      data.append("contactname", this.weddingServiceContactName);
-      data.append("engaged_idengaged", this.engagedID);
-      if (this.crud == "c") {
-        axios(this.apiURL + "/engagedes/createWeddingServices", {
-          method: "POST",
-          data: data,
-        }).then((response) => {
-          this.closeFormWeddingServices();
-          this.$swal(response.data.msg, "", response.data.icon);
-          this.getWeddingServices(this.engagedID);
-        });
-      } else if (this.crud == "u") {
-        axios(
-          this.apiURL +
-            "/engagedes/updateWeddingServices/" +
-            this.weddingServiceID,
-          {
+      if (this.$refs.formWeddingService.validate()) {
+        let data = new FormData();
+        data.append("companyname", this.weddingServiceCompanyName);
+        data.append("address", this.weddingServiceAddress);
+        data.append("phone", this.weddingServicePhone);
+        data.append("contactname", this.weddingServiceContactName);
+        data.append("engaged_idengaged", this.engagedID);
+        if (this.crud == "c") {
+          axios(this.apiURL + "/engagedes/createWeddingServices", {
             method: "POST",
             data: data,
-          }
-        ).then((response) => {
-          this.closeFormWeddingServices();
-          this.$swal(response.data.msg, "", response.data.icon);
-          this.getWeddingServices(this.engagedID);
-        });
+          }).then((response) => {
+            this.closeFormWeddingServices();
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getWeddingServices(this.engagedID);
+          });
+        } else if (this.crud == "u") {
+          axios(
+            this.apiURL +
+              "/engagedes/updateWeddingServices/" +
+              this.weddingServiceID,
+            {
+              method: "POST",
+              data: data,
+            }
+          ).then((response) => {
+            this.closeFormWeddingServices();
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getWeddingServices(this.engagedID);
+          });
+        }
+      }
+    },
+    saveSocialNetworks: function () {
+      if (this.$refs.formSocialNetworks.validate()) {
+        let data = new FormData();
+        data.append("name", this.socialNetworksSel.name);
+        data.append("icon", this.socialNetworksSel.icon);
+        data.append("engaged", this.socialNetworksEngaged);
+        data.append("link", this.socialNetworksLink);
+        data.append("engaged_idengaged", this.engagedID);
+        if (!this.socialNetworksEdit) {
+          axios(this.apiURL + "/engagedes/createSocialNetworks", {
+            method: "POST",
+            data: data,
+          }).then((response) => {
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getSocialNetworks(this.engagedID);
+          });
+        } else {
+          axios(
+            this.apiURL + "/engagedes/updateSocialNetworks/" + this.engagedID,
+            {
+              method: "POST",
+              data: data,
+            }
+          ).then((response) => {
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getSocialNetworks(this.engagedID);
+          });
+        }
       }
     },
     deleteWeddingService: function (id) {
@@ -1225,6 +1396,11 @@ export default {
           this.getWeddingServices(this.engagedID);
         });
     },
+    deleteSocialNetworks: async function(id){
+      const response =  await axios.get(this.apiURL + "/engagedes/deleteSocialNetworks/" + id);
+      this.$swal(response.data.msg, "", response.data.icon);
+      this.getSocialNetworks(this.engagedID);
+    }
   },
 
   computed: {
@@ -1237,6 +1413,7 @@ export default {
     }
     await this.getInscribe();
     await this.getEngaged();
+    // console.log(this.weddingServices.length)
   },
 };
 </script>
