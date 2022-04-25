@@ -35,7 +35,7 @@ class Engaged extends Crud{
         $this->groom_rg = $_POST['groom_rg'];
         $this->groom_birthdate = $_POST['groom_birthdate'];
         $this->groom_email = $_POST['groom_email'];
-        $this->groom_responsible_for = $_POST['groom_responsible_for'];
+        $this->groom_responsible_for = ($_POST['groom_responsible_for'] == "true") ? 1 : 0;
         $this->bride_name = $_POST['bride_name'];
         $this->bride_address = $_POST['bride_address'];
         $this->bride_phone = $_POST['bride_phone'];
@@ -45,7 +45,7 @@ class Engaged extends Crud{
         $this->bride_rg = $_POST['bride_rg'];
         $this->bride_birthdate = $_POST['bride_birthdate'];
         $this->bride_email = $_POST['bride_email'];
-        $this->bride_responsible_for = $_POST['bride_responsible_for'];
+        $this->bride_responsible_for = ($_POST['bride_responsible_for'] == "true") ? 1 : 0;
         $this->inscribe_idinscribe = $_POST['idinscribe'];
         $data = $this;
 
@@ -76,6 +76,10 @@ class Engaged extends Crud{
         return $this->create('social_networks', $data);
     }
 
+    public function createEngagedHasSignature($data){
+        return $this->create('engaged_has_signature', $data);
+    }
+
     public function readEngaged($where = null){
         if(!is_null($where)){
             return $this->ready('engaged', $where);
@@ -96,6 +100,10 @@ class Engaged extends Crud{
         return (!is_null($where)) ? $this->ready('social_networks', $where) : $this->ready('social_networks');
     }
 
+    public function readEngagedHasSignature($where = null){
+        return (!is_null($where)) ? $this->ready('engaged_has_signature', $where) : $this->ready('engaged_has_signature');
+    }
+
     public function updateEngaged($where){
         $this->groom_name = $_POST['groom_name'];
         $this->groom_address = $_POST['groom_address'];
@@ -106,7 +114,7 @@ class Engaged extends Crud{
         $this->groom_rg = $_POST['groom_rg'];
         $this->groom_birthdate = $_POST['groom_birthdate'];
         $this->groom_email = $_POST['groom_email'];
-        $this->groom_responsible_for = $_POST['groom_responsible_for'];
+        $this->groom_responsible_for = ($_POST['groom_responsible_for'] == "true" ? 1 : 0);
         $this->bride_name = $_POST['bride_name'];
         $this->bride_address = $_POST['bride_address'];
         $this->bride_phone = $_POST['bride_phone'];
@@ -116,7 +124,7 @@ class Engaged extends Crud{
         $this->bride_rg = $_POST['bride_rg'];
         $this->bride_birthdate = $_POST['bride_birthdate'];
         $this->bride_email = $_POST['bride_email'];
-        $this->bride_responsible_for = $_POST['bride_responsible_for'];
+        $this->bride_responsible_for = ($_POST['bride_responsible_for'] == "true") ? 1 : 0;
         $this->inscribe_idinscribe = $_POST['idinscribe'];
         $data = $this;
 
@@ -157,5 +165,9 @@ class Engaged extends Crud{
 
     public function deleteSocialNetworks($where){
         return $this->delete('social_networks', $where);
+    }
+
+    public function deleteEngagedHasSignature($where){
+        return $this->delete('engaged_has_signature', $where);
     }
 }

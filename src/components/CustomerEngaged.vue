@@ -462,8 +462,8 @@
                             label="De quem é a Rede Social?"
                             :items="socialNetworksEngagedItems"
                             item-text="name"
-                            item-value="id"
                             :rules="socialNetworksEngagedRule"
+                            return-object
                           ></v-select>
                           <v-text-field
                             v-model="socialNetworksLink"
@@ -477,9 +477,14 @@
                           rounded
                           color="red darken-4"
                           @click="saveSocialNetworks()"
-                          ><v-icon class="mr-3">mdi-plus-circle</v-icon
-                          >Adicionar</v-btn
+                          >
+                          <v-icon v-if="!socialNetworksEdit" class="mr-3">mdi-plus-circle</v-icon>
+                          <v-icon v-if="socialNetworksEdit" class="mr-3">mdi-content-save</v-icon>
+                          <span v-if="!socialNetworksEdit">Adicionar</span>
+                          <span v-if="socialNetworksEdit">Atualizar</span>
+                          </v-btn
                         >
+                        <v-btn v-if="socialNetworksEdit" text rounded color="red darken-4" @click="socialNetworksFormEmpty()">Limpar</v-btn>
                         <v-divider class="mt-3 mb-3"></v-divider>
                         <v-chip
                           v-for="social in socialNetworks"
@@ -490,7 +495,7 @@
                           {{ social.name }}
                           {{ socialNetworksEngagedReturn(social.engaged) }}
 
-                          <v-btn icon class="ml-3"
+                          <v-btn icon class="ml-3" @click="socialNetworksOpenEdit(social)"
                             ><v-icon>mdi-pencil</v-icon></v-btn
                           >
                           <v-btn icon @click="deleteSocialNetworks(social.id)"
@@ -883,10 +888,11 @@ export default {
     ],
     weddingServices: [],
     socialNetworks: [],
+    socialNetworksID: "",
     socialNetworksEdit: false,
     socialNetworksSel: { name: "", icon: "" },
     socialNetworksSelRule: [(v) => !!v || "Selecione uma Rede Social"],
-    socialNetworksEngaged: "",
+    socialNetworksEngaged: {id: "", name: ""},
     socialNetworksEngagedRule: [(v) => !!v || "Diga de quem é a rede social"],
     socialNetworksEngagedItems: [
       {
@@ -1125,9 +1131,18 @@ export default {
       if (n == 3) return "da Noiva e do Noivo";
     },
     socialNetworksFormEmpty: function(){
+      this.$refs.formSocialNetworks.reset();
       this.socialNetworksSel = {name: "", icon:""};
-      this.socialNetworksEngaged = "";
+      this.socialNetworksEngaged = {id: "", name: ""};
       this.socialNetworksLink = "";
+      this.socialNetworksEdit = false;
+    },
+    socialNetworksOpenEdit: function(social){
+      this.socialNetworksEdit = true;
+      this.socialNetworksID = social.id
+      this.socialNetworksSel = {name: social.name, icon: social.icon};
+      this.socialNetworksEngaged = {id: social.engaged, name: this.socialNetworksEngagedReturn(social.engaged)};
+      this.socialNetworksLink = social.link;
     },
     openLink: function(link){
       window.open("https://" + link);
@@ -1361,7 +1376,7 @@ export default {
         let data = new FormData();
         data.append("name", this.socialNetworksSel.name);
         data.append("icon", this.socialNetworksSel.icon);
-        data.append("engaged", this.socialNetworksEngaged);
+        data.append("engaged", this.socialNetworksEngaged.id);
         data.append("link", this.socialNetworksLink);
         data.append("engaged_idengaged", this.engagedID);
         if (!this.socialNetworksEdit) {
@@ -1370,17 +1385,20 @@ export default {
             data: data,
           }).then((response) => {
             this.$swal(response.data.msg, "", response.data.icon);
+            this.socialNetworksFormEmpty();
             this.getSocialNetworks(this.engagedID);
           });
-        } else {
+        } else if(this.socialNetworksEdit) {
           axios(
-            this.apiURL + "/engagedes/updateSocialNetworks/" + this.engagedID,
+            this.apiURL + "/engagedes/updateSocialNetworks/" + this.socialNetworksID,
             {
               method: "POST",
               data: data,
             }
           ).then((response) => {
             this.$swal(response.data.msg, "", response.data.icon);
+            this.socialNetworksEdit = false;
+            this.socialNetworksFormEmpty();
             this.getSocialNetworks(this.engagedID);
           });
         }

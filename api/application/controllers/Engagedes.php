@@ -14,57 +14,73 @@ class Engagedes extends CI_Controller{
         $this->load->model('engaged');
         $this->load->model('account');
         $this->load->model('signature');
-        if($_POST['groom_responsible_for']){
-            $account = [
-                'name' => $_POST['groom_name'],
-                'email' => $_POST['groom_email'],
-                'password' => password_generate(),
-                'status' => 1,
-                'pin' => code_generate(),
-                'access' => 4
-            ];
-            $this->account->createAccount($account);
-            $idAccount = $this->db->insert_id();
-            $signature = [
-                'name' => $_POST['groom_name'],
-                'type' => 1,
-                'font' => 'gf_fuggles',
-                'status' => 1,
-                'inuse' => 0,
-                'account_idaccount' => $idAccount
-            ];
-
-            $this->signature->createSignature($signature);
-        }
-        if($_POST['bride_responsible_for']){
-            $account = [
-                'name' => $_POST['bride_name'],
-                'email' => $_POST['bride_email'],
-                'password' => password_generate(),
-                'status' => 1,
-                'pin' => code_generate(),
-                'access' => 4
-            ];
-            $this->account->createAccount($account);
-            $idAccount = $this->db->insert_id();
-            $signature = [
-                'name' => $_POST['bride_name'],
-                'type' => 1,
-                'font' => 'gf_fuggles',
-                'status' => 1,
-                'inuse' => 0,
-                'account_idaccount' => $idAccount
-            ];
-
-            $this->signature->createSignature($signature);
-        }
         
         if($this->engaged->createEngaged()){
+            $idEngaged = $this->db->insert_id();
+            if($_POST['groom_responsible_for'] == "true"){
+                $account = [
+                    'name' => $_POST['groom_name'],
+                    'email' => $_POST['groom_email'],
+                    'password' => password_generate(),
+                    'status' => 1,
+                    'pin' => code_generate(),
+                    'access' => 4
+                ];
+                $this->account->createAccount($account);
+                $idAccount = $this->db->insert_id();
+                $signature = [
+                    'name' => $_POST['groom_name'],
+                    'type' => 1,
+                    'font' => 'gf_fuggles',
+                    'status' => 1,
+                    'inuse' => 0,
+                    'account_idaccount' => $idAccount
+                ];
+    
+                $this->signature->createSignature($signature);
+                $idSignature = $this->db->insert_id();
+                $engagedHasSignature = [
+                    'engaged_idengaged' => $idEngaged,
+                    'signature_idsignature' => $idSignature,
+                    'engaged' => 1
+                ];
+
+                $this->engaged->createEngagedHasSignature($engagedHasSignature);
+            }
+            if($_POST['bride_responsible_for'] == "true"){
+                $account = [
+                    'name' => $_POST['bride_name'],
+                    'email' => $_POST['bride_email'],
+                    'password' => password_generate(),
+                    'status' => 1,
+                    'pin' => code_generate(),
+                    'access' => 4
+                ];
+                $this->account->createAccount($account);
+                $idAccount = $this->db->insert_id();
+                $signature = [
+                    'name' => $_POST['bride_name'],
+                    'type' => 1,
+                    'font' => 'gf_fuggles',
+                    'status' => 1,
+                    'inuse' => 0,
+                    'account_idaccount' => $idAccount
+                ];
+    
+                $this->signature->createSignature($signature);
+                $idSignature = $this->db->insert_id();
+                $engagedHasSignature = [
+                    'engaged_idengaged' => $idEngaged,
+                    'signature_idsignature' => $idSignature,
+                    'engaged' => 2
+                ];
+
+                $this->engaged->createEngagedHasSignature($engagedHasSignature);
+            }
             $resp = array('msg' => 'Noivos cadastrados com sucesso', 'icon' => 'success');
         } else{
             $resp = array('msg' => 'Noivos não foram cadastrados', 'icon' => 'error');
         }
-
         echo json_encode($resp);
     }
 
@@ -88,7 +104,98 @@ class Engagedes extends CI_Controller{
 
     public function updateCustomers($id){
         $this->load->model('engaged');
+        $this->load->model('signature');
+        $this->load->model('account');
         $where = array('idengaged' => $id);
+
+        if($_POST['groom_responsible_for'] == "true"){
+            $engagedHasSignature = $this->engaged->readEngagedHasSignature(['engaged' => 1, 'engaged_idengaged' => $id]);
+            if($engagedHasSignature->num_rows() == 0){
+                $account = [
+                    'name' => $_POST['groom_name'],
+                    'email' => $_POST['groom_email'],
+                    'password' => password_generate(),
+                    'status' => 1,
+                    'pin' => code_generate(),
+                    'access' => 4
+                ];
+                $this->account->createAccount($account);
+                $idAccount = $this->db->insert_id();
+                $signature = [
+                    'name' => $_POST['groom_name'],
+                    'type' => 1,
+                    'font' => 'gf_fuggles',
+                    'status' => 1,
+                    'inuse' => 0,
+                    'account_idaccount' => $idAccount
+                ];
+    
+                $this->signature->createSignature($signature);
+                $idSignature = $this->db->insert_id();
+                $engagedHasSignature = [
+                    'engaged_idengaged' => $id,
+                    'signature_idsignature' => $idSignature,
+                    'engaged' => 1
+                ];
+
+                $this->engaged->createEngagedHasSignature($engagedHasSignature);
+            }
+        } else{
+            $engagedHasSignature = $this->engaged->readEngagedHasSignature(['engaged' => 1, 'engaged_idengaged' => $id]);
+            if($engagedHasSignature->num_rows() != 0){
+                $idSignature = $engagedHasSignature->row()->signature_idsignature;
+                $signature = $this->signature->readSignature(['idsignature' => $idSignature]);
+                $idAccount = $signature->row()->account_idaccount;
+                $this->engaged->deleteEngagedHasSignature(['engaged_idengaged' => $id, 'engaged' => 1]);
+                $this->signature->deleteSignature($idSignature);
+                $this->account->deleteAccount(['idaccount' => $idAccount]);
+            }
+        }
+        
+        if($_POST['bride_responsible_for'] == "true"){
+            $engagedHasSignature = $this->engaged->readEngagedHasSignature(['engaged' => 2, 'engaged_idengaged' => $id]);
+            if($engagedHasSignature->num_rows() == 0){
+                $account = [
+                    'name' => $_POST['bride_name'],
+                    'email' => $_POST['bride_email'],
+                    'password' => password_generate(),
+                    'status' => 1,
+                    'pin' => code_generate(),
+                    'access' => 4
+                ];
+                $this->account->createAccount($account);
+                $idAccount = $this->db->insert_id();
+                $signature = [
+                    'name' => $_POST['bride_name'],
+                    'type' => 1,
+                    'font' => 'gf_fuggles',
+                    'status' => 1,
+                    'inuse' => 0,
+                    'account_idaccount' => $idAccount
+                ];
+    
+                $this->signature->createSignature($signature);
+                $idSignature = $this->db->insert_id();
+                $engagedHasSignature = [
+                    'engaged_idengaged' => $id,
+                    'signature_idsignature' => $idSignature,
+                    'engaged' => 2
+                ];
+
+                $this->engaged->createEngagedHasSignature($engagedHasSignature);
+            }
+            
+        } else{
+            $engagedHasSignature = $this->engaged->readEngagedHasSignature(['engaged' => 2, 'engaged_idengaged' => $id]);
+            if($engagedHasSignature->num_rows() != 0){
+                $idSignature = $engagedHasSignature->row()->signature_idsignature;
+                $signature = $this->signature->readSignature(['idsignature' => $idSignature]);
+                $idAccount = $signature->row()->account_idaccount;
+                $this->engaged->deleteEngagedHasSignature(['engaged_idengaged' => $id, 'engaged' => 2]);
+                $this->signature->deleteSignature($idSignature);
+                $this->account->deleteAccount(['idaccount' => $idAccount]);
+            }
+        }
         if($this->engaged->updateEngaged($where)){
             $resp = array('msg' => 'Cadastro dos noivos editado com sucesso', 'icon' => 'success');
         } else{
