@@ -143,6 +143,8 @@
                         :items="formation"
                         item-text="name"
                         item-value="idformation"
+                        append-outer-icon="mdi-plus-box"
+                        @click:append-out="openAddInstrument(inscribeFormation)"
                         required
                       >
                       </v-select>
@@ -313,6 +315,9 @@ export default {
       }
       // console.log(getAge(date));
     },
+    openAddInstruments: function(){
+      //
+    },
     getAddressData: function (addressData, placeResultData, id) {
       this.inscribeAddress.street = addressData.route;
       this.inscribeAddress.number = addressData.street_number
@@ -389,6 +394,7 @@ export default {
           if (resp) {
             this.inscribeID = resp.idinscribe;
             this.inscribeAccountable = resp.accountable;
+            this.inscribeBirthdate = this.$moment(resp.birthdate).format("DD/MM/YYYY")
             this.inscribePhone = resp.phone;
             this.inscribeMobile = resp.mobile;
             this.inscribeAddress = resp.address;
