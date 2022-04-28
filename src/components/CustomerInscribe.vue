@@ -143,8 +143,6 @@
                         :items="formation"
                         item-text="name"
                         item-value="idformation"
-                        append-outer-icon="mdi-plus-box"
-                        @click:append-out="openAddInstrument(inscribeFormation)"
                         required
                       >
                       </v-select>
@@ -236,9 +234,11 @@ function convertToMMDDYYYY(date) {
 export default {
   data: () => ({
     apiURL: process.env.VUE_APP_URL,
+    imgPath: process.env.VUE_APP_IMGPATH,
     crud: "c",
     inputLoading: false,
     showPassword: false,
+    loadingChips: false,
     alert: false,
     alertMsg: "",
     maskPhone: "(##) ####-####",
@@ -273,8 +273,10 @@ export default {
     inscribeStatus: "",
     inscribeService: "",
     inscribeFormation: "",
+    inscribeInstrumentsByFormation: [],
     inscribeServiceTax: "",
     inscribeAgree: false,
+    addInstruments: false,
   }),
 
   methods: {
@@ -315,8 +317,13 @@ export default {
       }
       // console.log(getAge(date));
     },
-    openAddInstruments: function(){
-      //
+    openAddInstruments: function () {
+      this.addInstruments = true;
+      this.getInstrumentsByFormation();
+    },
+    closeAddInstruments: function () {
+      this.addInstruments = false;
+      this.inscribeInstrumentsByFormation = [];
     },
     getAddressData: function (addressData, placeResultData, id) {
       this.inscribeAddress.street = addressData.route;
@@ -385,6 +392,14 @@ export default {
         this.loadingAgreementFormation = false;
       });
     },
+    getInstrumentsByFormation: async function () {
+      this.loadingChips = true;
+      const response = await axios.get(
+        this.apiURL + "/formations/get/" + this.inscribeFormation.idformation
+      );
+      this.inscribeInstrumentsByFormation = response.data[0].instruments;
+      this.loadingChips = false;
+    },
     getInscribe: function () {
       this.loadingInscribeFields = true;
       axios
@@ -394,7 +409,9 @@ export default {
           if (resp) {
             this.inscribeID = resp.idinscribe;
             this.inscribeAccountable = resp.accountable;
-            this.inscribeBirthdate = this.$moment(resp.birthdate).format("DD/MM/YYYY")
+            this.inscribeBirthdate = this.$moment(resp.birthdate).format(
+              "DD/MM/YYYY"
+            );
             this.inscribePhone = resp.phone;
             this.inscribeMobile = resp.mobile;
             this.inscribeAddress = resp.address;

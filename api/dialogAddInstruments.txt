@@ -1,0 +1,37 @@
+<v-dialog v-model="addInstruments" persistent>
+                        <v-card>
+                          <v-toolbar color="grey darken-4" dark>
+                            <v-btn icon @click="closeAddInstruments()"
+                              ><v-icon>mdi-close</v-icon></v-btn
+                            >
+                            <v-toolbar-title
+                              >Adicionar Instrumento</v-toolbar-title
+                            >
+                          </v-toolbar>
+                          <v-card-text>
+                            <v-sheet class="mt-5 pa-5" rounded outlined>
+                              <h2>
+                                Instrumentos da formação
+                                {{ inscribeFormation.name }}
+                              </h2>
+                              <v-skeleton-loader v-if="loadingChips" type="table-thead"></v-skeleton-loader>
+                              <v-chip v-else
+                                v-for="instrument in inscribeInstrumentsByFormation"
+                                :key="instrument.idinstrument"
+                                class="pa-5 ma-2"
+                                ><v-img
+                                  :src="
+                                    imgPath + '/instrument/' + instrument.image
+                                  "
+                                  width="30" class="mr-3"
+                                ></v-img
+                                >{{ instrument.name }}</v-chip
+                              >
+                            </v-sheet>
+                          </v-card-text>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn @click="closeAddInstruments()" color="red darken-4" class="pa-3" dark>Fechar</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
