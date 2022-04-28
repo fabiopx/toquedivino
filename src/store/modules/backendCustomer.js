@@ -7,6 +7,7 @@ const state = {
   startedRepertory: false,
   isAgreement: false,
   isBudget: false,
+  budgetID: "",
   isEvent: false,
 };
 
@@ -16,29 +17,34 @@ const getters = {
   startedRepertory: (state) => state.startedRepertory,
   isAgreement: (state) => state.isAgreement,
   isBudget: (state) => state.isBudget,
+  budgetID: (state) => state.budgetID,
   isEvent: (state) => state.isEvent
 };
 
 const actions = {
   
   setUserNow({commit}, payload){
-    commit('setUserNow', payload)
+    commit('setUserNow', payload);
   },
 
   setInscribeID({commit}, payload){
-    commit('setInscribeID', payload)
+    commit('setInscribeID', payload);
   },
 
   setStartedRepertory({commit}, payload){
-    commit('setStartedRepertory', payload)
+    commit('setStartedRepertory', payload);
   },
 
   setIsAgreement({commit}, payload){
-    commit('setIsAgreement', payload)
+    commit('setIsAgreement', payload);
   },
 
   setIsBudget({commit}, payload){
-    commit('setIsBudget', payload)
+    commit('setIsBudget', payload);
+  },
+
+  setBudgetID({commit}, payload){
+    commit('setBudgetID', payload);
   },
 
   async setIsEvent({commit}){
@@ -56,6 +62,7 @@ const mutations = {
   setStartedRepertory: (state, startedRepertory) => (state.startedRepertory = startedRepertory),
   setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement),
   setIsBudget: (state, isBudget) => (state.isBudget = isBudget),
+  setBudgetID: (state, budgetID) => (state.budgetID = budgetID),
   setIsEvent: (state, isEvent) => (state.isEvent = isEvent)
 };
 

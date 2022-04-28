@@ -5,7 +5,9 @@
         <v-col>
           <v-card v-show="isEvent">
             <v-toolbar color="grey darken-4" dark>
-              <h2><v-icon class="mr-3">mdi-file-document-edit</v-icon>Orçamento</h2>
+              <h2>
+                <v-icon class="mr-3">mdi-file-document-edit</v-icon>Orçamento
+              </h2>
             </v-toolbar>
             <v-card-text v-show="budgetOpen">
               <v-sheet class="pa-4" outlined elevation="1">
@@ -276,7 +278,7 @@
                         <v-btn
                           v-show="budget.status == 1"
                           icon
-                          @click="$router.push('/customer/agreement')"
+                          @click="selectBudgetForContract(budget.idbudget)"
                           ><v-icon>mdi-file-sign</v-icon></v-btn
                         >
                       </td>
@@ -336,7 +338,7 @@ export default {
     loadingBudget: true,
   }),
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "setIsEvent"]),
+    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "setIsEvent", "setBudgetID"]),
 
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
@@ -467,6 +469,11 @@ export default {
         this.apiURL + "/budgets/verifyBudgetCancel/" + this.inscribeID
       );
       this.budgetCancel = response.data;
+    },
+    selectBudgetForContract: function (id) {
+      this.setBudgetID(id);
+      console.log(id)
+      this.$router.push('/customer/agreement');
     },
   },
   created: async function () {

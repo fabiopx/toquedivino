@@ -21,13 +21,21 @@ class Budgets extends CI_Controller{
         echo json_encode($resp);
     }
 
-    public function get($id = null){
+    public function get($inscribe = null){
         $this->load->model('budget');
-        $where = is_null($id) ? $id : array('inscribe_idinscribe' => $id);
+        $where = is_null($inscribe) ? $inscribe : array('inscribe_idinscribe' => $inscribe);
         $budget = $this->budget->readBudget($where);
         $resp = empty($budget->result()) ? null : $budget->result();
         echo json_encode($resp);
 
+    }
+
+    public function getById($id){
+        $this->load->model('budget');
+        $where = ['idbudget' => $id];
+        $budget = $this->budget->readBudget($where);
+        $resp = ($budget->num_rows() == 0) ? null : $budget->row();
+        echo json_encode($resp);
     }
 
     public function isBudget($id){
