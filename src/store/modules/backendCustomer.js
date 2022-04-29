@@ -8,6 +8,7 @@ const state = {
   isAgreement: false,
   isBudget: false,
   budgetID: "",
+  budgetIsActive: false,
   isEvent: false,
 };
 
@@ -18,6 +19,7 @@ const getters = {
   isAgreement: (state) => state.isAgreement,
   isBudget: (state) => state.isBudget,
   budgetID: (state) => state.budgetID,
+  budgetIsActive: (state) => state.budgetIsActive,
   isEvent: (state) => state.isEvent
 };
 
@@ -45,6 +47,11 @@ const actions = {
 
   setBudgetID({commit}, payload){
     commit('setBudgetID', payload);
+  },
+
+  async budgetIsActive({commit}){
+    const response = await axios.get(process.env.VUE_APP_URL + "/budgets/get/" + state.inscribeID);
+    const budgets = response.data;
   },
 
   async setIsEvent({commit}){

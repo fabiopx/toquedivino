@@ -25,7 +25,6 @@
                     Existe um orçamento ativo na sua conta, você já pode gerar
                     seu contrato.
                   </p>
-                  <p v-else>Existe um orçamento ativo na sua conta. Clique aqui para selecionar o orçamento</p>
                 </div>
                 <div v-if="!isAgreement && !isBudget">
                   <h1 class="red--text darken-4 h2">Faça um orçamento</h1>
