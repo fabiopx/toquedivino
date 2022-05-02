@@ -65,17 +65,9 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     apiURL: process.env.VUE_APP_URL,
-    budget: {},
   }),
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow"]),
-    getBudget: async function () {
-      const response = await axios.get(
-        this.apiURL + "/budgets/getById/" + this.budgetID
-      );
-      this.budget = response.data;
-      console.log(response.data.code);
-    },
+    ...mapActions(["setInscribeID", "setUserNow", "setBudgetActive"]),
   },
   computed: {
     ...mapGetters([
@@ -83,11 +75,11 @@ export default {
       "userNow",
       "isAgreement",
       "isBudget",
-      "budgetID",
+      "budget",
     ]),
   },
   created: async function () {
-    await this.getBudget();
+    await this.setBudgetActive();
   },
 };
 </script>

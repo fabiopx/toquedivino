@@ -278,7 +278,7 @@
                         <v-btn
                           v-show="budget.status == 1"
                           icon
-                          @click="selectBudgetForContract(budget.idbudget)"
+                          @click="$router.push('/customer/agreement')"
                           ><v-icon>mdi-file-sign</v-icon></v-btn
                         >
                       </td>
@@ -338,7 +338,7 @@ export default {
     loadingBudget: true,
   }),
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "setIsEvent", "setBudgetID"]),
+    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "setIsEvent", "setBudget"]),
 
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
@@ -469,11 +469,6 @@ export default {
         this.apiURL + "/budgets/verifyBudgetCancel/" + this.inscribeID
       );
       this.budgetCancel = response.data;
-    },
-    selectBudgetForContract: function (id) {
-      this.setBudgetID(id);
-      console.log(id)
-      this.$router.push('/customer/agreement');
     },
   },
   created: async function () {

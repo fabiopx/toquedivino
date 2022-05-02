@@ -7,8 +7,7 @@ const state = {
   startedRepertory: false,
   isAgreement: false,
   isBudget: false,
-  budgetID: "",
-  budgetIsActive: false,
+  budget: {},
   isEvent: false,
 };
 
@@ -18,8 +17,7 @@ const getters = {
   startedRepertory: (state) => state.startedRepertory,
   isAgreement: (state) => state.isAgreement,
   isBudget: (state) => state.isBudget,
-  budgetID: (state) => state.budgetID,
-  budgetIsActive: (state) => state.budgetIsActive,
+  budget: (state) => state.budget,
   isEvent: (state) => state.isEvent
 };
 
@@ -45,13 +43,18 @@ const actions = {
     commit('setIsBudget', payload);
   },
 
-  setBudgetID({commit}, payload){
-    commit('setBudgetID', payload);
+  setBudget({commit}, payload){
+    commit('setBudget', payload);
   },
 
-  async budgetIsActive({commit}){
+  async setBudgetActive({commit}){
     const response = await axios.get(process.env.VUE_APP_URL + "/budgets/get/" + state.inscribeID);
     const budgets = response.data;
+    budgets.forEach(function(budget){
+      if(budget.status == 1){
+        commit('setBudget', budget);
+      }
+    })
   },
 
   async setIsEvent({commit}){
@@ -69,7 +72,7 @@ const mutations = {
   setStartedRepertory: (state, startedRepertory) => (state.startedRepertory = startedRepertory),
   setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement),
   setIsBudget: (state, isBudget) => (state.isBudget = isBudget),
-  setBudgetID: (state, budgetID) => (state.budgetID = budgetID),
+  setBudget: (state, budget) => (state.budget = budget),
   setIsEvent: (state, isEvent) => (state.isEvent = isEvent)
 };
 
