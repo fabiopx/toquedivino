@@ -23,7 +23,7 @@ class Budgets extends CI_Controller{
 
     public function get($inscribe = null){
         $this->load->model('budget');
-        $where = is_null($inscribe) ? $inscribe : array('inscribe_idinscribe' => $inscribe);
+        $where = is_null($inscribe) ? $inscribe : ['inscribe_idinscribe' => $inscribe];
         $budget = $this->budget->readBudget($where);
         $resp = empty($budget->result()) ? null : $budget->result();
         echo json_encode($resp);

@@ -48,15 +48,18 @@
                   color="red darken-4"
                   class="pa-8"
                   dark
+                  @click="generateContract()"
                   ><v-icon class="mr-3">mdi-text-box-plus</v-icon>Gerar
                   contrato</v-btn
                 >
               </v-sheet>
             </v-card-text>
           </v-card>
+          <v-overlay :value="loading"><v-progress-circular indeterminate></v-progress-circular></v-overlay>
         </v-col>
       </v-row>
     </v-container>
+    
   </div>
 </template>
 <script>
@@ -65,9 +68,16 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     apiURL: process.env.VUE_APP_URL,
+    loading: false,
   }),
   methods: {
     ...mapActions(["setInscribeID", "setUserNow", "setBudgetActive"]),
+    generateContract: async function(){
+      this.loading = true;
+      const response = await axios.get(this.apiURL + "/agreements/createCustomer/" + this.inscribeID);
+      this.loading = false;
+      this.$swal(response.data.msg, "", response.data.icon);
+    }
   },
   computed: {
     ...mapGetters([

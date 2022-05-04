@@ -19,17 +19,9 @@ class Signature extends Crud{
             $this->inuse = 0;
             $this->account_idaccount = $_POST['account_idaccount'];
             $data = $this;
-    
-            $this->db->db_debug = false;
-            if($this->create('signature', $data)){
-                return $this->response('success', 'Assinatura cadastrada com sucesso');
-            } else{
-                $error = $this->db->error();
-                return $this->response('error', $error['message']);
-            }
-        } else{
-            return $this->create('signature', $data);
         }
+        
+        return $this->create('signature', $data);
     }
 
 
