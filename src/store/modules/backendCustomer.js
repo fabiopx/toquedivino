@@ -57,6 +57,12 @@ const actions = {
     })
   },
 
+  async verifyIsAgreement({commit}){
+    const response = await axios.get(process.env.VUE_APP_URL + "/agreements/getCustomer/" + state.inscribeID);
+    const isAgreement = (response.data) ? true: false;
+    commit('setIsAgreement', isAgreement);
+  },
+
   async setIsEvent({commit}){
     const response = await axios.get(process.env.VUE_APP_URL + "/events/getCustomers/" + state.inscribeID)
     const resp = (response.data) ? true : false

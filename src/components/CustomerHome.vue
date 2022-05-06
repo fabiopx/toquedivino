@@ -150,7 +150,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget"]),
+    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "verifyIsAgreement"]),
     getInscribe: async function () {
       this.loadingData1 = true;
       this.loadingData2 = true;
@@ -237,6 +237,7 @@ export default {
       this.setUserNow(this.$session.get("userData"));
       await this.verifyEvent();
       await this.verifyBudget();
+      await this.verifyIsAgreement();
     }
   },
 };

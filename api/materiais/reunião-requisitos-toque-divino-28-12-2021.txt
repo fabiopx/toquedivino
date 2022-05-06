@@ -21,3 +21,5 @@ Salvar contrato em pdf
 Criar financeiro (lançar pagamentos)
 Verificar apagar lead na tela app (>>OK<<)
 Apagar lead no dashboard
+Gerar assinatura dos contratados
+Preparar telas quando existir contrato

@@ -71,7 +71,7 @@ export default {
     loading: false,
   }),
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow", "setBudgetActive"]),
+    ...mapActions(["setInscribeID", "setUserNow", "setBudgetActive", "verifyIsAgreement"]),
     generateContract: async function(){
       this.loading = true;
       const response = await axios.get(this.apiURL + "/agreements/createCustomer/" + this.inscribeID);
@@ -90,6 +90,7 @@ export default {
   },
   created: async function () {
     await this.setBudgetActive();
+    await this.verifyIsAgreement();
   },
 };
 </script>
