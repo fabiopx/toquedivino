@@ -1,18 +1,20 @@
-import Vue from 'vue'
-import './plugins/axios'
-import App from './App.vue'
-import router from './router'
-import vuetify from './plugins/vuetify'
-import store from './store'
-import VueMask from 'v-mask'
-import VueCookies from 'vue-cookies'
-import VueLocalStorage from 'vue-localstorage'
-import VueSession from 'vue-session'
-import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete'
-import VueSweetalert2 from 'vue-sweetalert2'
-import 'sweetalert2/dist/sweetalert2.min.css'
+import Vue from 'vue';
+import './plugins/axios';
+import App from './App.vue';
+import router from './router';
+import vuetify from './plugins/vuetify';
+import store from './store';
+import VueMask from 'v-mask';
+import VueCookies from 'vue-cookies';
+import VueLocalStorage from 'vue-localstorage';
+import VueSession from 'vue-session';
+import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete';
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import extenso from 'extenso';
 
-Vue.use(VueMask)
+Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
+Vue.use(VueMask);
 // Vue.use(VueCookies)
 Vue.use(VueSession)
 // Vue.use(VueLocalStorage, {

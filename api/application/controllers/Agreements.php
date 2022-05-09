@@ -67,7 +67,14 @@ class Agreements extends CI_controller{
         $this->load->model('agreement');
         $where = ['inscribe_idinscribe' => $inscribe];
         $agreement = $this->agreement->readAgreement($where);
-        $resp = ($agreement->num_rows() == 0) ? null : $agreement->row();
+        if($agreement->num_rows() != 0){
+            $agreement = $agreement->row();
+            $agreement->value_total = $agreement->value - $agreement->discount + $agreement->addition;
+            $resp = $agreement;
+        } else{
+            $resp = null;
+        }
+        
         echo json_encode($resp);
     }
 
