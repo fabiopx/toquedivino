@@ -50,6 +50,14 @@ class Agreement extends Crud{
         }
     }
 
+    public function readAgreementsManagers($where = null){
+        if(is_null($where)){
+            return $this->ready('agreements_managers');
+        } else{
+            return $this->ready('agreements_managers', $where);
+        }
+    }
+
     public function updateAgreement($where, $data){
         return $this->update('agreement', $where, $data);
     }

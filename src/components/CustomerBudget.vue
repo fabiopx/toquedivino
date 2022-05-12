@@ -305,6 +305,9 @@
               </p>
             </v-card-text>
           </v-card>
+          <v-overlay :value="loading"
+            ><v-progress-circular indeterminate></v-progress-circular
+          ></v-overlay>
         </v-col>
       </v-row>
     </v-container>
@@ -336,9 +339,16 @@ export default {
     loadingTotalTax: true,
     loadingSomaBudget: false,
     loadingBudget: true,
+    loading: false
   }),
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "setIsEvent", "setBudget"]),
+    ...mapActions([
+      "setInscribeID",
+      "setUserNow",
+      "setIsBudget",
+      "setIsEvent",
+      "setBudget",
+    ]),
 
     somaBudget: function (item) {
       this.budgetSoma = parseFloat(this.budgetSoma) + parseFloat(item);
@@ -470,6 +480,13 @@ export default {
       );
       this.budgetCancel = response.data;
     },
+    verifyBudgetExpires: async function () {
+      this.loading = true
+      await axios.get(
+        this.apiURL + "/budgets/verifyBudgetExpires/" + this.inscribeID
+      );
+      this.loading = false
+    },
   },
   created: async function () {
     if (this.$session.exists()) {
@@ -478,6 +495,7 @@ export default {
       await this.getEvent();
       await this.getInscribe();
       await this.calculateTaxValue();
+      await this.verifyBudgetExpires();
       await this.getBudget();
       await this.verifyBudgetCancel();
     }

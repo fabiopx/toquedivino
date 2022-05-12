@@ -159,7 +159,7 @@
                         >
                       </p>
                     </div>
-                    <hr class="mt-3 mb-3">
+                    <hr class="mt-3 mb-3" />
                     <p style="text-align: justify">
                       <span style="font-size: 14px"
                         >A CONTRATADA e CONTRATANTE estabelecem em comum acordo
@@ -449,6 +449,44 @@
                       >
                     </p>
                     <hr />
+                    <v-row>
+                      <v-col class="text-center">
+                        <div v-for="sign in signatures" :key="sign.idsignature">
+                          <p
+                            class="text-subtitle-1 mt-2"
+                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            v-if="sign.type == 1"
+                          >
+                            {{ sign.name }}
+                          </p>
+                          <p
+                            class="text-subtitle-2 mt-n6"
+                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            v-if="sign.type == 1"
+                          >
+                            {{ selSignatureType(sign.type) }}
+                          </p>
+                        </div>
+                      </v-col>
+                      <v-col class="text-center">
+                        <div v-for="sign in signatures" :key="sign.idsignature">
+                          <p
+                            class="text-subtitle-1 mt-2"
+                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            v-if="sign.type == 2 || sign.type == 3"
+                          >
+                            {{ sign.name }}
+                          </p>
+                          <p
+                            class="text-subtitle-2 mt-n6"
+                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            v-if="sign.type == 2 || sign.type == 3"
+                          >
+                            {{ selSignatureType(sign.type) }}
+                          </p>
+                        </div>
+                      </v-col>
+                    </v-row>
                   </div>
                   <!-- Fim Contrato -->
                 </div>
@@ -475,8 +513,12 @@
             </v-card-text>
             <v-card-actions v-if="isAgreement">
               <v-spacer></v-spacer>
-              <v-btn class="mr-3" depressed dark color="red darken-4 pa-5"><v-icon class="mr-2">mdi-file-sign</v-icon>Assinar</v-btn>
-              <v-btn class="mr-3" depressed dark color="red darken-4 pa-5"><v-icon class="mr-2">mdi-file-pdf-box</v-icon>Gerar PDF</v-btn>
+              <v-btn class="mr-3" depressed dark color="red darken-4 pa-5"
+                ><v-icon class="mr-2">mdi-file-sign</v-icon>Assinar</v-btn
+              >
+              <v-btn class="mr-3" depressed dark color="red darken-4 pa-5"
+                ><v-icon class="mr-2">mdi-file-pdf-box</v-icon>Gerar PDF</v-btn
+              >
             </v-card-actions>
           </v-card>
           <v-overlay :value="loading"
@@ -497,7 +539,10 @@ export default {
     inscribe: {},
     engaged: { bride_address: {}, groom_address: {} },
     selectEngaged: true,
-    contract: {},
+    contract: { value_total: "" },
+    signatures: [],
+    signatureType: "",
+    signNotInUse: "red--text darken-4",
   }),
   methods: {
     ...mapActions([
@@ -524,21 +569,34 @@ export default {
       const response = await axios.get(
         this.apiURL + "/agreements/getCustomer/" + this.inscribeID
       );
-      this.contract = response.data;
-      this.contract.down_payment_extenso = this.$extenso(
-        response.data.down_payment.replace(".", ","),
-        { number: { decimal: "formal" }, mode: "currency" }
-      );
-      this.contract.value_total_extenso = this.$extenso(
-        response.data.value_total.toString().replace(".", ","),
-        { number: { decimal: "formal" }, mode: "currency" }
-      );
+      if (response.data) {
+        this.contract = response.data;
+        this.contract.down_payment_extenso = this.$extenso(
+          response.data.down_payment.replace(".", ","),
+          { number: { decimal: "formal" }, mode: "currency" }
+        );
+        this.contract.value_total_extenso = this.$extenso(
+          response.data.value_total.toString().replace(".", ","),
+          { number: { decimal: "formal" }, mode: "currency" }
+        );
+      }
     },
     getEngaged: async function () {
       const response = await axios.get(
         this.apiURL + "/engagedes/getCustomers/" + this.inscribeID
       );
       this.engaged = response.data;
+    },
+    getSignature: async function () {
+      const response = await axios.get(
+        this.apiURL + "/signatures/getSignaturesContract/" + this.inscribeID
+      );
+      this.signatures = response.data;
+    },
+    selSignatureType: function (type) {
+      if (type == 1) return "Contratante";
+      if (type == 2) return "Contratado";
+      if (type == 3) return "Testemunha";
     },
   },
   computed: {
@@ -557,7 +615,13 @@ export default {
     await this.getInscribe();
     await this.getEngaged();
     await this.getAgreement();
+    await this.getSignature();
     this.loading = false;
   },
 };
 </script>
+<style lang="css" scoped>
+.gf-fuggles {
+  font-family: "Fuggles", cursive;
+}
+</style>

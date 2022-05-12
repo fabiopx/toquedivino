@@ -34,15 +34,33 @@ class Signatures extends CI_Controller{
     public function verifySignCustomers($id){
         $this->load->model('signature');
         $this->load->model('agreement');
+        $this->load->model('account');
 
         $where = array('account_idaccount' => $id);
         $signature = $this->signature->readSignature($where);
         if($signature->num_rows() != 0){
-            $ahs = $this->agreement->readAgreementHasSignature(array('signature_idsignature' => $signature->row()->idsignature));
+            $ahs = $this->agreement->readAgreementHasSignature(['signature_idsignature' => $signature->row()->idsignature]);
             $resp = ($ahs->row()->sign == 1) ? true : false;
         } else{
             $resp = false;
         }
+        echo json_encode($resp);
+    }
+
+    public function getSignaturesContract($idInscribe){
+        $this->load->model('signature');
+        $this->load->model('agreement');
+        $this->load->model('account');
+
+        $where = ['inscribe_idinscribe' => $idInscribe];
+        $ahs = $this->agreement->readAgreementHasSignature($where);
+        $resp = [];
+
+        foreach($ahs->result() as $s):
+            $signature = $this->signature->readSignature(['idsignature' => $s->signature_idsignature]);
+            $resp[] = $signature->row();
+        endforeach;
+
         echo json_encode($resp);
     }
 

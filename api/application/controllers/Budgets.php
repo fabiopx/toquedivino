@@ -54,6 +54,22 @@ class Budgets extends CI_Controller{
         echo json_encode($resp);
     }
 
+    public function verifyBudgetExpires($inscribe){
+        $this->load->model('budget');
+        $this->load->model('agreement');
+        $budget = $this->budget->readBudget(['inscribe_idinscribe' => $inscribe]);
+        $agreement = $this->agreement->readAgreement(['inscribe_idinscribe' => $inscribe]);
+        $dateNow = date('Y-m-d');
+        foreach($budget->result() as $b):
+            $dateBudget = $b->expires_in;
+            if($b->status == 0 || $b->status == 1){
+                (strtotime($dateNow) > strtotime($dateBudget)) ? $this->budget->updateBudget(['idbudget' => $b->idbudget], ['status' => 3]) : exit;
+            } elseif($b->status == 2 && $agreement->num_rows() == 0){
+                (strtotime($dateNow) > strtotime($dateBudget)) ? $this->budget->updateBudget(['idbudget' => $b->idbudget], ['status' => 3]) : exit;
+            }
+        endforeach;
+    }
+
     public function cancel($id){
         $this->load->model('budget');
         $where = array('idbudget' => $id);

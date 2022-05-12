@@ -35,6 +35,10 @@ class Agreements extends CI_controller{
         $createdAgreement = $this->agreement->createAgreement($data);
         if($createdAgreement){
             $idAgreement = $this->db->insert_id();
+            $agreementsManagers = $this->agreement->readAgreementsManagers();
+            foreach($agreementsManagers->result() as $am):
+                $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $am->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+            endforeach;
             $engaged = $this->engaged->readEngaged(['inscribe_idinscribe' => $idInscribe]);
             if($engaged->num_rows() != 0){
                 $EHSGroom = $this->engaged->readEngagedHasSignature(['engaged' => 1, 'engaged_idengaged' => $engaged->row()->idengaged]);

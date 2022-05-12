@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container v-show="!isAgreement">
+    <v-container>
       <v-card>
         <v-toolbar color="grey darken-4" dark>
           <v-toolbar-title><h2>Seja bem-vindo!</h2></v-toolbar-title>
