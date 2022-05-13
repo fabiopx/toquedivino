@@ -70,6 +70,18 @@ class Budgets extends CI_Controller{
         endforeach;
     }
 
+    public function extendExpirationDate($inscribe){
+        $this->load->model('budget');
+        $where = ['inscribe_idinscribe' => $inscribe, 'idbudget' => $_POST['idbudget']];
+        $data = ['expires_in' => $_POST['new_date'], 'status' => 1];
+        if($this->budget->updateBudget($where, $data)){
+            $resp = ['msg' => 'Orçamento prorrogado para'. $_POST['new_date'], 'icon' => 'success'];
+        } else{
+            $resp = ['msg' => 'Orçamento não pode ser prorrogado', 'icon' => 'error'];
+        }
+        echo json_encode($resp);
+    }
+
     public function cancel($id){
         $this->load->model('budget');
         $where = array('idbudget' => $id);

@@ -3,16 +3,9 @@
     <v-container v-show="isAgreement" fluid>
       <v-row>
         <v-col>
-          <p class="text-h4 white--text">
-            <v-icon color="white">mdi-music-circle</v-icon> Repertório
-          </p>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
           <v-card>
             <v-toolbar color="grey darken-4" dark>
-              <v-toolbar-title>Gerenciar repertório</v-toolbar-title>
+              <v-toolbar-title><v-icon class="mr-3">mdi-music-circle</v-icon>Gerenciar repertório</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-toolbar-items>
                 <v-btn

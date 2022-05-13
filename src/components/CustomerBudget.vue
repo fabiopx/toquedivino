@@ -270,7 +270,7 @@
                       </td>
                       <td>
                         <v-btn
-                          v-show="budget.status == 0 || budget.status == 1"
+                          v-show="budget.status == 0 || budget.status == 1 || budget.status == 3"
                           icon
                           @click="cancelBudget(budget.idbudget)"
                           ><v-icon>mdi-cancel</v-icon></v-btn
@@ -281,6 +281,7 @@
                           @click="$router.push('/customer/agreement')"
                           ><v-icon>mdi-file-sign</v-icon></v-btn
                         >
+                        <v-btn v-show="budget.status == 3" icon @click="extendExpirationDate(budget.idbudget)"><v-icon>mdi-calendar-clock</v-icon></v-btn>
                       </td>
                     </tr>
                   </tbody>
@@ -481,12 +482,25 @@ export default {
       this.budgetCancel = response.data;
     },
     verifyBudgetExpires: async function () {
-      this.loading = true
+      this.loading = true;
       await axios.get(
         this.apiURL + "/budgets/verifyBudgetExpires/" + this.inscribeID
       );
       this.loading = false
     },
+    extendExpirationDate: async function(id){
+      this.loading = true;
+      const data = new FormData();
+      data.append('new_date', this.$moment().add(15, 'days').format('YYYY-MM-DD'));
+      data.append('idbudget', id)
+      const response = await axios(this.apiURL + "/budgets/extendExpirationDate/" + this.inscribeID, {
+        method: 'POST',
+        data: data
+      });
+      this.loading = false;
+      // this.$swal(response.data.msg, '', response.data.icon);
+      await this.getBudget();
+    }
   },
   created: async function () {
     if (this.$session.exists()) {

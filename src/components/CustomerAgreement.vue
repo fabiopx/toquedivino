@@ -513,11 +513,21 @@
             </v-card-text>
             <v-card-actions v-if="isAgreement">
               <v-spacer></v-spacer>
+              <v-menu rounded="lg" offset-x color="grey darken-4" dark>
+                <template v-slot:activator="{attrs, on}">
+                  <v-btn class="mr-3" depressed dark color="red darken-4 pa-5" v-bind="attrs" v-on="on"
+                    ><v-icon class="ma-2">mdi-file-sign</v-icon></v-btn
+                  >
+                </template>
+                <v-list>
+                  <v-list-item v-for="signature in contractors" :key="signature.idsignature" link>
+                    <v-list-item-title v-show="signature.type == 1">{{ signature.name }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
               <v-btn class="mr-3" depressed dark color="red darken-4 pa-5"
-                ><v-icon class="mr-2">mdi-file-sign</v-icon>Assinar</v-btn
-              >
-              <v-btn class="mr-3" depressed dark color="red darken-4 pa-5"
-                ><v-icon class="mr-2">mdi-file-pdf-box</v-icon>Gerar PDF</v-btn
+                ><v-icon class="ma-2">mdi-file-pdf-box</v-icon></v-btn
               >
             </v-card-actions>
           </v-card>
@@ -539,8 +549,9 @@ export default {
     inscribe: {},
     engaged: { bride_address: {}, groom_address: {} },
     selectEngaged: true,
-    contract: { value_total: "" },
+    contract: { value_total: "", down_payment: "" },
     signatures: [],
+    contractors: [],
     signatureType: "",
     signNotInUse: "red--text darken-4",
   }),
@@ -592,6 +603,7 @@ export default {
         this.apiURL + "/signatures/getSignaturesContract/" + this.inscribeID
       );
       this.signatures = response.data;
+      this.contractors = this.signatures.filter(item => (item.type == 1));
     },
     selSignatureType: function (type) {
       if (type == 1) return "Contratante";

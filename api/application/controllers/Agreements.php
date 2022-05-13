@@ -19,7 +19,7 @@ class Agreements extends CI_controller{
 
         $where = ['idinscribe' => $idInscribe];
         $inscribe = $this->inscribe->readInscribe($where);
-        $whereBudget = ['inscribe_idinscribe' => $idInscribe];
+        $whereBudget = ['inscribe_idinscribe' => $idInscribe, 'status' => 1];
         $budget = $this->budget->readBudget($whereBudget);
 
         $data = [
@@ -35,6 +35,7 @@ class Agreements extends CI_controller{
         $createdAgreement = $this->agreement->createAgreement($data);
         if($createdAgreement){
             $idAgreement = $this->db->insert_id();
+            $this->budget->updateBudget(['idbudget' => $budget->row()->idbudget], ['status' => 2]);
             $agreementsManagers = $this->agreement->readAgreementsManagers();
             foreach($agreementsManagers->result() as $am):
                 $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $am->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
