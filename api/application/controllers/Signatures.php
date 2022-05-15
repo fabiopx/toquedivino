@@ -58,7 +58,9 @@ class Signatures extends CI_Controller{
 
         foreach($ahs->result() as $s):
             $signature = $this->signature->readSignature(['idsignature' => $s->signature_idsignature]);
-            $resp[] = $signature->row();
+            $signature = $signature->row();
+            $signature->sign = $s->sign;
+            $resp[] = $signature;
         endforeach;
 
         echo json_encode($resp);
@@ -71,11 +73,12 @@ class Signatures extends CI_Controller{
         $resp = $this->account->signWithPassword();
 
         if($resp){
-            $where = array('account_idaccount' => $_POST['idaccount']);
-            $signature = $this->signature->readSignature($where);
-            $this->signature->markAsSigned($signature->row()->idsignature);
+            $this->signature->markAsSigned($_POST['idsignature']);
+            $response = ['msg' => 'Contrato assinado com sucesso', 'icon' => 'success'];
+        } else{
+            $response = ['msg' => 'Senha não corresponde', 'icon' => 'error'];
         }
 
-        echo json_encode($resp);
+        echo json_encode($response);
     }
 }

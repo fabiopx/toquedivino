@@ -454,14 +454,14 @@
                         <div v-for="sign in signatures" :key="sign.idsignature">
                           <p
                             class="text-subtitle-1 mt-2"
-                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 1"
                           >
                             {{ sign.name }}
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
-                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 1"
                           >
                             {{ selSignatureType(sign.type) }}
@@ -472,14 +472,14 @@
                         <div v-for="sign in signatures" :key="sign.idsignature">
                           <p
                             class="text-subtitle-1 mt-2"
-                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 2 || sign.type == 3"
                           >
                             {{ sign.name }}
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
-                            :class="sign.inuse == 0 ? signNotInUse : null"
+                            :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 2 || sign.type == 3"
                           >
                             {{ selSignatureType(sign.type) }}
@@ -520,7 +520,7 @@
                   >
                 </template>
                 <v-list>
-                  <v-list-item v-for="signature in contractors" :key="signature.idsignature" link>
+                  <v-list-item v-for="signature in contractors" :key="signature.idsignature" link @click="signaturePassword(signature)">
                     <v-list-item-title v-show="signature.type == 1">{{ signature.name }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -554,6 +554,7 @@ export default {
     contractors: [],
     signatureType: "",
     signNotInUse: "red--text darken-4",
+    ip: {query: "", lat: "", lon: ""},
   }),
   methods: {
     ...mapActions([
@@ -562,6 +563,22 @@ export default {
       "setBudgetActive",
       "verifyIsAgreement",
     ]),
+    getIP: async function(){
+      const resp = await axios.get("http://ip-api.com/json/");
+      this.ip = resp.data;
+    },
+    generateCode: function(){
+      var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJLMNOPQRSTUVWXYZ";
+      var passwordLength = 16;
+      var password = "";
+
+      for (var i = 0; i < passwordLength; i++) {
+        var randomNumber = Math.floor(Math.random() * chars.length);
+        password += chars.substring(randomNumber, randomNumber + 1);
+      }
+
+      return password;
+    },
     generateContract: async function () {
       this.loading = true;
       const response = await axios.get(
@@ -603,13 +620,46 @@ export default {
         this.apiURL + "/signatures/getSignaturesContract/" + this.inscribeID
       );
       this.signatures = response.data;
-      this.contractors = this.signatures.filter(item => (item.type == 1));
+      this.contractors = this.signatures.filter(item => (item.type == 1 && item.sign != 1));
     },
     selSignatureType: function (type) {
       if (type == 1) return "Contratante";
       if (type == 2) return "Contratado";
       if (type == 3) return "Testemunha";
     },
+    signaturePassword: async function(sign){
+      const { value:password } = await this.$swal({
+        title: 'Assinatura do contrato ',
+        icon: 'question',
+        input: 'password',
+        inputLabel: 'Assinatura eletrônica de ' + sign.name,
+        inputPlaceholder: 'Entre com sua senha',
+        inputAtrributes: {
+          maxLength: 10,
+          autocapitalize: 'off',
+          autocorrect: 'off'
+        },
+        confirmButtonText: 'Assinar',
+        showCancelButton: true
+      })
+      if(password){
+        const data = new FormData();
+        data.append('idsignature', sign.idsignature);
+        data.append('idinscribe', this.inscribeID);
+        data.append('idaccount', sign.account_idaccount);
+        data.append('date', this.$moment().format("YYYY-MM-DD HH:mm:ss"));
+        data.append('ip', this.ip.query);
+        data.append('geolocation', this.ip.lat + ", " + this.ip.lon);
+        data.append('hash', this.generateCode());
+        data.append('password', password)
+        const response = await axios(this.apiURL + "/signatures/signWithPassword", {
+          method: 'POST',
+          data: data
+        })
+        this.$swal(response.data.msg, '', response.data.icon)
+        this.getSignature()
+      }
+    }
   },
   computed: {
     ...mapGetters([
@@ -628,6 +678,7 @@ export default {
     await this.getEngaged();
     await this.getAgreement();
     await this.getSignature();
+    await this.getIP();
     this.loading = false;
   },
 };

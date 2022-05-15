@@ -83,14 +83,14 @@ class Signature extends Crud{
     }
 
     public function markAsSigned($id){
-        $where = array('signature_idsignature' => $id);
-        $data = array(
+        $where = ['signature_idsignature' => $id];
+        $data = [
             'sign' => 1,
             'date' => $_POST['date'],
             'ip' => $_POST['ip'],
             'geolocation' => $_POST['geolocation'],
             'hash' => $_POST['hash']
-        );
+        ];
         return $this->update('agreement_has_signature', $where, $data);
     }
 }
