@@ -8,19 +8,23 @@ Alterar nomenclatura de contrato para orçamento (>>OK<<)
 Separar senha de login e assinatura (>>OK<<)
 Possibilidades dos noivos: não responsáveis pelo contrato, os dois responsáveis, só um responsável (>>OK<<)
 Verificar se o responsável (noivos ou não) tem maioridade (>>OK<<)
-Colocar prazo na possibilidade de excluir músicas repertório (faltando 90 dias) - permitir desbloquear com tempo - emitir aviso com 5 dias de 
+Colocar prazo na possibilidade de excluir músicas repertório (faltando 90 dias) - permitir desbloquear com tempo - emitir aviso com 5 dias de (...)
 Mudar a forma de apresentar repertório (com busca de música) (>>OK<<)
 Incluir redes sociais dos noivos (>>OK<<)
-Incluir valor na tabela instrumento para adicionar um instrumento à formação
-Incluir quantidade de membros da formação para cálculo de carros necessários
-Mudar ênfase de intermediador de contrato para orçamento online 
+Incluir valor na tabela instrumento para adicionar um instrumento à formação (>>OK<<)(...)
+Incluir quantidade de membros da formação para cálculo de carros necessários (?)
+Mudar ênfase de intermediador de contrato para orçamento online (?)
 Acrescentar tabela <<orçamento>>, para registrar o orçamento (incluir validade - 15 dias) (>>OK<<)
-Disparar e-mail avisando que Orçamento está expirando nos 2 dias anteriores
+Disparar e-mail avisando que Orçamento está expirando nos 2 dias anteriores (...)
 Liberar as funções após aceite de contrato (>>OK<<)
-Salvar contrato em pdf
-Criar financeiro (lançar pagamentos)
+Salvar contrato em pdf (...)
+Criar financeiro (lançar pagamentos) (...)
 Verificar apagar lead na tela app (>>OK<<)
 Apagar lead no dashboard
 Gerar assinatura dos contratados (>>OK<<)
-Preparar telas quando existir contrato
-Verificar se orçamento expirou
+Preparar telas quando existir contrato (>>OK<<)
+Verificar se orçamento expirou (>>OK<<)
+
+Resolver direcionamento quando página cai na /customers
+Resolver https:// da api de ip
+Resolver bug de envio de e-mail
