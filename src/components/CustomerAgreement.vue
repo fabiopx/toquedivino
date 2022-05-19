@@ -554,7 +554,7 @@ export default {
     contractors: [],
     signatureType: "",
     signNotInUse: "red--text darken-4",
-    ip: {query: "", lat: "", lon: ""},
+    ip: {ip: "", latitude: "", longitude: ""},
   }),
   methods: {
     ...mapActions([
@@ -564,7 +564,7 @@ export default {
       "verifyIsAgreement",
     ]),
     getIP: async function(){
-      const resp = await axios.get("http://ip-api.com/json/");
+      const resp = await axios.get("https://ipapi.co/json/");
       this.ip = resp.data;
     },
     generateCode: function(){
@@ -648,8 +648,8 @@ export default {
         data.append('idinscribe', this.inscribeID);
         data.append('idaccount', sign.account_idaccount);
         data.append('date', this.$moment().format("YYYY-MM-DD HH:mm:ss"));
-        data.append('ip', this.ip.query);
-        data.append('geolocation', this.ip.lat + ", " + this.ip.lon);
+        data.append('ip', this.ip.ip);
+        data.append('geolocation', this.ip.latitude + ", " + this.ip.longitude);
         data.append('hash', this.generateCode());
         data.append('password', password)
         const response = await axios(this.apiURL + "/signatures/signWithPassword", {

@@ -39,12 +39,12 @@ class Inscribes extends CI_Controller{
                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td>
-                               <img src="https://toquedivino.com/divine/assets/img/logotipo.png" alt="logotipo" width="200" />
+                               <img src="https://api.cerimonialoquedivino.com.br/assets/img/logotipo.png" alt="logotipo" width="200" />
                             </td>
                             <td>Olá '.$account->name.'</td>
                         </tr>
                         <tr>
-                            <td>Acesso: {unwrap}https://toquedivino.com/divine/customers{/unwrap}</td>
+                            <td>Acesso: {unwrap}https://app.cerimonialtoquedivino.com.br/customer/home{/unwrap}</td>
                         </tr>
                         <tr>
                             <td>Login: '.$account->email.'</td>
@@ -102,7 +102,7 @@ class Inscribes extends CI_Controller{
                             <td>Olá '.$account->name.'</td>
                         </tr>
                         <tr>
-                            <td>Acesso: {unwrap}https://app.cerimonialtoquedivino.com.br/customers{/unwrap}</td>
+                            <td>Acesso: {unwrap}https://app.cerimonialtoquedivino.com.br/customer/home{/unwrap}</td>
                         </tr>
                         <tr>
                             <td>Login: '.$account->email.'</td>
