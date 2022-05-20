@@ -11,9 +11,9 @@
           <v-divider></v-divider>
           <v-stepper-step :complete="tela > 4" step="4"></v-stepper-step>
           <v-divider></v-divider>
-          <v-stepper-step :complete="tela > 5" step="5"></v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :complete="tela == 6" step="6"></v-stepper-step>
+          <v-stepper-step :complete="tela == 5" step="5"></v-stepper-step>
+          <!-- <v-divider></v-divider>
+          <v-stepper-step :complete="tela == 6" step="6"></v-stepper-step> -->
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -328,6 +328,11 @@
                   >
                   </v-text-field>
                   <v-text-field
+                    v-model="inscribeBirthdate"
+                    label="Data de nascimento"
+                    :rules="inscribeBirthdateRules"
+                  ></v-text-field>
+                  <v-text-field
                     v-model="inscribeEmail"
                     label="E-mail"
                     :rules="inscribeEmailRules"
@@ -365,12 +370,12 @@
                   color="primary"
                   @click="nextScreen()"
                 >
-                  <v-icon>mdi-menu-right</v-icon> Continuar
+                  <v-icon>mdi-menu-right</v-icon> Finalizar
                 </v-btn>
               </v-col>
             </v-row>
           </v-stepper-content>
-          <v-stepper-content step="5">
+          <!-- <v-stepper-content step="5">
             <v-row>
               <v-col>
                 <v-sheet elevation="0" outlined rounded class="pa-5">
@@ -522,9 +527,9 @@
                 </v-btn>
               </v-col>
             </v-row>
-          </v-stepper-content>
+          </v-stepper-content> -->
 
-          <v-stepper-content step="6">
+          <v-stepper-content step="5">
             <v-row>
               <v-col>
                 <p>
@@ -619,6 +624,10 @@ export default {
     inscribeID: "",
     inscribeAccountable: "",
     inscribeAccountableRules: [(v) => !!v || "O campo NOME é requerido"],
+    inscribeBirthdate: "",
+    inscribeBirthdateRules: [
+      (v) => !!v || "O campo DATA DE NASCIMENTO é requerido",
+    ],
     inscribeEmail: "",
     inscribeEmailRules: [
       (v) => !!v || "O campo EMAIL é requerido",
@@ -826,6 +835,7 @@ export default {
       data.append("datetime", this.$moment().format("YYYY-MM-DD"));
       data.append("email", this.inscribeEmail);
       data.append("accountable", this.inscribeAccountable);
+      data.append("birthdate", this.inscribeBirthdate);
       data.append("phone", this.inscribePhone);
       data.append("mobile", this.inscribeMobile);
       data.append("address", JSON.stringify(this.inscribeAddress));

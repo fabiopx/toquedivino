@@ -25,7 +25,12 @@ Gerar assinatura dos contratados (>>OK<<)
 Preparar telas quando existir contrato (>>OK<<)
 Verificar se orçamento expirou (>>OK<<)
 
-Resolver direcionamento quando página cai na /customer
-Incluir campo de nascimento no cadastro do APP, com validação de maioridade
-Resolver https:// da api de ip
+Resolver direcionamento quando página cai na /customer (>>OK<<)
+Incluir campo de nascimento no cadastro do APP, com validação de maioridade (>>OK<<)
+Resolver https:// da api de ip (>>OK<<)
 Resolver bug de envio de e-mail (>>OK<<)
+Verificar responsividade das telas em diversos dispositivos. (>>OK<<)
+Retirar cadastro de endereço na tela APP (>>OK<<)
+Reencaminhar para a home quando fizer o primeiro cadastro de evento (isEvent = true)
+Caminhos das imagens: avatar.jpg
+Verificar o carregamento da página Orçamento
