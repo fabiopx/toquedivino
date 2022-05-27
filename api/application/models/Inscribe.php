@@ -21,7 +21,7 @@ class Inscribe extends Crud{
         $this->birthdate = $_POST['birthdate'];
         $this->phone = $_POST['phone'];
         $this->mobile = $_POST['mobile'];
-        $this->address = $_POST['address'];
+        $this->address = empty($_POST['address']) ? null : $_POST['address'];
         $this->cpf = $_POST['cpf'];
         $this->rg = $_POST['rg'];
         $this->status = 0;

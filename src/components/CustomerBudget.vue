@@ -463,6 +463,7 @@ export default {
         this.budgetItems = response.data;
         this.setIsBudget(true);
         await this.verifyBudgetCancel();
+        await this.verifyBudgetExpires();
       } else {
         this.setIsBudget(false);
       }
@@ -509,9 +510,7 @@ export default {
       await this.getEvent();
       await this.getInscribe();
       await this.calculateTaxValue();
-      await this.verifyBudgetExpires();
       await this.getBudget();
-      await this.verifyBudgetCancel();
     }
   },
   computed: {

@@ -330,18 +330,15 @@
                   <v-text-field
                     v-model="inscribeBirthdate"
                     label="Data de nascimento"
+                    v-mask="maskBirthdate"
                     :rules="inscribeBirthdateRules"
+                    @change="is18(inscribeBirthdate)"
                   ></v-text-field>
                   <v-text-field
                     v-model="inscribeEmail"
                     label="E-mail"
                     :rules="inscribeEmailRules"
-                  >
-                  </v-text-field>
-                  <v-text-field
-                    v-model="inscribePhone"
-                    label="Telefone"
-                    v-mask="maskTel(inscribePhone)"
+                    @change="verifyEmail()"
                   >
                   </v-text-field>
                   <v-text-field
@@ -349,6 +346,7 @@
                     label="Celular"
                     :rules="inscribeMobileRules"
                     v-mask="maskTel(inscribeMobile)"
+                    @change="saveLead()"
                   >
                   </v-text-field>
                 </v-form>
@@ -368,7 +366,7 @@
                   depressed
                   class="float-right"
                   color="primary"
-                  @click="nextScreen()"
+                  @click="finish()"
                 >
                   <v-icon>mdi-menu-right</v-icon> Finalizar
                 </v-btn>
@@ -599,6 +597,42 @@ Date.prototype.toMysqlFormat = function () {
   );
 };
 
+function getAge(dataNasc) {
+  var dataAtual = new Date();
+
+  var anoAtual = dataAtual.getFullYear();
+
+  var anoNascParts = dataNasc.split("/");
+
+  var diaNasc = anoNascParts[0];
+
+  var mesNasc = anoNascParts[1];
+
+  var anoNasc = anoNascParts[2];
+
+  var idade = anoAtual - anoNasc;
+
+  var mesAtual = dataAtual.getMonth() + 1;
+
+  //Se mes atual for menor que o nascimento, nao fez aniversario ainda;
+
+  if (mesAtual < mesNasc) {
+    idade--;
+  } else {
+    //Se estiver no mes do nascimento, verificar o dia
+
+    if (mesAtual == mesNasc) {
+      if (new Date().getDate() < diaNasc) {
+        //Se a data atual for menor que o dia de nascimento ele ainda nao fez aniversario
+
+        idade--;
+      }
+    }
+  }
+
+  return idade;
+}
+
 export default {
   name: "AppFrontendSteppers",
 
@@ -614,6 +648,7 @@ export default {
     maskCep: "#####-###",
     maskCpf: "###.###.###-##",
     maskCnpj: "##.###.###/####-##",
+    maskBirthdate: "##/##/####",
     setIP: {},
     serviceRules: [(v) => !!v || "Por favor diga qual o tipo do evento"],
     selectedService: "",
@@ -699,6 +734,27 @@ export default {
       this.restart();
     },
 
+    is18: function (date) {
+      if (getAge(date) < 18) {
+        this.$swal("Responsável precisa ter mais que 18 anos");
+        this.inscribeBirthdate = null;
+      }
+      // console.log(getAge(date));
+    },
+
+    verifyEmail: async function () {
+      let data = new FormData();
+      data.append("email", this.inscribeEmail);
+      const resp = await axios(this.urlApi + "/user/verifyEmail", {
+        method: "POST",
+        data: data,
+      });
+      if(resp.data){
+        this.$swal("Este e-mail já está sendo utilizado");
+        this.inscribeEmail = null;
+      }
+    },
+
     nextScreen: function () {
       if (this.tela == 1) {
         if (this.$refs.firstScreen.validate()) {
@@ -720,7 +776,6 @@ export default {
         }
       } else if (this.tela == 4) {
         if (this.$refs.formInscribePartOne.validate()) {
-          this.saveLead();
           this.next();
         }
       }
@@ -731,8 +786,7 @@ export default {
       }
     },
     finish: function () {
-      if (this.$refs.formInscribePartTwo.validate()) {
-        this.deleteLead();
+      if (this.$refs.formInscribePartOne.validate()) {
         this.saveInscribe();
         this.next();
       }
@@ -800,45 +854,45 @@ export default {
         : "";
       this.buscarEndereco = false;
     },
-    saveLead: function () {
-      let data = new FormData();
-      data.append("datetime", new Date().toMysqlFormat());
-      data.append("ip", this.setIP.ip);
-      data.append("origin", "app toque divino");
-      data.append("accountable", this.inscribeAccountable);
-      data.append("phone", this.inscribePhone);
-      data.append("mobile", this.inscribeMobile);
-      data.append("email", this.inscribeEmail);
-      data.append("flag", 0);
-      axios(this.urlApi + "/leads/create", {
-        method: "POST",
-        data: data,
-      }).then((response) => {
-        console.log(response.data);
-      });
-    },
-    deleteLead: function () {
-      let data = new FormData();
-      data.append("ip", this.setIP.id);
-      data.append("email", this.inscribeEmail);
-      data.append("mobile", this.inscribeMobile);
-      axios(this.urlApi + "/leads/delete", {
-        method: "POST",
-        data: data,
-      }).then((response) => {
-        console.log(response.data);
-      });
-    },
+    // saveLead: function () {
+    //   let data = new FormData();
+    //   data.append("datetime", new Date().toMysqlFormat());
+    //   data.append("ip", this.setIP.ip);
+    //   data.append("origin", "app toque divino");
+    //   data.append("accountable", this.inscribeAccountable);
+    //   // data.append("phone", this.inscribePhone);
+    //   data.append("mobile", this.inscribeMobile);
+    //   data.append("email", this.inscribeEmail);
+    //   data.append("flag", 0);
+    //   axios(this.urlApi + "/leads/create", {
+    //     method: "POST",
+    //     data: data,
+    //   }).then((response) => {
+    //     console.log(response.data);
+    //   });
+    // },
+    // deleteLead: function () {
+    //   let data = new FormData();
+    //   data.append("ip", this.setIP.id);
+    //   data.append("email", this.inscribeEmail);
+    //   data.append("mobile", this.inscribeMobile);
+    //   axios(this.urlApi + "/leads/delete", {
+    //     method: "POST",
+    //     data: data,
+    //   }).then((response) => {
+    //     console.log(response.data);
+    //   });
+    // },
     saveInscribe: function () {
       this.loading = true;
       let data = new FormData();
       data.append("datetime", this.$moment().format("YYYY-MM-DD"));
       data.append("email", this.inscribeEmail);
       data.append("accountable", this.inscribeAccountable);
-      data.append("birthdate", this.inscribeBirthdate);
+      data.append("birthdate", toDateFormat(this.inscribeBirthdate));
       data.append("phone", this.inscribePhone);
       data.append("mobile", this.inscribeMobile);
-      data.append("address", JSON.stringify(this.inscribeAddress));
+      // data.append("address", JSON.stringify(this.inscribeAddress));
       data.append("cpf", "");
       data.append("rg", "");
       data.append("service_idservice", this.selectedService.idservice);

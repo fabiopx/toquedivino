@@ -76,7 +76,7 @@ class Inscribes extends CI_Controller{
         $resp = $this->inscribe->createInscribe();
         if($resp['icon'] == 'success'){
             
-            $account = $this->account->readAccount(array('idaccount' => $resp['idAccount']));
+            $account = $this->account->readAccount(['idaccount' => $resp['idAccount']]);
             $account = $account->row();
 
             $config['mailtype'] = 'html';

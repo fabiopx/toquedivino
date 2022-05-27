@@ -414,7 +414,7 @@ export default {
             );
             this.inscribePhone = resp.phone;
             this.inscribeMobile = resp.mobile;
-            this.inscribeAddress = resp.address;
+            this.inscribeAddress = (resp.address) ? resp.address : "";
             this.inscribeCpf = resp.cpf;
             this.inscribeRg = resp.rg;
             this.inscribeStatus = resp.status;

@@ -20,7 +20,7 @@ Liberar as funções após aceite de contrato (>>OK<<)
 Salvar contrato em pdf (...)
 Criar financeiro (lançar pagamentos) (...)
 Verificar apagar lead na tela app (>>OK<<)
-Apagar lead no dashboard
+Apagar lead no dashboard 
 Gerar assinatura dos contratados (>>OK<<)
 Preparar telas quando existir contrato (>>OK<<)
 Verificar se orçamento expirou (>>OK<<)
@@ -31,6 +31,6 @@ Resolver https:// da api de ip (>>OK<<)
 Resolver bug de envio de e-mail (>>OK<<)
 Verificar responsividade das telas em diversos dispositivos. (>>OK<<)
 Retirar cadastro de endereço na tela APP (>>OK<<)
-Reencaminhar para a home quando fizer o primeiro cadastro de evento (isEvent = true)
-Caminhos das imagens: avatar.jpg
-Verificar o carregamento da página Orçamento
+Mudar fluxo desde o primeiro acesso no customer/home
+Caminhos das imagens: avatar.jpg (>>OK<<)
+Verificar o carregamento da página Orçamento (>>OK<<)

@@ -33,6 +33,13 @@ class User extends CI_Controller{
         echo json_encode($resp);
     }
 
+    public function verifyEmail(){
+        $this->load->model('account');
+        $account = $this->account->readAccount(['email' => $this->input->post('email')]);
+        $resp = ($account->num_rows() != 0) ? true : false;
+        echo json_encode($resp);
+    }
+
     public function update($id){
         $this->load->model('account');
         $where = array('idaccount' => $id);
