@@ -3,13 +3,13 @@
     <v-container>
       <v-row>
         <v-col>
-          <v-card v-show="isEvent">
+          <v-card v-if="access.isEvent">
             <v-toolbar color="grey darken-4" dark>
               <h2>
                 <v-icon class="mr-3">mdi-file-document-edit</v-icon>Orçamento
               </h2>
             </v-toolbar>
-            <v-card-text v-show="budgetOpen">
+            <v-card-text v-if="budgetOpen">
               <v-sheet class="pa-4" outlined elevation="1">
                 <v-simple-table>
                   <tbody>
@@ -219,7 +219,7 @@
                 </div>
               </v-sheet>
             </v-card-text>
-            <v-card-text v-show="isBudget">
+            <v-card-text v-if="access.isBudget">
               <v-sheet>
                 <v-skeleton-loader
                   type="table-thead, table-row"
@@ -289,7 +289,7 @@
               </v-sheet>
             </v-card-text>
           </v-card>
-          <v-card v-show="!isEvent">
+          <v-card v-else>
             <v-toolbar color="grey darken-4" dark><h3>Ops!</h3></v-toolbar>
             <v-card-text>
               <p>Você ainda não cadastrou seu evento!</p>
@@ -467,7 +467,7 @@ export default {
       } else {
         this.setIsBudget(false);
       }
-      this.budgetOpen = !this.isBudget || this.budgetCancel ? true : false;
+      this.budgetOpen = !this.access.isBudget || this.budgetCancel ? true : false;
       this.loadingBudget = false;
     },
     cancelBudget: async function (id) {
@@ -517,9 +517,7 @@ export default {
     ...mapGetters([
       "inscribeID",
       "userNow",
-      "isAgreement",
-      "isBudget",
-      "isEvent",
+      "access",
     ]),
   },
   formationChecked: function () {

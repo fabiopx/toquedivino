@@ -14,30 +14,30 @@
                 class="d-flex justify-space-around align-center"
               >
                 <v-img
-                  v-if="!isAgreement"
+                  v-if="!access.isAgreement"
                   max-width="200"
                   :src="require('../assets/undraw_contract_re_ves9.svg')"
                 ></v-img>
-                <div v-if="isBudget && !isAgreement">
+                <div v-if="access.isBudget && !access.isAgreement">
                   <h1 class="red--text darken-4 h2">
                     Você ainda não gerou seu contrato.
                   </h1>
                   <p
-                    v-if="isBudget && budget.status == 1"
+                    v-if="access.isBudget && budget.status == 1"
                     class="subtitle-1 mt-3"
                   >
                     Existe um orçamento ativo na sua conta, você já pode gerar
                     seu contrato.
                   </p>
                 </div>
-                <div v-if="!isAgreement && !isBudget">
+                <div v-if="!access.isAgreement && !access.isBudget">
                   <h1 class="red--text darken-4 h2">Faça um orçamento</h1>
                   <p class="subtitle-1">
                     Não há nenhum orçamento realizado em sua conta. Faça um
                     orçamento:
                   </p>
                 </div>
-                <div v-if="isAgreement">
+                <div v-if="access.isAgreement">
                   <p class="subtitle-1 pa-5 grey darken-4 white--text">
                     Leia atentamente o contrato abaixo. Estando de acordo com os
                     termos do contrato, assine eletronicamente usando a senha
@@ -491,7 +491,7 @@
                   <!-- Fim Contrato -->
                 </div>
               </v-sheet>
-              <v-sheet v-if="!isAgreement" class="mt-3">
+              <v-sheet v-if="!access.isAgreement" class="mt-3">
                 <v-btn
                   color="red darken-4"
                   class="pa-8 mr-3"
@@ -501,7 +501,7 @@
                   orçamento</v-btn
                 >
                 <v-btn
-                  v-if="isBudget && budget.status == 1"
+                  v-if="access.isBudget && budget.status == 1"
                   color="red darken-4"
                   class="pa-8"
                   dark
@@ -511,7 +511,7 @@
                 >
               </v-sheet>
             </v-card-text>
-            <v-card-actions v-if="isAgreement">
+            <v-card-actions v-if="access.isAgreement">
               <v-spacer></v-spacer>
               <v-menu rounded="lg" offset-x color="grey darken-4" dark>
                 <template v-slot:activator="{attrs, on}">
@@ -665,8 +665,7 @@ export default {
     ...mapGetters([
       "inscribeID",
       "userNow",
-      "isAgreement",
-      "isBudget",
+      "access",
       "budget",
     ]),
   },

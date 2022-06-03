@@ -6,10 +6,12 @@
           <v-toolbar-title><h2>Seja bem-vindo!</h2></v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <p class="ml-5 subtitle-1">Confira abaixo os dados que reunimos até aqui.</p>
           <v-sheet v-show="!loadingData2" class="ml-4 mt-4 pa-3" outlined>
-            <div class="d-flex justify-space-around mt-5">
-              <v-img max-width="200" :src="require('../assets/undraw_setup_re_y9w8.svg')"></v-img>
+            <div class="d-lg-flex justify-lg-space-around mt-5">
+              <v-img 
+                max-width="200" class="mb-3"
+                :src="require('../assets/undraw_setup_re_y9w8.svg')"
+              ></v-img>
               <v-sheet outlined rounded>
                 <v-skeleton-loader
                   v-show="loadingData1"
@@ -19,62 +21,89 @@
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>
-                        <b class="red--text darken-4">Formação:</b> {{ inscribe.formation.name }}
+                        <b class="red--text darken-4">Formação:</b>
+                        {{ inscribe.formation.name }}
                       </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>
-                        <b class="red--text darken-4">Serviço:</b> {{ inscribe.service.name }}
+                        <b class="red--text darken-4">Serviço:</b>
+                        {{ inscribe.service.name }}
                       </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
               </v-sheet>
             </div>
-            <v-divider class="mt-5 mb-3"></v-divider>
-            <v-skeleton-loader
-              v-show="loadingData2"
-              type="article"
-            ></v-skeleton-loader>
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <h2 class="mb-3">Dados pessoais</h2>
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    <p><b class="red--text darken-4">Nome:</b> {{ inscribe.accountable }}</p>
-                    <p><b class="red--text darken-4">Telefone:</b> {{ inscribe.phone }}</p>
-                    <p><b class="red--text darken-4">Celular:</b> {{ inscribe.mobile }}</p>
-                    <p>
-                      <b class="red--text darken-4">Endereço:</b> {{ inscribe.address.street }},
-                      {{ inscribe.address.number }}
-                      {{
-                        inscribe.address.complement
-                          ? ", " + inscribe.address.complement + ","
-                          : ""
-                      }}
-                      {{ inscribe.address.neighborhood }},
-                      {{ inscribe.address.city }} -
-                      {{ inscribe.address.state }},
-                      {{ inscribe.address.zipcode }},
-                      {{ inscribe.address.country }}
-                    </p>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+            <div v-if="!access.first">
+              <v-divider class="mt-5 mb-3"></v-divider>
+              <v-skeleton-loader
+                v-show="loadingData2"
+                type="article"
+              ></v-skeleton-loader>
+              <v-list>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <h2 class="mb-3">Dados pessoais</h2>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      <p>
+                        <b class="red--text darken-4">Nome:</b>
+                        {{ inscribe.accountable }}
+                      </p>
+                      <p>
+                        <b class="red--text darken-4">Telefone:</b>
+                        {{ inscribe.phone }}
+                      </p>
+                      <p>
+                        <b class="red--text darken-4">Celular:</b>
+                        {{ inscribe.mobile }}
+                      </p>
+                      <p>
+                        <b class="red--text darken-4">Endereço:</b>
+                        {{ inscribe.address.street }},
+                        {{ inscribe.address.number }}
+                        {{
+                          inscribe.address.complement
+                            ? ", " + inscribe.address.complement + ","
+                            : ""
+                        }}
+                        {{ inscribe.address.neighborhood }},
+                        {{ inscribe.address.city }} -
+                        {{ inscribe.address.state }},
+                        {{ inscribe.address.zipcode }},
+                        {{ inscribe.address.country }}
+                      </p>
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <v-sheet>
+                <p class="ml-5 mt-3 text-h6 red--text darken-4" v-if="!access.isEvent">
+                  Em seguida, precisamos de maiores informações sobre seu evento.
+                </p>
+                <p
+                  class="ml-5 mt-3 text-h6 red--text darken-4"
+                  v-show="access.isEvent"
+                  v-if="!access.isBudget"
+                >
+                  Seu evento foi cadastrado como sucesso! Agora você pode
+                  realizar o orçamento.
+                </p>
+              </v-sheet>
+            </div>
+            <div v-else>
+              <v-sheet>
+                <p class="ml-5 mt-3 text-h6 red--text darken-4">
+                  Seu cadastro ainda não está completo. O primeiro passo é
+                  concluir seu cadastro.
+                </p>
+              </v-sheet>
+            </div>
           </v-sheet>
-          <p class="ml-5 mt-3" v-show="!isEvent">
-            O próximo passo é oferecer maiores informações sobre o evento e
-            realizar o orçamento.
-          </p>
-          <p class="ml-5 mt-3" v-show="isEvent" v-if="!isBudget">
-            Seu evento foi cadastrado como sucesso! Agora você pode realizar o
-            orçamento Toque Divino.
-          </p>
         </v-card-text>
         <v-skeleton-loader
           v-show="loadingActions"
@@ -82,8 +111,11 @@
           class="ml-5"
         ></v-skeleton-loader>
         <v-card-actions v-show="!loadingActions">
+          <v-btn v-show="access.first" color="red darken-4" depressed dark class="ml-5 pa-8" @click="$router.push('/customer/inscribe')">
+          <v-icon class="mr-2">mdi-file-document-multiple</v-icon>Finalizar cadastro
+          </v-btn>
           <v-btn
-            v-show="isEvent && !isBudget"
+            v-show="access.isEvent && !access.isBudget"
             color="red darken-4"
             depressed
             dark
@@ -93,7 +125,7 @@
             orçamento</v-btn
           >
           <v-btn
-            v-show="!isEvent"
+            v-if="!access.first && !access.isEvent"
             color="red darken-4"
             depressed
             dark
@@ -150,7 +182,13 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setInscribeID", "setUserNow", "setIsBudget", "verifyIsAgreement"]),
+    ...mapActions([
+      "setInscribeID",
+      "setUserNow",
+      "setIsBudget",
+      "verifyIsAgreement",
+      "verifyStatusInscribe",
+    ]),
     getInscribe: async function () {
       this.loadingData1 = true;
       this.loadingData2 = true;
@@ -170,7 +208,7 @@ export default {
       );
       const resp = response.data;
       if (resp) {
-        this.isEvent = true;
+        this.access.isEvent = true;
         this.eventID = resp.idevent;
         this.eventName = resp.name;
         this.eventDate = resp.date;
@@ -229,7 +267,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["inscribeID", "userNow", "isAgreement", "isBudget"]),
+    ...mapGetters(["inscribeID", "userNow", "access"]),
   },
 
   created: async function () {
@@ -238,6 +276,7 @@ export default {
       await this.verifyEvent();
       await this.verifyBudget();
       await this.verifyIsAgreement();
+      await this.verifyStatusInscribe();
     }
   },
 };

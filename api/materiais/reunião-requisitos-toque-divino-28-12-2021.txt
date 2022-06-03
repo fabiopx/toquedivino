@@ -31,6 +31,7 @@ Resolver https:// da api de ip (>>OK<<)
 Resolver bug de envio de e-mail (>>OK<<)
 Verificar responsividade das telas em diversos dispositivos. (>>OK<<)
 Retirar cadastro de endereço na tela APP (>>OK<<)
-Mudar fluxo desde o primeiro acesso no customer/home
+Mudar fluxo desde o primeiro acesso no customer/home (...)
 Caminhos das imagens: avatar.jpg (>>OK<<)
 Verificar o carregamento da página Orçamento (>>OK<<)
+tratar quando os noivos não são responsáveis pela assinatura do contrato (...)

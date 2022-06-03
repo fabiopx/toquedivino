@@ -174,7 +174,7 @@ class Inscribes extends CI_Controller{
         $resp = $this->inscribe->readInscribe($where);
         if($resp->num_rows() != 0){
             $resp = $resp->row();
-            $resp->address = json_decode($resp->address);
+            $resp->address = ($resp->address != null) ? json_decode($resp->address): json_decode('{"street": "", "number": "", "complement": "", "neighborhood": "", "city": "", "zipcode": "", "state": "", "country": ""}');
             $composition = $this->inscribe->readComposition($resp->idinscribe);
             foreach($composition->result() as $comp):
                 $formation = $this->formation->readFormation(array('idformation' => $comp->formation_idformation));
@@ -187,6 +187,13 @@ class Inscribes extends CI_Controller{
         }
         
         echo json_encode($resp);
+    }
+
+    public function verifyStatus($id){
+        $this->load->model('inscribe');
+        $inscribe = $this->inscribe->readInscribe(['idinscribe' => $id]);
+        $inscribe = $inscribe->row();
+        echo json_encode($inscribe->status);
     }
 
 

@@ -442,19 +442,21 @@ export default {
       data.append("rg", this.inscribeRg);
       data.append("idservice", this.inscribeService.idservice);
       data.append("idformation", this.inscribeFormation.idformation);
+      data.append("status", 1);
       axios(this.apiURL + "/inscribes/updateCustomers/" + this.inscribeID, {
         method: "POST",
         data: data,
       }).then((response) => {
         this.$swal(response.data.msg, "", response.data.icon);
         this.getInscribe();
+        if(this.access.first) this.$router.push('/customer/home');
       });
       // console.log(this.$moment(FormataStringData(this.inscribeBirthdate)).format("YYYY-MM-DD"));
     },
   },
 
   computed: {
-    ...mapGetters(["userNow", "isAgreement"]),
+    ...mapGetters(["userNow", "isAgreement", "access"]),
   },
 
   created: function () {

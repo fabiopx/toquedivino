@@ -439,6 +439,7 @@ export default {
             this.$swal(response.data.msg, "", response.data.icon);
             this.setIsEvent();
             this.getEvent();
+            this.$router.push('/customer/home');
           });
         } else if (this.crud == "u") {
           axios(this.apiURL + "/events/updateCustomers/" + this.eventID, {
@@ -454,7 +455,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["userNow", "isAgreement", "isEvent"]),
+    ...mapGetters(["userNow", "isAgreement", "access"]),
   },
 
   created: async function () {
@@ -464,7 +465,7 @@ export default {
     }
     await this.getInscribe();
     await this.getEvent();
-    console.log(this.isEvent);
+    console.log(this.access.isEvent);
   },
 };
 </script>

@@ -5,20 +5,16 @@ const state = {
   alert: { status: false, msg: "" },
   inscribeID: null,
   startedRepertory: false,
-  isAgreement: false,
-  isBudget: false,
   budget: {},
-  isEvent: false,
+  access: {first: true, isInscribe: false, isAgreement: false, isBudget: false, isEvent: false},
 };
 
 const getters = {
   userNow: (state) => state.userNow,
   inscribeID: (state) => state.inscribeID,
   startedRepertory: (state) => state.startedRepertory,
-  isAgreement: (state) => state.isAgreement,
-  isBudget: (state) => state.isBudget,
   budget: (state) => state.budget,
-  isEvent: (state) => state.isEvent
+  access: (state) => state.access
 };
 
 const actions = {
@@ -35,16 +31,16 @@ const actions = {
     commit('setStartedRepertory', payload);
   },
 
-  setIsAgreement({commit}, payload){
-    commit('setIsAgreement', payload);
+  setBudget({commit}, payload){
+    commit('setBudget', payload);
   },
 
   setIsBudget({commit}, payload){
     commit('setIsBudget', payload);
   },
 
-  setBudget({commit}, payload){
-    commit('setBudget', payload);
+  setAccess({commit}, payload){
+    commit('setAccess', payload);
   },
 
   async setBudgetActive({commit}){
@@ -64,10 +60,17 @@ const actions = {
   },
 
   async setIsEvent({commit}){
-    const response = await axios.get(process.env.VUE_APP_URL + "/events/getCustomers/" + state.inscribeID)
+    const response = await axios.get(process.env.VUE_APP_URL + "/events/getCustomers/" + state.inscribeID);
     const resp = (response.data) ? true : false
     commit('setIsEvent', resp)
   },
+
+  async verifyStatusInscribe({commit}){
+    const response  = await axios.get(process.env.VUE_APP_URL + "/inscribes/verifyStatus/" + state.inscribeID);
+    const resp = (response.data == "0") ? true : false;
+    console.log(resp)
+    commit('setFirstAccess', resp);
+  }
   
 };
 
@@ -76,10 +79,11 @@ const mutations = {
   setAlertLogin: (state, alertLogin) => (state.alert = alertLogin),
   setInscribeID: (state, inscribeID) => (state.inscribeID = inscribeID),
   setStartedRepertory: (state, startedRepertory) => (state.startedRepertory = startedRepertory),
-  setIsAgreement: (state, isAgreement) => (state.isAgreement = isAgreement),
-  setIsBudget: (state, isBudget) => (state.isBudget = isBudget),
+  setIsAgreement: (state, isAgreement) => (state.access.isAgreement = isAgreement),
+  setIsBudget: (state, isBudget) => (state.access.isBudget = isBudget),
   setBudget: (state, budget) => (state.budget = budget),
-  setIsEvent: (state, isEvent) => (state.isEvent = isEvent)
+  setIsEvent: (state, isEvent) => (state.access.isEvent = isEvent),
+  setFirstAccess: (state, firstAccess) => (state.access.first = firstAccess)
 };
 
 export default {

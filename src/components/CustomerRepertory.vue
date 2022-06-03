@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container v-show="isAgreement" fluid>
+    <v-container v-show="access.isAgreement" fluid>
       <v-row>
         <v-col>
           <v-card>
@@ -194,7 +194,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container v-show="!isAgreement">
+    <v-container v-show="!access.isAgreement">
       <v-card>
         <v-toolbar color="grey darken-4" dark>
           <h3>Ops!</h3>
@@ -389,7 +389,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["userNow", "inscribeID", "startedRepertory", "isAgreement"]),
+    ...mapGetters(["userNow", "inscribeID", "startedRepertory", "access"]),
   },
 };
 </script>

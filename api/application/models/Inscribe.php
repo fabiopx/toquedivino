@@ -165,7 +165,8 @@ class Inscribe extends Crud{
             'phone' => $_POST['phone'],
             'address' => $_POST['address'],
             'cpf' => $_POST['cpf'],
-            'rg' => $_POST['rg']
+            'rg' => $_POST['rg'],
+            'status' => $_POST['status']
         );
 
         $dComposition = array(
