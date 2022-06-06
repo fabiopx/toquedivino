@@ -17,6 +17,7 @@
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.4",
     "vue-google-autocomplete": "^1.1.2",
+    "vue-google-charts": "^1.1.0",
     "vue-localstorage": "^0.6.2",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.5.3",

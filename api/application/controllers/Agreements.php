@@ -44,8 +44,25 @@ class Agreements extends CI_controller{
             if($engaged->num_rows() != 0){
                 $EHSGroom = $this->engaged->readEngagedHasSignature(['engaged' => 1, 'engaged_idengaged' => $engaged->row()->idengaged]);
                 $EHSBride = $this->engaged->readEngagedHasSignature(['engaged' => 2, 'engaged_idengaged' => $engaged->row()->idengaged]);
-                $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSGroom->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
-                $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSBride->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                if($EHSGroom->num_rows() != 0){
+                    $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSGroom->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                }
+                if($EHSBride->num_rows() != 0){
+                    $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSBride->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                }
+                if($engaged->row()->groom_responsible_for == 0 && $engaged->row()->bride_responsible_for == 0){
+                    $dataSignature = [
+                        'name' => $inscribe->row()->accountable,
+                        'type' => 1,
+                        'font' => 'gf_fuggles',
+                        'status' => 1,
+                        'inuse' => 0,
+                        'account_idaccount' => $inscribe->row()->account_idaccount
+                    ];
+                    $this->signature->createSignature($dataSignature);
+                    $idSignature = $this->db->insert_id();
+                    $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $idSignature, 'inscribe_idinscribe' => $idInscribe]);
+                }
             } else{
                 $dataSignature = [
                     'name' => $inscribe->row()->accountable,
@@ -53,7 +70,7 @@ class Agreements extends CI_controller{
                     'font' => 'gf_fuggles',
                     'status' => 1,
                     'inuse' => 0,
-                    'account_idaccount' => $inscribe->row()->idaccount
+                    'account_idaccount' => $inscribe->row()->account_idaccount
                 ];
                 $this->signature->createSignature($dataSignature);
                 $idSignature = $this->db->insert_id();

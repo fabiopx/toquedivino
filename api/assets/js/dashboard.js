@@ -1237,9 +1237,7 @@
                 this.contractDownPaymentDate = ''
                 this.contractSignatures = []
             },
-            setCrud: function(op) {
-                this.crud = op
-            },
+            close
             selectFile: function(file) {
                 this.currentFile = file.name
             },

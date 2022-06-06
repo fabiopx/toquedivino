@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" color="blue-grey" app>
+    <v-navigation-drawer v-model="drawer" color="grey darken-4" app>
       <v-list>
         <v-list-item class="px-2" dark>
           <v-list-item-avatar>
-            <v-img :src="userNow.photo"></v-img>
+            <v-img :src="loginNow.photo"></v-img>
           </v-list-item-avatar>
-          <v-list-item-title>{{ userNow.name }}</v-list-item-title>
+          <v-list-item-title>{{ loginNow.name }}</v-list-item-title>
         </v-list-item>
       </v-list>
       <v-divider></v-divider>
@@ -52,12 +52,11 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar color="blue-grey" app>
+    <v-app-bar color="grey darken-4" app>
       <v-app-bar-nav-icon dark @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text">
         <v-img
-          max-height="61"
-          max-width="180"
+          max-width="120"
           :src="require('../assets/logotipo_branco.png')"
         ></v-img>
       </v-toolbar-title>
@@ -74,8 +73,10 @@
 
 <script>
 import {mapGetters, mapActions} from "vuex";
+
 export default {
   name: "dashboard",
+  
 
   data() {
     return {

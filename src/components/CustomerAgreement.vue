@@ -586,6 +586,7 @@ export default {
       );
       this.loading = false;
       this.$swal(response.data.msg, "", response.data.icon);
+      await this.getAgreement();
     },
     getInscribe: async function () {
       const response = await axios.get(
