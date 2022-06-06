@@ -4,7 +4,7 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar dark color="blue-grey">
+            <v-toolbar dark color="grey darken-4">
               <h3>Usuários</h3>
               <v-spacer></v-spacer>
               <!-- add user -->
@@ -29,7 +29,7 @@
                   </v-toolbar-items>
                 </template>
                 <v-card>
-                  <v-toolbar dark color="blue-grey">
+                  <v-toolbar dark color="grey darken-4">
                     <v-btn
                       icon
                       dark
@@ -178,6 +178,7 @@
                   <span v-show="item.access == 1">Usuário</span>
                   <span v-show="item.access == 2">Cliente</span>
                   <span v-show="item.access == 3">Músico</span>
+                  <span v-show="item.access == 4">Assinante</span>
                 </template>
                 <template v-slot:item.status="{ item }">
                   <v-chip v-show="item.status == 1" color="primary">
@@ -190,7 +191,7 @@
                     <v-icon>mdi-account-edit</v-icon>
                   </v-btn>
                   <v-btn
-                    v-show="item.access != 0"
+                    v-if="item.access != 0 && item.access != 4"
                     color="red"
                     icon
                     @click="deleteUser(item.idaccount)"
@@ -213,9 +214,11 @@ export default {
 
   data() {
     return {
+      apiURL: process.env.VUE_APP_URL,
       dialogUsers: false,
       showPassword: false,
       firstLoad: false,
+      loadingVisible: false,
       currentFile: undefined,
       progressUpload: 0,
       progressShow: false,
@@ -256,6 +259,10 @@ export default {
         {
           name: "Músicos",
           value: "3",
+        },
+        {
+          name: "Assinante",
+          value: "4",
         },
       ],
       accountPassword: "",
@@ -303,6 +310,11 @@ export default {
       } else {
         return this.maskMobile;
       }
+    },
+
+    stopContentLoading: function () {
+      this.contentLoading = false;
+      this.firstLoad = false;
     },
 
     clearFormUsers: function () {
@@ -367,6 +379,109 @@ export default {
         this.uploadError = false;
       }
     },
+
+    getUsers: async function () {
+      this.firstLoad = true;
+      const response = await axios.get(this.apiURL + "/user/get");
+      this.users = response.data;
+      this.stopContentLoading();
+    },
+
+    editUsers: function (item) {
+      this.dialogUsers = true;
+      this.crud = "u";
+      this.accountId = item.idaccount;
+      this.accountName = item.name;
+      this.accountEmail = item.email;
+      this.accountPhone = item.phone;
+      this.accountAccessType = item.access;
+      this.accountPassword = item.password;
+      this.accountStatus = item.status;
+      this.accountPhoto = item.photo;
+    },
+
+    saveUser: function () {
+      if (this.$refs.formAccount.validate()) {
+        this.dialogUsers = false;
+        this.loadingVisible = true;
+        if (this.accountStatus) {
+          this.accountStatus = 1;
+        } else {
+          this.accountStatus = 0;
+        }
+        let data = new FormData();
+        data.append("name", this.accountName);
+        data.append("email", this.accountEmail);
+        data.append("password", this.accountPassword);
+        data.append("status", this.accountStatus);
+        data.append("phone", this.accountPhone);
+        data.append(
+          "photo",
+          this.currentFile ? "assets/uploads/" + this.currentFile.name : ""
+        );
+        data.append("access", this.accountAccessType);
+        if (this.crud == "u") {
+          axios(this.apiURL + "/user/update/" + this.accountId, {
+            method: "POST",
+            data: data,
+          }).then((response) => {
+            this.loadingVisible = false;
+            this.progressShow = false;
+            this.uploadError = false;
+            this.uploadSuccess = false;
+            this.accountId = "";
+            this.accountName = "";
+            this.accountEmail = "";
+            this.accountPhone = "";
+            this.accountAccessType = "";
+            this.accountPassword = "";
+            this.accountPhoto = process.env.VUE_APP_IMGPATH + "profile.svg";
+            this.users = [];
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getUsers();
+          });
+        } else if (this.crud == "c") {
+          axios(this.apiURL + "/user/create", {
+            method: "POST",
+            data: data,
+          }).then((response) => {
+            this.loadingVisible = false;
+            this.progressShow = false;
+            this.uploadError = false;
+            this.uploadSuccess = false;
+            this.accountId = "";
+            this.accountName = "";
+            this.accountEmail = "";
+            this.accountPhone = "";
+            this.accountAccessType = "";
+            this.accountPassword = "";
+            this.accountPhoto = process.env.VUE_APP_IMGPATH + "profile.svg";
+            this.users = [];
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getUsers();
+          });
+        }
+      }
+    },
+
+    deleteUser: function (id) {
+      this.$swal({
+        title: "Deseja deletar usuário?",
+        confirmButtonText: "Deletar",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.get(this.apiURL + "/user/delete/" + id).then((response) => {
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getUsers();
+          });
+        }
+      });
+    },
+  },
+
+  created: async function () {
+    await this.getUsers();
   },
 };
 </script>

@@ -1237,7 +1237,6 @@
                 this.contractDownPaymentDate = ''
                 this.contractSignatures = []
             },
-            close
             selectFile: function(file) {
                 this.currentFile = file.name
             },
@@ -2195,7 +2194,7 @@
                 this.clearFormServiceTax()
                 this.crud = 'c'
             },
-            saveServiceTax: function() {
+            : function() {
                 this.closeDialog('dialogTaxService' )
                 this.loadingVisible = true
                 let data = new FormData()
@@ -2209,7 +2208,7 @@
                     axios(this.urlApi + 'createTax', {
                             method: 'POST',
                             data: data
-                        })
+                        })saveServiceTax
                         .then(response => {
                             this.loadingVisible = false
                             this.clearFormServiceTax()
