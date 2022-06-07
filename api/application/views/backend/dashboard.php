@@ -374,7 +374,7 @@
                                             <v-btn color="red" title="deletar" icon
                                                 @click="deleteService(item.idservice)">
                                                 <v-icon>mdi-delete</v-icon>
-                                            </v-btn icon>
+                                            </v-btn>
                                         </template>
                                     </v-data-table>
                                 </v-card-text>

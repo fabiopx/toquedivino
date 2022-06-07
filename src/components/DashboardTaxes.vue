@@ -348,6 +348,21 @@ export default {
         });
       }
     },
+
+    deleteTax: function (id) {
+      this.$swal({
+        title: "Deseja deletar taxa?",
+        confirmButtonText: "Deletar",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.get(this.apiURL + "/taxes/delete/" + id).then((response) => {
+            this.$swal(response.data.msg, "", response.data.icon);
+            this.getTax();
+          });
+        }
+      });
+    },
   },
 
   created: async function () {

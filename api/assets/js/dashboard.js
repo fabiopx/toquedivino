@@ -2194,7 +2194,7 @@
                 this.clearFormServiceTax()
                 this.crud = 'c'
             },
-            : function() {
+            saveServiceTax: function() {
                 this.closeDialog('dialogTaxService' )
                 this.loadingVisible = true
                 let data = new FormData()
@@ -2208,7 +2208,7 @@
                     axios(this.urlApi + 'createTax', {
                             method: 'POST',
                             data: data
-                        })saveServiceTax
+                        })
                         .then(response => {
                             this.loadingVisible = false
                             this.clearFormServiceTax()
