@@ -14,6 +14,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import extenso from 'extenso';
 
 Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
+
+
 Vue.use(VueMask);
 // Vue.use(VueCookies)
 Vue.use(VueSession)
