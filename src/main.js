@@ -12,22 +12,24 @@ import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import extenso from 'extenso';
+import CKEditor from '@ckeditor/ckeditor5-vue2'
 
 Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
 
 
 Vue.use(VueMask);
 // Vue.use(VueCookies)
-Vue.use(VueSession)
+Vue.use(VueSession);
 // Vue.use(VueLocalStorage, {
 //   name: 'ls',
 //   bind: true
 // })
 Vue.use(VuetifyGoogleAutocomplete, {
   apiKey: process.env.VUE_APP_API_KEY
-})
-Vue.use(VueSweetalert2)
-Vue.use(require('vue-moment'))
+});
+Vue.use(VueSweetalert2);
+Vue.use(require('vue-moment'));
+Vue.use(CKEditor);
 
 Vue.config.productionTip = false
 

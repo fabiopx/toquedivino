@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^34.1.0",
+    "@ckeditor/ckeditor5-vue2": "^3.0.1",
     "@sweetalert2/theme-material-ui": "^5.0.11",
     "core-js": "^3.6.5",
     "extenso": "^2.0.1",
@@ -21,6 +23,7 @@
     "vue-demi": "^0.13.1",
     "vue-google-autocomplete": "^1.1.2",
     "vue-google-charts": "^1.1.0",
+    "vue-ip": "^2.0.2",
     "vue-localstorage": "^0.6.2",
     "vue-moment": "^4.1.0",
     "vue-money": "^0.4.1",
