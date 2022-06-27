@@ -151,11 +151,7 @@ class Inscribe extends Crud{
 
         $this->update('account', array('idaccount' => $data->account_idaccount), array('name' => $data->accountable, 'email' => $_POST['email']));
 
-        if($this->update('inscribe', array('idinscribe' => $id), $data)){
-            return $this->response('success', 'Cadastro editado com sucesso');
-        } else{
-            return $this->response('error', 'Cadastro não pode ser editado');
-        }
+        return $this->update('inscribe', array('idinscribe' => $id), $data);
     }
 
     public function updateInscribeCustomers($id){

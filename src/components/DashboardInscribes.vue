@@ -5,7 +5,7 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar color="blue-grey">
+            <v-toolbar color="grey darken-4">
               <h3 class="white--text">Cadastros</h3>
               <v-spacer></v-spacer>
               <!-- add inscribe -->
@@ -29,7 +29,7 @@
                   </v-toolbar-items>
                 </template>
                 <v-card>
-                  <v-toolbar dark color="blue-grey">
+                  <v-toolbar dark color="grey darken-4">
                     <v-btn
                       icon
                       dark
@@ -51,7 +51,7 @@
                   <v-form ref="formInscribe" lazy-validation>
                     <v-container>
                       <v-row>
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                           <v-menu
                             v-model="pickDateInscribe"
                             :close-on-content-click="false"
@@ -76,7 +76,7 @@
                             ></v-date-picker>
                           </v-menu>
                         </v-col>
-                        <v-col cols="9">
+                        <v-col cols="12" md="6">
                           <v-text-field
                             v-model="inscribeAccountable"
                             :rules="inscribeAccountableRules"
@@ -84,9 +84,19 @@
                             required
                           ></v-text-field>
                         </v-col>
+                        <v-col cols="12" md="3">
+                          <v-text-field
+                            v-model="inscribeBirthdate"
+                            v-mask="maskBirthdate"
+                            :rules="inscribeBirthdateRule"
+                            label="Data de Nascimento"
+                            required
+                            @change="is18(inscribeBirthdate)"
+                          ></v-text-field>
+                        </v-col>
                       </v-row>
                       <v-row>
-                        <v-col cols="4">
+                        <v-col cols="12" md="4">
                           <v-text-field
                             v-model="inscribePhone"
                             :rules="inscribePhoneRules"
@@ -95,7 +105,7 @@
                             required
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="4">
+                        <v-col cols="12" md="4">
                           <v-text-field
                             v-model="inscribeMobile"
                             :rules="inscribeMobileRules"
@@ -104,7 +114,7 @@
                             required
                           ></v-text-field>
                         </v-col>
-                        <v-col>
+                        <v-col cols="12" md="4">
                           <v-text-field
                             v-model="inscribeEmail"
                             :rules="inscribeEmailRules"
@@ -114,7 +124,7 @@
                         </v-col>
                       </v-row>
                       <v-row>
-                        <v-col cols="2">
+                        <v-col cols="12" md="2">
                           <v-text-field
                             v-model="inscribeAddress.zipcode"
                             :rules="inscribeAddressRules"
@@ -124,7 +134,7 @@
                             required
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-text-field
                             :loading="inputLoading"
                             v-model="inscribeAddress.street"
@@ -133,7 +143,7 @@
                             required
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="2">
+                        <v-col cols="12" md="2">
                           <v-text-field
                             v-model="inscribeAddress.number"
                             :rules="inscribeAddressRules"
@@ -142,7 +152,7 @@
                           >
                           </v-text-field>
                         </v-col>
-                        <v-col cols="2">
+                        <v-col cols="12" md="2">
                           <v-text-field
                             v-model="inscribeAddress.complement"
                             label="Complemento"
@@ -151,7 +161,7 @@
                         </v-col>
                       </v-row>
                       <v-row>
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                           <v-text-field
                             :loading="inputLoading"
                             v-model="inscribeAddress.neighborhood"
@@ -161,7 +171,7 @@
                           >
                           </v-text-field>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                           <v-text-field
                             :loading="inputLoading"
                             v-model="inscribeAddress.city"
@@ -170,7 +180,7 @@
                             required
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                           <v-text-field
                             :loading="inputLoading"
                             v-model="inscribeAddress.state"
@@ -179,7 +189,7 @@
                             required
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="12" md="3">
                           <v-text-field
                             :loading="inputLoading"
                             v-model="inscribeAddress.country"
@@ -190,20 +200,20 @@
                         </v-col>
                       </v-row>
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-text-field
                             v-model="inscribeCpf"
                             label="CPF"
                             v-mask="maskCpf"
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-text-field v-model="inscribeRg" label="RG">
                           </v-text-field>
                         </v-col>
                       </v-row>
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-select
                             v-model="inscribeIdService"
                             label="Serviço"
@@ -215,7 +225,7 @@
                           >
                           </v-select>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                           <v-select
                             v-model="inscribeIdFormation"
                             label="Formação"
@@ -255,6 +265,29 @@
                 :search="searchInscribe"
                 :items-per-page="5"
               >
+                <template v-slot:item.budget="{ item }">
+                  <v-expansion-panels>
+                    <v-expansion-panel
+                      v-for="budget in item.budget"
+                      :key="budget.idbudget"
+                    >
+                      <v-expansion-panel-header>
+                        {{ budget.code }}
+                        <v-spacer></v-spacer>
+                        <v-chip v-show="budget.status == 0" class="justify-center">Iniciado</v-chip>
+                        <v-chip v-show="budget.status == 1" dark color="primary" class="justify-center">Validado</v-chip>
+                        <v-chip v-show="budget.status == 2" dark color="primary" class="justify-center">Finalizado</v-chip>
+                        <v-chip v-show="budget.status == 3" dark color="amber" class="justify-center">Expirado</v-chip>
+                        <v-chip v-show="budget.status == 4" dark color="red" class="justify-center">Cancelado</v-chip>
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <p>Data: {{ budget.date }}</p>
+                        <p>Valor: {{ budget.value }}</p>
+                        <v-btn v-if="budget.status == 0" color="primary" @click="validate"><v-icon>mdi-check</v-icon>Validar</v-btn>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </template>
                 <template v-slot:item.actions="{ item }">
                   <v-btn color="blue" icon @click="editInscribe(item)">
                     <v-icon>mdi-pencil</v-icon>
@@ -278,6 +311,50 @@
 </template>
 
 <script>
+function getAge(dataNasc) {
+  var dataAtual = new Date();
+
+  var anoAtual = dataAtual.getFullYear();
+
+  var anoNascParts = dataNasc.split("/");
+
+  var diaNasc = anoNascParts[0];
+
+  var mesNasc = anoNascParts[1];
+
+  var anoNasc = anoNascParts[2];
+
+  var idade = anoAtual - anoNasc;
+
+  var mesAtual = dataAtual.getMonth() + 1;
+
+  //Se mes atual for menor que o nascimento, nao fez aniversario ainda;
+
+  if (mesAtual < mesNasc) {
+    idade--;
+  } else {
+    //Se estiver no mes do nascimento, verificar o dia
+
+    if (mesAtual == mesNasc) {
+      if (new Date().getDate() < diaNasc) {
+        //Se a data atual for menor que o dia de nascimento ele ainda nao fez aniversario
+
+        idade--;
+      }
+    }
+  }
+
+  return idade;
+}
+
+function FormataStringData(data) {
+  var dia = data.split("/")[0];
+  var mes = data.split("/")[1];
+  var ano = data.split("/")[2];
+
+  return ano + "-" + ("0" + mes).slice(-2) + "-" + ("0" + dia).slice(-2);
+}
+
 export default {
   name: "DashboardInscribes",
 
@@ -288,10 +365,24 @@ export default {
       loadingVisible: false,
       inputLoading: false,
       dialogInscribe: false,
+      dialogBudget: false,
+      maskPhone: "(##) ####-####",
+      maskMobile: "(##) #####-####",
+      maskCep: "#####-###",
+      maskCpf: "###.###.###-##",
+      maskCnpj: "##.###.###/####-##",
+      maskMoney: "######.##",
+      maskBirthdate: "##/##/####",
+      formation: [],
+      services: [],
       inscribeDatetime: "",
       inscribeAccountable: "",
       inscribeAccountableRules: [
         (v) => !!v || "O campo NOME DO RESPONSÁVEL é requerido",
+      ],
+      inscribeBirthdate: "",
+      inscribeBirthdateRule: [
+        (v) => !!v || "O campo DATA DE NASCIMENTO é requrido",
       ],
       inscribePhone: "",
       inscribePhoneRules: [
@@ -306,7 +397,16 @@ export default {
         (v) => !!v || "O campo E-MAIL é requerido",
         (v) => /.+@.+/.test(v) || "Insira um E-mail válido",
       ],
-      inscribeAddress: address,
+      inscribeAddress: {
+        street: "",
+        number: "",
+        complement: "",
+        neighborhood: "",
+        city: "",
+        zipcode: "",
+        state: "",
+        country: "",
+      },
       inscribeAddressRules: [(v) => !!v || "Preencha corretamente o endereço"],
       inscribeCpf: "",
       inscribeRg: "",
@@ -334,6 +434,10 @@ export default {
         {
           text: "Celular",
           value: "mobile",
+        },
+        {
+          text: "Orçamentos",
+          value: "budget",
         },
         {
           text: "Ações",
@@ -395,6 +499,17 @@ export default {
       }
     },
 
+    is18: function (date) {
+      if (getAge(date) < 18) {
+        this.$swal("Responsável precisa ter mais que 18 anos");
+      }
+      // console.log(getAge(date));
+    },
+
+    clearFormInscribe: function () {
+      this.$refs.formInscribe.reset();
+    },
+
     getCEP: function (obj) {
       var cep = this[obj].zipcode.replace(/\D/g, "");
 
@@ -441,14 +556,33 @@ export default {
       this.inscribeCpf = null;
     },
 
+    getFormations: async function () {
+      this.firstLoad = true;
+      const response = await axios.get(this.apiURL + "/formations/get");
+      this.formation = response.data;
+      this.stopContentLoading();
+    },
+
+    getServices: async function () {
+      this.firstLoad = true;
+      const response = await axios.get(this.apiURL + "/services/get");
+      this.services = response.data;
+      this.stopContentLoading();
+    },
+
     editInscribe: function (item) {
       this.dialogInscribe = true;
       this.idInscribe = item.idinscribe;
       this.crud = "u";
       this.inscribeDatetime = item.datetime;
       this.inscribeAccountable = item.accountable;
+      this.inscribeBirthdate = this.$moment(item.birthdate).format(
+        "DD/MM/YYYY"
+      );
       this.inscribePhone = item.phone;
       this.inscribeMobile = item.mobile;
+      this.inscribeCpf = item.cpf;
+      this.inscribeRg = item.rg;
       this.inscribeIdService = item.service.idservice;
       this.inscribeIdFormation = item.formation.idformation;
 
@@ -470,12 +604,11 @@ export default {
       this.inscribeStatus = item.status;
     },
 
-    getInscribe: function () {
+    getInscribe: async function () {
       this.firstLoad = true;
-      axios.get(this.apiURL + "/inscribes/get").then((response) => {
-        this.inscribe = response.data;
-        this.stopContentLoading();
-      });
+      const response = await axios.get(this.apiURL + "/inscribes/get");
+      this.inscribe = response.data;
+      this.stopContentLoading();
     },
 
     deleteInscribe: function (id) {
@@ -486,11 +619,13 @@ export default {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.get(this.apiURL + "/inscribes/delete/" + id).then((response) => {
-            this.$swal(response.data.msg, "", response.data.icon);
-            console.log(response.data);
-            this.getInscribe();
-          });
+          axios
+            .get(this.apiURL + "/inscribes/delete/" + id)
+            .then((response) => {
+              this.$swal(response.data.msg, "", response.data.icon);
+              console.log(response.data);
+              this.getInscribe();
+            });
         }
       });
     },
@@ -502,6 +637,12 @@ export default {
       data.append("datetime", this.inscribeDatetime);
       data.append("email", this.inscribeEmail);
       data.append("accountable", this.inscribeAccountable);
+      data.append(
+        "birthdate",
+        this.$moment(FormataStringData(this.inscribeBirthdate)).format(
+          "YYYY-MM-DD"
+        )
+      );
       data.append("phone", this.inscribePhone);
       data.append("mobile", this.inscribeMobile);
       data.append("address", JSON.stringify(this.inscribeAddress));
@@ -519,66 +660,89 @@ export default {
         axios(this.apiURL + "/inscribes/create", {
           method: "POST",
           data: data,
-        })
-          .then((response) => {
-            this.loadingVisible = false;
-            this.clearFormInscribe();
-            this.inscribeDateTime = "";
-            this.inscribeAccountable = "";
-            this.inscribePhone = "";
-            this.inscribeMobile = "";
-            this.inscribeEmail = "";
-            this.inscribeAddress = address;
-            this.inscribeCpf = "";
-            this.inscribeRg = "";
-            this.inscribeIdAccount = "";
-            this.inscribeIdService = "";
-            this.inscribeIdFormation = "";
-            this.inscribeStatus = "";
-            this.inscribe = [];
-            this.$swal(response.data.msg, "", response.data.icon);
-            console.log(response.data);
-            this.getInscribe();
-            this.getPreInscribe();
-          })
-          .catch((err) => {
-            this.loadingVisible = false;
-            this.$swal(err, "", "error");
-          });
+        }).then((response) => {
+          this.loadingVisible = false;
+          this.clearFormInscribe();
+          this.inscribeDateTime = "";
+          this.inscribeAccountable = "";
+          this.inscribeBirthdate = "";
+          this.inscribePhone = "";
+          this.inscribeMobile = "";
+          this.inscribeEmail = "";
+          this.inscribeAddress = {
+            street: "",
+            number: "",
+            complement: "",
+            neighborhood: "",
+            city: "",
+            zipcode: "",
+            state: "",
+            country: "",
+          };
+          this.inscribeCpf = "";
+          this.inscribeRg = "";
+          this.inscribeIdAccount = "";
+          this.inscribeIdService = "";
+          this.inscribeIdFormation = "";
+          this.inscribeStatus = "";
+          this.inscribe = [];
+          this.$swal(response.data.msg, "", response.data.icon);
+          console.log(response.data);
+          this.getInscribe();
+        });
       } else if (this.crud == "u") {
         data.append("account_idaccount", this.inscribeIdAccount);
         data.append("status", this.inscribeStatus);
         axios(this.apiURL + "/inscribes/update/" + this.idInscribe, {
           method: "POST",
           data: data,
-        })
-          .then((response) => {
-            this.loadingVisible = false;
-            this.clearFormInscribe();
-            this.idInscribe = "";
-            this.inscribeDateTime = "";
-            this.inscribeAccountable = "";
-            this.inscribePhone = "";
-            this.inscribeMobile = "";
-            this.inscribeEmail = "";
-            this.inscribeAddress = address;
-            this.inscribeCpf = "";
-            this.inscribeRg = "";
-            this.inscribeIdAccount = "";
-            this.inscribeIdService = "";
-            this.inscribeIdFormation = "";
-            this.inscribeStatus = "";
-            this.inscribe = [];
-            this.$swal(response.data.msg, "", response.data.icon);
-            console.log(response.data);
-            this.getInscribe();
-          })
-          .catch((err) => {
-            this.loadingVisible = false;
-            this.$swal(err, "", "error");
-          });
+        }).then((response) => {
+          this.loadingVisible = false;
+          this.idInscribe = "";
+          this.inscribeDateTime = "";
+          this.inscribeAccountable = "";
+          this.inscribeBirthdate = "";
+          this.inscribePhone = "";
+          this.inscribeMobile = "";
+          this.inscribeEmail = "";
+          this.inscribeAddress = {
+            street: "",
+            number: "",
+            complement: "",
+            neighborhood: "",
+            city: "",
+            zipcode: "",
+            state: "",
+            country: "",
+          };
+          this.inscribeCpf = "";
+          this.inscribeRg = "";
+          this.inscribeIdAccount = "";
+          this.inscribeIdService = "";
+          this.inscribeIdFormation = "";
+          this.inscribeStatus = "";
+          this.inscribe = [];
+          this.$swal(response.data.msg, "", response.data.icon);
+          console.log(response.data);
+          this.getInscribe();
+        });
       }
     },
+
+    validate: async function (id) {
+      const response = await axios.get(
+        this.apiURL + "/inscribes/validate/" + id
+      );
+      const resp = response.data;
+      this.$swal(resp.msg, "", resp.icon);
+      await this.getInscribe();
+    },
+  },
+
+  created: async function () {
+    await this.getFormations();
+    await this.getServices();
+    await this.getInscribe();
   },
 };
 </script>

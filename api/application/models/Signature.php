@@ -60,9 +60,8 @@ class Signature extends Crud{
         return $this->update('signature', $where, $data);
     }
 
-    public function deleteSignature($id){
+    public function deleteSignature($where){
         $this->db->db_debug = false;
-        $where = array('idsignature' => $id);
         $response = $this->delete('signature', $where);
         if($response !== false){
             return $this->response('success', 'Assinatura excluída com sucesso');

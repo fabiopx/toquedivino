@@ -129,14 +129,16 @@ class Inscribes extends CI_Controller{
         $this->load->model('account');
         $this->load->model('formation');
         $this->load->model('service');
+        $this->load->model('budget');
         $resp = array();
         $serv = array();
-        $where = array('status' => 0);
-        $inscribe = $this->inscribe->readInscribe($where);
+        $inscribe = $this->inscribe->readInscribe();
         foreach($inscribe->result() as $i):
             $i->address = json_decode($i->address);
             $account = $this->account->readAccount(array('idaccount' => $i->account_idaccount));
             $i->account = $account->row();
+            $budget = $this->budget->readBudget(['inscribe_idinscribe' => $i->idinscribe]);
+            $i->budget = $budget->result();
             $composition = $this->inscribe->readComposition($i->idinscribe);
             foreach($composition->result() as $comp):
                 $formation = $this->formation->readFormation(array('idformation' => $comp->formation_idformation));
@@ -196,10 +198,16 @@ class Inscribes extends CI_Controller{
         echo json_encode($inscribe->status);
     }
 
-
     public function update($id){
         $this->load->model('inscribe');
-        echo json_encode($this->inscribe->updateInscribe($id));
+        $resp = ($this->inscribe->updateInscribe($id)) ? ['msg' => 'Cadastro atualizado com sucesso', 'icon' => 'success'] : ['msg' => 'Cadastro não pode ser atualizado', 'icon' => 'error'];
+        echo json_encode($resp);
+    }
+
+    public function validate($id){
+        $this->load->model('inscribe');
+        $resp = ($this->inscribe->updateStatusInscribe($id, 2)) ? ['msg' => 'Cadastro validado com sucesso', 'icon' => 'success'] : ['msg' => 'Cadastro não pode ser validado', 'icon' => 'error'];
+        echo json_encode($resp);
     }
 
     public function updateCustomers($id){
@@ -209,24 +217,24 @@ class Inscribes extends CI_Controller{
 
     public function delete($id){
         $this->load->model('inscribe');
-        $this->load->model('leads');
+        $this->load->model('lead');
         $this->load->model('account');
+        $this->load->model('signature');
 
-        $where = array('inscribe_idinscribe' => $id);
-        $this->inscribe->deleteComposition($where);
+        
+        $this->inscribe->deleteComposition(['inscribe_idinscribe' => $id]);
 
-        $idPreInscribe = $this->leads->returnIdPreInscribe($id);
+        $idPreInscribe = $this->lead->returnIdPreInscribe($id);
 
         if(!is_null($idPreInscribe)){
-            $this->leads->deletePreInscribeHasInscribe($where);
+            $this->lead->deletePreInscribeHasInscribe(['inscribe_idinscribe' => $id]);
 
-            $this->leads->updateLead(array('idpre_inscribe' => $idPreInscribe), array('flag' => 0));
+            $this->lead->updateLead(array('idpre_inscribe' => $idPreInscribe), array('flag' => 0));
         }
 
         $idAccount = $this->inscribe->returnAccountIdByInscribeId($id);
-
-        $whereInscribe = array('idinscribe' => $id);
-        $resp = $this->inscribe->deleteInscribe($whereInscribe);
+        $this->signature->deleteSignature(['account_idaccount' => $idAccount]);
+        $resp = $this->inscribe->deleteInscribe(['idinscribe' => $id]);
         $this->account->deleteAccountByID($idAccount);
         echo json_encode($resp);
     }
