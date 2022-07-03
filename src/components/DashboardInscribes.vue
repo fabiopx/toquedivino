@@ -271,22 +271,94 @@
                       v-for="budget in item.budget"
                       :key="budget.idbudget"
                     >
-                      <v-expansion-panel-header>
+                      <v-expansion-panel-header v-if="budget.status != 4">
                         {{ budget.code }}
                         <v-spacer></v-spacer>
-                        <v-chip v-show="budget.status == 0" class="justify-center">Iniciado</v-chip>
-                        <v-chip v-show="budget.status == 1" dark color="primary" class="justify-center">Validado</v-chip>
-                        <v-chip v-show="budget.status == 2" dark color="primary" class="justify-center">Finalizado</v-chip>
-                        <v-chip v-show="budget.status == 3" dark color="amber" class="justify-center">Expirado</v-chip>
-                        <v-chip v-show="budget.status == 4" dark color="red" class="justify-center">Cancelado</v-chip>
+                        <v-chip
+                          v-show="budget.status == 0"
+                          class="justify-center ml-2"
+                          >Iniciado</v-chip
+                        >
+                        <v-chip
+                          v-show="budget.status == 1"
+                          dark
+                          color="primary"
+                          class="justify-center ml-2"
+                          >Validado</v-chip
+                        >
+                        <v-chip
+                          v-show="budget.status == 2"
+                          dark
+                          color="primary"
+                          class="justify-center ml-2"
+                          >Finalizado</v-chip
+                        >
+                        <v-chip
+                          v-show="budget.status == 3"
+                          dark
+                          color="amber"
+                          class="justify-center ml-2"
+                          >Expirado</v-chip
+                        >
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <p>Data: {{ budget.date }}</p>
                         <p>Valor: {{ budget.value }}</p>
-                        <v-btn v-if="budget.status == 0" color="primary" @click="validate"><v-icon>mdi-check</v-icon>Validar</v-btn>
+                        <v-btn
+                          v-if="budget.status == 0"
+                          color="primary"
+                          @click="showBudget(budget)"
+                          ><v-icon>mdi-check</v-icon>Validar</v-btn
+                        >
+                        <v-dialog v-model="dialogBudget" persistent>
+                          <v-card>
+                            <v-toolbar dark color="grey darken-4">
+                              <v-btn icon @click="closeBudget()"><v-icon>mdi-close</v-icon></v-btn>
+                              <v-toolbar-title>Validar Orçamento</v-toolbar-title>
+                              
+                              </v-toolbar>
+                            <v-card-text>
+                              <v-chip class="mt-3">Orçamento: {{ budget.code }}</v-chip>
+                              <v-divider class="mt-3 mb-3"></v-divider>
+                              <v-row>
+                                <v-col cols="12" md="6">
+                                  <v-text-field label="Data" v-model="budget.date" readonly></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                  <v-text-field label="Valor" v-model="budget.value" readonly></v-text-field>
+                                </v-col>
+                              </v-row>
+                              <v-row>
+                                <v-col cols="12" md="6">
+                                  <v-text-field label="Desconto" v-model="budget.discount"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                  <v-text-field label="Acréscimo" v-model="budget.addition"></v-text-field>
+                                </v-col>
+                              </v-row>
+                              <v-row>
+                                <v-col cols="12" md="6">
+                                  <v-currency-field label="Valor da entrada" v-model="budget.down_payment"></v-currency-field>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                  <v-text-field label="Data da entrada" v-model="budget.down_payment_date" v-mask="maskBirthdate"></v-text-field>
+                                </v-col>
+                              </v-row>
+                              <v-row>
+                                <v-col>
+                                  <v-spacer></v-spacer>
+                                  <v-btn :loading="btnLoading" rounded depressed color="primary" @click="validateBudget(budget.idbudget)">Validar</v-btn>
+                                </v-col>
+                              </v-row>
+                            </v-card-text>
+                          </v-card>
+                        </v-dialog>
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                   </v-expansion-panels>
+                  <v-dialog>
+                    <v-card> </v-card>
+                  </v-dialog>
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <v-btn color="blue" icon @click="editInscribe(item)">
@@ -364,6 +436,7 @@ export default {
       firstLoad: false,
       loadingVisible: false,
       inputLoading: false,
+      btnLoading:false,
       dialogInscribe: false,
       dialogBudget: false,
       maskPhone: "(##) ####-####",
@@ -447,6 +520,7 @@ export default {
       ],
       inscribe: [],
       idInscribe: "",
+      budget: {},
       pickDateInscribe: false,
       contractService: { taxas: [] },
       contractFormation: {},
@@ -729,14 +803,20 @@ export default {
       }
     },
 
-    validate: async function (id) {
-      const response = await axios.get(
-        this.apiURL + "/inscribes/validate/" + id
-      );
-      const resp = response.data;
-      this.$swal(resp.msg, "", resp.icon);
-      await this.getInscribe();
+    showBudget: function (budget) {
+      this.budget = budget;
+      this.budget.date = this.$moment(budget.date).format("DD/MM/YYYY");
+      this.budget.value = parseInt(budget.value).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+      this.dialogBudget = true;
     },
+    closeBudget: function () {
+      this.budget = {};
+      this.dialogBudget = false;
+    },
+    validateBudget: function(id){
+      this.btnLoading = true;
+      setInterval(() => { this.btnLoading = false}, 3000)
+    }
   },
 
   created: async function () {

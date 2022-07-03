@@ -134,6 +134,7 @@ class Inscribes extends CI_Controller{
         $serv = array();
         $inscribe = $this->inscribe->readInscribe();
         foreach($inscribe->result() as $i):
+            $i->action = null;
             $i->address = json_decode($i->address);
             $account = $this->account->readAccount(array('idaccount' => $i->account_idaccount));
             $i->account = $account->row();

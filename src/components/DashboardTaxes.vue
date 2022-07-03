@@ -94,20 +94,13 @@
                       </v-row>
                       <v-row>
                         <v-col>
-                          <v-text-field
+                          <v-currency-field
                             v-model="serviceTaxValue"
                             :rules="serviceTaxValueRules"
                             label="Valor"
                             append-icon="mdi-currency-usd"
-                            v-currency="{
-                              locale: 'pt-BR',
-                              currency: 'BRL',
-                              distractionFree: true,
-                              precision: 2,
-                              autoDecimalMode: true,
-                            }"
                           >
-                          </v-text-field>
+                          </v-currency-field>
                         </v-col>
                       </v-row>
                     </v-container>

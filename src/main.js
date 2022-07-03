@@ -12,7 +12,9 @@ import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import extenso from 'extenso';
-import CKEditor from '@ckeditor/ckeditor5-vue2'
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+import VCurrencyField from 'v-currency-field';
+import { VTextField } from 'vuetify/lib';
 
 Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
 
@@ -30,6 +32,17 @@ Vue.use(VuetifyGoogleAutocomplete, {
 Vue.use(VueSweetalert2);
 Vue.use(require('vue-moment'));
 Vue.use(CKEditor);
+Vue.component('v-text-field', VTextField);
+Vue.use(VCurrencyField, {
+  locale: 'pt-BR',
+  decimalLength: 2,
+  autoDecimalMode: true,
+  min: null,
+  max: null,
+  defaultValue: 0,
+  valueAsInteger: false,
+  allowNegative: true,
+});
 
 Vue.config.productionTip = false
 

@@ -16,6 +16,7 @@
     "google-distance-matrix": "^1.1.1",
     "sweetalert2": "^11.4.14",
     "text-mask-addons": "^3.8.0",
+    "v-currency-field": "^3.1.1",
     "v-mask": "^2.3.0",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.4",
