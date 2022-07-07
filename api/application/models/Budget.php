@@ -8,6 +8,8 @@ class Budget extends Crud{
     public $value;
     public $discount;
     public $addition;
+    public $down_payment;
+    public $down_payment_date;
     public $expires_in;
     public $status;
     public $inscribe_idinscribe;
@@ -18,6 +20,8 @@ class Budget extends Crud{
         $this->value = $this->input->post('value');
         $this->discount = $this->input->post('discount');
         $this->addition = $this->input->post('addition');
+        $this->down_payment = $this->input->post('down_payment');
+        $this->down_payment_date = $this->input->post('down_payment_date');
         $this->expires_in = $this->input->post('expires_in');
         $this->status = $this->input->post('status');
         $this->inscribe_idinscribe = $this->input->post('inscribe_idinscribe');
@@ -34,7 +38,19 @@ class Budget extends Crud{
         }
     }
 
-    public function updateBudget($where, $data){
+    public function updateBudget($where){
+        $this->code = $this->input->post('code');
+        $this->date = $this->input->post('date');
+        $this->value = $this->input->post('value');
+        $this->discount = $this->input->post('discount');
+        $this->addition = $this->input->post('addition');
+        $this->down_payment = $this->input->post('down_payment');
+        $this->down_payment_date = $this->input->post('down_payment_date');
+        $this->expires_in = $this->input->post('expires_in');
+        $this->status = $this->input->post('status');
+        $this->inscribe_idinscribe = $this->input->post('inscribe_idinscribe');
+        $data = $this;
+        
         return $this->update('budget', $where, $data);
     }
 

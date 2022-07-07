@@ -318,22 +318,17 @@
                               
                               </v-toolbar>
                             <v-card-text>
-                              <v-chip class="mt-3">Orçamento: {{ budget.code }}</v-chip>
+                              <v-chip class="mt-3 pa-5">Orçamento: {{ budget.code }}</v-chip>
+                              <v-chip class="mt-3 ml-3 pa-5" color="primary">Data: {{ $moment(budget.date).format("DD/MM/YYYY") }} </v-chip>
+                              <v-chip class="mt-3 ml-3 pa-5" color="primary">Valor: {{ parseInt(budget.value).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</v-chip>
+                              
                               <v-divider class="mt-3 mb-3"></v-divider>
                               <v-row>
                                 <v-col cols="12" md="6">
-                                  <v-text-field label="Data" v-model="budget.date" readonly></v-text-field>
+                                  <v-currency-field label="Desconto" v-model="budget.discount"></v-currency-field>
                                 </v-col>
                                 <v-col cols="12" md="6">
-                                  <v-text-field label="Valor" v-model="budget.value" readonly></v-text-field>
-                                </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col cols="12" md="6">
-                                  <v-text-field label="Desconto" v-model="budget.discount"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                  <v-text-field label="Acréscimo" v-model="budget.addition"></v-text-field>
+                                  <v-currency-field label="Acréscimo" v-model="budget.addition"></v-currency-field>
                                 </v-col>
                               </v-row>
                               <v-row>
@@ -426,6 +421,19 @@ function FormataStringData(data) {
 
   return ano + "-" + ("0" + mes).slice(-2) + "-" + ("0" + dia).slice(-2);
 }
+
+function moneyToFloat(valor){
+      
+      if(valor === ""){
+         valor =  0;
+      }else{
+         valor = valor.replace(".","");
+         valor = valor.replace(",",".");
+         valor = parseFloat(valor);
+      }
+      return valor;
+
+   }
 
 export default {
   name: "DashboardInscribes",
@@ -805,18 +813,32 @@ export default {
 
     showBudget: function (budget) {
       this.budget = budget;
-      this.budget.date = this.$moment(budget.date).format("DD/MM/YYYY");
-      this.budget.value = parseInt(budget.value).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+      this.budget.down_payment_date = this.$moment(budget.down_payment_date).format("DD/MM/YYYY");
       this.dialogBudget = true;
     },
     closeBudget: function () {
       this.budget = {};
       this.dialogBudget = false;
     },
-    validateBudget: function(id){
+    validateBudget: async function(id){
       this.btnLoading = true;
-      setInterval(() => { this.btnLoading = false}, 3000)
-    }
+      var data = new FormData();
+      data.append('code', this.budget.code);
+      data.append('date', this.budget.date);
+      data.append('value', this.budget.value);
+      data.append('discount', this.budget.discount);
+      data.append('addition', this.budget.addition);
+      data.append('down_payment', this.budget.down_payment);
+      data.append('down_payment_date', FormataStringData(this.budget.down_payment_date));
+      data.append('expires_in', this.budget.expires_in);
+      data.append('status', 1);
+      data.append('inscribe_idinscribe', this.budget.inscribe_idinscribe);
+      const response = await axios.post("/budgets/validate/" + id, data, { baseURL: this.apiURL});
+      this.btnLoading = false;
+      this.closeBudget();
+      this.$swal(response.data.msg, '', response.data.icon);
+      await this.getInscribe();
+    },
   },
 
   created: async function () {

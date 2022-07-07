@@ -207,6 +207,7 @@ class Inscribes extends CI_Controller{
 
     public function validate($id){
         $this->load->model('inscribe');
+        
         $resp = ($this->inscribe->updateStatusInscribe($id, 2)) ? ['msg' => 'Cadastro validado com sucesso', 'icon' => 'success'] : ['msg' => 'Cadastro não pode ser validado', 'icon' => 'error'];
         echo json_encode($resp);
     }
