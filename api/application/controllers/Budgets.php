@@ -85,7 +85,20 @@ class Budgets extends CI_Controller{
     public function validate($id){
         $this->load->model('budget');
         $where = ['idbudget' => $id];
-        $resp = ($this->budget->updateBudget($where)) ? ['msg' => 'Orçamento validado com sucesso', 'icon' => 'success'] : ['msg' => 'Orçamento não validado', 'icon' => 'error'];
+        $post = $this->input->post();
+        $data = [
+            'code' => $post['code'],
+            'date' => $post['date'],
+            'value' => $post['value'],
+            'discount' => $post['discount'],
+            'addition' => $post['addition'],
+            'down_payment' => $post['down_payment'],
+            'down_payment_date' => $post['down_payment_date'],
+            'expires_in' => $post['expires_in'],
+            'status' => $post['status'],
+            'inscribe_idinscribe' => $post['inscribe_idinscribe']
+        ];
+        $resp = ($this->budget->updateBudget($where, $data)) ? ['msg' => 'Orçamento validado com sucesso', 'icon' => 'success'] : ['msg' => 'Orçamento não validado', 'icon' => 'error'];
         echo json_encode($resp);
     }
 

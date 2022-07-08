@@ -80,7 +80,7 @@
                     <p>RG: {{ inscribe.rg }}</p>
                     <p>Telefone: {{ inscribe.pPhone }}</p>
                     <p>Celular: {{ inscribe.mobile }}</p>
-                    <div v-show="engaged.selectEngaged">
+                    <div v-show="engaged != null || engaged.selectEngaged">
                       <hr />
                       <h2 class="mb-3 mt-3">Dados dos Noivos</h2>
                       <p>
