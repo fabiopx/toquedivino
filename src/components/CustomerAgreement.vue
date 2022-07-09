@@ -38,6 +38,7 @@
                   </p>
                 </div>
                 <div v-if="access.isAgreement">
+                  <v-alert border="top" color="red darken-4" v-if="!engaged" dark dismissible>Os dados dos noivos não foram cadastrados.</v-alert>
                   <p class="subtitle-1 pa-5 grey darken-4 white--text">
                     Leia atentamente o contrato abaixo. Estando de acordo com os
                     termos do contrato, assine eletronicamente usando a senha
@@ -80,7 +81,7 @@
                     <p>RG: {{ inscribe.rg }}</p>
                     <p>Telefone: {{ inscribe.pPhone }}</p>
                     <p>Celular: {{ inscribe.mobile }}</p>
-                    <div v-show="engaged != null || engaged.selectEngaged">
+                    <div v-if="engaged" v-show="engaged.selectEngaged">
                       <hr />
                       <h2 class="mb-3 mt-3">Dados dos Noivos</h2>
                       <p>
@@ -454,14 +455,14 @@
                         <div v-for="sign in signatures" :key="sign.idsignature">
                           <p
                             class="text-subtitle-1 mt-2"
-                            :class="sign.sign == 0 ? signNotInUse : null"
+                            :class="(sign.sign == 0) ? signNotInUse : null"
                             v-if="sign.type == 1"
                           >
-                            {{ sign.name }}
+                            {{ sign.name }} 
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
-                            :class="sign.sign == 0 ? signNotInUse : null"
+                            :class="(sign.sign == 0) ? signNotInUse : null"
                             v-if="sign.type == 1"
                           >
                             {{ selSignatureType(sign.type) }}
@@ -475,7 +476,7 @@
                             :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 2 || sign.type == 3"
                           >
-                            {{ sign.name }}
+                            <v-icon v-if="sign.sign == 1">mdi-check</v-icon>{{ sign.name }}
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
