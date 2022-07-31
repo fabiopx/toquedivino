@@ -270,7 +270,11 @@
                       </td>
                       <td>
                         <v-btn
-                          v-show="budget.status == 0 || budget.status == 1 || budget.status == 3"
+                          v-show="
+                            budget.status == 0 ||
+                            budget.status == 1 ||
+                            budget.status == 3
+                          "
                           icon
                           @click="cancelBudget(budget.idbudget)"
                           ><v-icon>mdi-cancel</v-icon></v-btn
@@ -281,7 +285,12 @@
                           @click="$router.push('/customer/agreement')"
                           ><v-icon>mdi-file-sign</v-icon></v-btn
                         >
-                        <v-btn v-show="budget.status == 3" icon @click="extendExpirationDate(budget.idbudget)"><v-icon>mdi-calendar-clock</v-icon></v-btn>
+                        <v-btn
+                          v-show="budget.status == 3"
+                          icon
+                          @click="extendExpirationDate(budget.idbudget)"
+                          ><v-icon>mdi-calendar-clock</v-icon></v-btn
+                        >
                       </td>
                     </tr>
                   </tbody>
@@ -340,7 +349,7 @@ export default {
     loadingTotalTax: true,
     loadingSomaBudget: false,
     loadingBudget: true,
-    loading: false
+    loading: false,
   }),
   methods: {
     ...mapActions([
@@ -467,7 +476,8 @@ export default {
       } else {
         this.setIsBudget(false);
       }
-      this.budgetOpen = !this.access.isBudget || this.budgetCancel ? true : false;
+      this.budgetOpen =
+        !this.access.isBudget || this.budgetCancel ? true : false;
       this.loadingBudget = false;
     },
     cancelBudget: async function (id) {
@@ -487,21 +497,30 @@ export default {
       await axios.get(
         this.apiURL + "/budgets/verifyBudgetExpires/" + this.inscribeID
       );
-      this.loading = false
+      this.loading = false;
     },
-    extendExpirationDate: async function(id){
+    extendExpirationDate: async function (id) {
       this.loading = true;
       const data = new FormData();
-      data.append('new_date', this.$moment().add(15, 'days').format('YYYY-MM-DD'));
-      data.append('idbudget', id)
-      const response = await axios(this.apiURL + "/budgets/extendExpirationDate/" + this.inscribeID, {
-        method: 'POST',
-        data: data
-      });
+      data.append(
+        "new_date",
+        this.$moment().add(15, "days").format("YYYY-MM-DD")
+      );
+      data.append("idbudget", id);
+      const response = await axios(
+        this.apiURL + "/budgets/extendExpirationDate/" + this.inscribeID,
+        {
+          method: "POST",
+          data: data,
+        }
+      );
       this.loading = false;
       // this.$swal(response.data.msg, '', response.data.icon);
       await this.getBudget();
-    }
+    },
+    checkBudget: function () {
+      setInterval(() => console.log('rodar verificador'), 5000);
+    },
   },
   created: async function () {
     if (this.$session.exists()) {
@@ -514,16 +533,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      "inscribeID",
-      "userNow",
-      "access",
-    ]),
+    ...mapGetters(["inscribeID", "userNow", "access"]),
+    formationChecked: function () {
+      this.formationChecked
+        ? this.somaBudget(this.formation.price)
+        : this.subtractBudget(this.formation.price);
+    },
   },
-  formationChecked: function () {
-    this.formationChecked
-      ? this.somaBudget(this.formation.price)
-      : this.subtractBudget(this.formation.price);
+  mounted() {
+    this.checkBudget();
   },
 };
 </script>

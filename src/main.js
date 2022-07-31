@@ -15,6 +15,8 @@ import extenso from 'extenso';
 import CKEditor from '@ckeditor/ckeditor5-vue2';
 import VCurrencyField from 'v-currency-field';
 import { VTextField } from 'vuetify/lib';
+import VueLodash from 'vue-lodash';
+import lodash from 'lodash';
 
 Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
 
@@ -43,6 +45,7 @@ Vue.use(VCurrencyField, {
   valueAsInteger: false,
   allowNegative: true,
 });
+Vue.use(VueLodash, {lodash: lodash});
 
 Vue.config.productionTip = false
 

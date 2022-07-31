@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" color="grey darken-4" app>
+    <v-navigation-drawer v-model="drawer" temporary color="grey darken-4" app>
       <v-list>
         <v-list-item class="px-2" dark>
           <v-list-item-avatar>
@@ -52,7 +52,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar color="grey darken-4" app>
+    <v-app-bar color="grey darken-4">
       <v-app-bar-nav-icon dark @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text">
         <v-img
