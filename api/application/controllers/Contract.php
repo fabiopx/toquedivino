@@ -203,9 +203,8 @@ class Contract extends CI_Controller{
         $this->load->model('event');
         $this->load->model('graduation_committe');
         $this->load->model('signature');
-        $resp = array();
-        $serv = array();
-        $where = (is_null($status)) ? array('status >' => 0, 'status <' => 3): array('status' => $status);
+        $resp = [];
+        $where = (is_null($status)) ? ['status >' => '0', 'status <' => '2'] : ['status' => $status];
         $contract = $this->inscribe->readInscribe($where);
         foreach($contract->result() as $c):
             $c->address = json_decode($c->address);
@@ -251,31 +250,34 @@ class Contract extends CI_Controller{
             $c->event = $event;
             $agreement = $this->agreement->readAgreement(array('inscribe_idinscribe' => $c->idinscribe));
             $c->agreement = $agreement->row();
-            $total = $agreement->row()->value - $agreement->row()->discount + $agreement->row()->addition;
-            $c->agreement->totalValue = (string) $total;
-            $whereAHS = array(
-                'inscribe_idinscribe' => $c->idinscribe,
-                'agreement_idagreement' => $c->agreement->idagreement
-            );
-            $signatures = array();
-            
-            $agreementHasSignature = $this->agreement->readAgreementHasSignature($whereAHS);
-            foreach($agreementHasSignature->result() as $a):
-                $signature = $this->signature->readSignature(array('idsignature' => $a->signature_idsignature));
-                if($signature->row()->type == 1){
-                    $c->agreement->sign = $a->sign;
-                }
-                array_push($signatures, 
-                    array(
-                        'name' => $signature->row()->name, 
-                        'type' => $signature->row()->type, 
-                        'font' => $signature->row()->font, 
-                        'sign' => $a->sign, 
-                        'idaccount' => $signature->row()->account_idaccount
-                        )
+            if($agreement->num_rows() != 0){
+                $total = $agreement->row()->value - $agreement->row()->discount + $agreement->row()->addition;
+                $c->agreement->totalValue = (string) $total;
+
+                $whereAHS = array(
+                    'inscribe_idinscribe' => $c->idinscribe,
+                    'agreement_idagreement' => $c->agreement->idagreement
                 );
-            endforeach;
-            $c->signatures = $signatures;
+                $signatures = array();
+                
+                $agreementHasSignature = $this->agreement->readAgreementHasSignature($whereAHS);
+                foreach($agreementHasSignature->result() as $a):
+                    $signature = $this->signature->readSignature(array('idsignature' => $a->signature_idsignature));
+                    if($signature->row()->type == 1){
+                        $c->agreement->sign = $a->sign;
+                    }
+                    array_push($signatures, 
+                        array(
+                            'name' => $signature->row()->name, 
+                            'type' => $signature->row()->type, 
+                            'font' => $signature->row()->font, 
+                            'sign' => $a->sign, 
+                            'idaccount' => $signature->row()->account_idaccount
+                            )
+                    );
+                endforeach;
+                $c->signatures = $signatures;
+            }
             $resp[] = $c;
         endforeach;
         echo json_encode($resp);

@@ -180,6 +180,10 @@ class Inscribe extends Crud{
         }
     }
 
+    public function updateInscribeWithData($data, $id){
+        return $this->update('inscribe', ['idinscribe' => $id], $data);
+    }
+
     public function updateStatusInscribe($id, $status){
         $where = array('idinscribe' => $id);
         return $this->update('inscribe', $where, array('status' => $status));
@@ -198,5 +202,19 @@ class Inscribe extends Crud{
 
     public function deleteComposition($where){
         $this->delete('composition', $where);
+    }
+
+    public function createVariantTax(){
+        $post = $this->input->post();
+        $data = [
+            'value' => $post['value'],
+            'tax_idtax' => $post['tax_idtax'],
+            'inscribe_idinscribe' => $post['inscribe_idinscribe']
+        ];
+        if($this->create('variant_tax', $data)){
+            return ['msg' => 'Variante de taxa cadastrada com sucesso', 'icon' => 'success'];
+        } else{
+            return ['msg' => 'Variante de taxa não pode ser cadastrada', 'icon' => 'error'];
+        }
     }
 }

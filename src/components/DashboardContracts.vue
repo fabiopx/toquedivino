@@ -5,77 +5,8 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar color="blue-grey">
-              <h3 class="white--text">Contratos</h3>
-              <v-spacer></v-spacer>
-              <v-toolbar-items>
-                <v-dialog
-                  v-model="dialogContractTrash"
-                  persistent
-                  transition="dialog-bottom-transition"
-                  max-width="900"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      text
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="getContractsTrash()"
-                    >
-                      <v-icon>mdi-delete-circle</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-toolbar dark color="blue-grey">
-                      <v-icon class="mr-3">mdi-delete-circle</v-icon>Lixeira
-                      <v-spacer></v-spacer>
-                      <v-btn icon @click.stop="closeDialogContractTrash()">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-toolbar>
-                    <v-card-text>
-                      <v-skeleton-loader
-                        v-if="firstLoad"
-                        :tableLoading="true"
-                        type="table"
-                      >
-                      </v-skeleton-loader>
-                      <v-data-table
-                        v-show="!firstLoad"
-                        :headers="headersContractsTrash"
-                        :items="itemsContractTrash"
-                        :search="searchContract"
-                        :items-per-page="5"
-                      >
-                        <template v-slot:item.actions="{ item }">
-                          <v-btn
-                            color="red"
-                            icon
-                            @click="deleteContract(item.idinscribe)"
-                          >
-                            <v-icon>mdi-delete</v-icon>
-                          </v-btn>
-                          <v-btn
-                            color="purple"
-                            icon
-                            @click="removeContract(item.idinscribe)"
-                          >
-                            <v-icon>mdi-file-remove</v-icon>
-                          </v-btn>
-                          <v-btn
-                            color="primary"
-                            icon
-                            @click="undoContract(item.idinscribe)"
-                          >
-                            <v-icon>mdi-file-undo</v-icon>
-                          </v-btn>
-                        </template>
-                      </v-data-table>
-                    </v-card-text>
-                  </v-card>
-                </v-dialog>
-              </v-toolbar-items>
+            <v-toolbar color="grey darken-4" dark>
+              <h3>Contratos</h3>
             </v-toolbar>
             <v-card-text>
               <v-skeleton-loader
@@ -109,7 +40,7 @@
 
                 <template v-slot:item.actions="{ item }">
                   <v-btn
-                    v-show="(item.agreement.sign == 0, item.status == 2)"
+                    v-show="item.status == 2"
                     color="blue-grey"
                     icon
                     dark
@@ -223,7 +154,7 @@
                                             </v-btn> -->
 
                   <v-btn
-                    v-show="item.status == 2"
+                    v-show="item.status == 1"
                     color="red"
                     icon
                     dark
@@ -335,20 +266,6 @@
                                 <b>{{ tax.name }}:</b><br />R$
                                 {{ printMoeda(tax.value) }}
                               </v-col>
-                              <v-col cols="2" v-show="tax.type == 2">X</v-col>
-                              <v-col cols="5" v-show="tax.type == 2">
-                                <v-text-field
-                                  v-model="tax.vValue"
-                                  height="20"
-                                  outlined
-                                  @blur="
-                                    addMultipliedContractValue(),
-                                      calculateContractValue(),
-                                      calculateContractValueTotal()
-                                  "
-                                >
-                                </v-text-field>
-                              </v-col>
                               <v-col v-show="tax.type == 2">
                                 {{ tax.multiplied }}
                               </v-col>
@@ -369,45 +286,30 @@
                       <v-form ref="formContract">
                         <v-row>
                           <v-col cols="12" md="4">
-                            <v-text-field
+                            <v-currency-field
                               label="Valor do contrato"
                               v-model="contractValue"
-                              v-currency="{
-                                currency: 'BRL',
-                                locale: 'pt-BR',
-                                autoDecimalMode: true,
-                              }"
                               disabled
                             >
-                            </v-text-field>
+                            </v-currency-field>
                           </v-col>
                           <v-col cols="12" md="4">
-                            <v-text-field
+                            <v-currency-field
                               label="Desconto ao valor do contrato"
                               v-model="contractDiscount"
                               ref="inputContractDiscount"
-                              v-currency="{
-                                currency: null,
-                                locale: 'pt-BR',
-                                autoDecimalMode: true,
-                              }"
                               @blur="calculateContractValueTotal()"
                             >
-                            </v-text-field>
+                            </v-currency-field>
                           </v-col>
                           <v-col cols="12" md="4">
-                            <v-text-field
+                            <v-currency-field
                               label="Adição ao valor do contrato"
                               v-model="contractAddition"
                               ref="inputContractAddition"
-                              v-currency="{
-                                currency: null,
-                                locale: 'pt-BR',
-                                autoDecimalMode: true,
-                              }"
                               @blur="calculateContractValueTotal()"
                             >
-                            </v-text-field>
+                            </v-currency-field>
                           </v-col>
                         </v-row>
                         <v-chip color="primary" class="pa2" large>
@@ -417,17 +319,12 @@
                         <v-divider></v-divider>
                         <v-row>
                           <v-col>
-                            <v-text-field
+                            <v-currency-field
                               label="Valor de entrada"
                               v-model="contractDownPayment"
                               ref="inputContractDownPayment"
-                              v-currency="{
-                                currency: null,
-                                locale: 'pt-BR',
-                                autoDecimalMode: true,
-                              }"
                             >
-                            </v-text-field>
+                            </v-currency-field>
                           </v-col>
                           <v-col>
                             <v-menu
@@ -558,7 +455,9 @@ export default {
       ],
       contractSignatures: [],
       pickDateDownPayment: false,
-      ePhoneRules: [
+      inscribeAccountable: "",
+      inscribePhone: "",
+      inscribePhoneRules: [
         (v) => !!v || "O campo TELEFONE DO RESPONSÁVEL é requerido",
       ],
       inscribeMobile: "",
@@ -570,7 +469,16 @@ export default {
         (v) => !!v || "O campo E-MAIL é requerido",
         (v) => /.+@.+/.test(v) || "Insira um E-mail válido",
       ],
-      inscribeAddress: address,
+      inscribeAddress: {
+        street: "",
+        number: "",
+        complement: "",
+        neighborhood: "",
+        city: "",
+        zipcode: "",
+        state: "",
+        country: "",
+      },
       inscribeAddressRules: [(v) => !!v || "Preencha corretamente o endereço"],
       inscribeCpf: "",
       inscribeRg: "",
@@ -672,12 +580,11 @@ export default {
           this.setIP = response.data;
         });
     },
-    getContracts: function () {
+    getContracts: async function () {
       this.firstLoad = true;
-      axios.get(this.apiURL + "/contract/get").then((response) => {
-        this.itemsContract = response.data;
-        this.stopContentLoading();
-      });
+      const response = await axios.get(this.apiURL + "/contract/get");
+      this.itemsContract = response.data;
+      this.stopContentLoading();
     },
     deleteContract: function (id) {
       this.$swal({
@@ -776,14 +683,16 @@ export default {
         this.engagedBrideBirthdate = toDateFormat(item.engaged.bride_birthdate);
         this.engagedBrideEmail = item.engaged.bride_email;
       }
-      this.contractValueTotal = item.agreement.totalValue;
-      this.contractValueExtenso = item.agreement.totalValue.extenso();
-      this.contractDownPayment = item.agreement.down_payment;
-      this.contractDownPaymentExtenso = item.agreement.down_payment.extenso();
-      this.contractDownPaymentDate = toDateFormat(
-        item.agreement.down_payment_date
-      );
-      this.contractSignatures = item.signatures;
+      if (item.agreement) {
+        this.contractValueTotal = item.agreement.totalValue;
+        this.contractValueExtenso = item.agreement.totalValue.extenso();
+        this.contractDownPayment = item.agreement.down_payment;
+        this.contractDownPaymentExtenso = item.agreement.down_payment.extenso();
+        this.contractDownPaymentDate = toDateFormat(
+          item.agreement.down_payment_date
+        );
+        this.contractSignatures = item.signatures;
+      }
     },
     closeDialogContractSign: function () {
       this.dialogContractSign = false;
@@ -903,6 +812,24 @@ export default {
         }
       });
     },
+    getDistance() {
+      return new Promise((resolve, reject) => {
+        var service = new google.maps.DistanceMatrixService();
+        service
+          .getDistanceMatrix({
+            origins: ["Americana-SP"],
+            destinations: [this.events.address.city],
+            travelMode: "DRIVING",
+          })
+          .then((response) => {
+            // console.log(response.rows[0].elements[0].distance.value * 2);
+            resolve(response.rows[0].elements[0].distance.value * 2);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     calculateContractTaxValue: function () {
       let value = 0;
       if (this.contractService.taxas != null) {
@@ -973,10 +900,10 @@ export default {
       });
     },
   },
-  created: function(){
-    this.getContracts();
+  created: async function () {
+    await this.getContracts();
     this.getIP();
-  }
+  },
 };
 </script>
 

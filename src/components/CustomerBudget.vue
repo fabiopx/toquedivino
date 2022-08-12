@@ -82,7 +82,7 @@
                           >
                             <h4>Taxa: {{ t.name }}</h4>
                             <p>{{ t.description }}</p>
-                            <p>
+                            <p v-if="t.mutiplied == 'por km'">
                               Origem: Americana-SP<br />
                               Destino:
                               {{
@@ -100,9 +100,9 @@
                                   currency: "BRL",
                                 })
                               }}
-                              x
-                              <span v-if="t.type == '2'" class="ml-2"
-                                >{{ (distance / 1000).toFixed("2") }} km</span
+
+                              <span v-if="t.multiplied == 'por km'" class="ml-2"
+                                >x {{ (distance / 1000).toFixed("2") }} km</span
                               >
                             </v-chip>
                           </div>
@@ -441,6 +441,23 @@ export default {
       }
       this.loadingTotalTax = false;
     },
+    createVariantTax: async function () {
+      let tax = this.tax;
+      if (tax) {
+        tax.forEach(async function (t) {
+          let data = new FormData();
+          data.append("value", this.distance);
+          data.append("tax_idtax", t.idtax);
+          data.append("inscribe_idinscribe", this.inscribeID);
+          const response = await axios({
+            method: "post",
+            url: this.apiURL + "/inscribes/variantTax",
+            data: data,
+          });
+          console.log(response);
+        });
+      }
+    },
 
     createBudget: async function () {
       var data = new FormData();
@@ -460,7 +477,7 @@ export default {
         data: data,
       });
       this.$swal(response.data.msg, "", response.data.icon);
-
+      // await this.createVariantTax();
       await this.getBudget();
     },
     getBudget: async function () {
@@ -518,9 +535,6 @@ export default {
       // this.$swal(response.data.msg, '', response.data.icon);
       await this.getBudget();
     },
-    checkBudget: function () {
-      setInterval(() => console.log('rodar verificador'), 5000);
-    },
   },
   created: async function () {
     if (this.$session.exists()) {
@@ -541,7 +555,7 @@ export default {
     },
   },
   mounted() {
-    this.checkBudget();
+    // this.checkBudget();
   },
 };
 </script>

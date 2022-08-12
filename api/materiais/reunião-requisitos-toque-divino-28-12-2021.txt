@@ -38,3 +38,4 @@ Tratar quando os noivos não são responsáveis pela assinatura do contrato (>>O
 Avisar que noivos não foram cadastrados (...)
 Observador de mudança de status no orçamento - entre iniciado e validado (...)
 Atualizar página contrato quando gerar contrato (...)
+Persistir a variante da taxa (por km) para apresentar na tela de validação do contrato no dashboard (...)

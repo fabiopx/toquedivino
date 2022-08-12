@@ -442,7 +442,7 @@ export default {
       data.append("rg", this.inscribeRg);
       data.append("idservice", this.inscribeService.idservice);
       data.append("idformation", this.inscribeFormation.idformation);
-      data.append("status", 1);
+      data.append("status", 0);
       axios(this.apiURL + "/inscribes/updateCustomers/" + this.inscribeID, {
         method: "POST",
         data: data,

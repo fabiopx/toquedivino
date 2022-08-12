@@ -241,4 +241,9 @@ class Inscribes extends CI_Controller{
         echo json_encode($resp);
     }
 
+    public function variantTax(){
+        $this->load->model('inscribe');
+        echo json_encode($this->inscribe->createVariantTax());
+    }
+
 }
