@@ -204,7 +204,7 @@ class Contract extends CI_Controller{
         $this->load->model('graduation_committe');
         $this->load->model('signature');
         $resp = [];
-        $where = (is_null($status)) ? ['status >' => '0', 'status <' => '2'] : ['status' => $status];
+        $where = (is_null($status)) ? ['status !=' => '0'] : ['status' => $status];
         $contract = $this->inscribe->readInscribe($where);
         foreach($contract->result() as $c):
             $c->address = json_decode($c->address);
