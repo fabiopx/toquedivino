@@ -28,8 +28,11 @@ Vue.use(VueSession);
 //   name: 'ls',
 //   bind: true
 // })
+
+
 Vue.use(VuetifyGoogleAutocomplete, {
-  apiKey: process.env.VUE_APP_API_KEY
+  apiKey: process.env.VUE_APP_API_KEY,
+
 });
 Vue.use(VueSweetalert2);
 Vue.use(require('vue-moment'));

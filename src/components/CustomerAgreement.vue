@@ -38,7 +38,14 @@
                   </p>
                 </div>
                 <div v-if="access.isAgreement">
-                  <v-alert border="top" color="red darken-4" v-if="!engaged" dark dismissible>Os dados dos noivos não foram cadastrados.</v-alert>
+                  <v-alert
+                    border="top"
+                    color="red darken-4"
+                    v-if="!engaged"
+                    dark
+                    dismissible
+                    >Os dados dos noivos não foram cadastrados.</v-alert
+                  >
                   <p class="subtitle-1 pa-5 grey darken-4 white--text">
                     Leia atentamente o contrato abaixo. Estando de acordo com os
                     termos do contrato, assine eletronicamente usando a senha
@@ -455,14 +462,14 @@
                         <div v-for="sign in signatures" :key="sign.idsignature">
                           <p
                             class="text-subtitle-1 mt-2"
-                            :class="(sign.sign == 0) ? signNotInUse : null"
+                            :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 1"
                           >
-                            {{ sign.name }} 
+                            {{ sign.name }}
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
-                            :class="(sign.sign == 0) ? signNotInUse : null"
+                            :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 1"
                           >
                             {{ selSignatureType(sign.type) }}
@@ -476,7 +483,8 @@
                             :class="sign.sign == 0 ? signNotInUse : null"
                             v-if="sign.type == 2 || sign.type == 3"
                           >
-                            <v-icon v-if="sign.sign == 1">mdi-check</v-icon>{{ sign.name }}
+                            <v-icon v-if="sign.sign == 1">mdi-check</v-icon
+                            >{{ sign.name }}
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
@@ -515,14 +523,27 @@
             <v-card-actions v-if="access.isAgreement">
               <v-spacer></v-spacer>
               <v-menu rounded="lg" offset-x color="grey darken-4" dark>
-                <template v-slot:activator="{attrs, on}">
-                  <v-btn class="mr-3" depressed dark color="red darken-4 pa-5" v-bind="attrs" v-on="on"
+                <template v-slot:activator="{ attrs, on }">
+                  <v-btn
+                    class="mr-3"
+                    depressed
+                    dark
+                    color="red darken-4 pa-5"
+                    v-bind="attrs"
+                    v-on="on"
                     ><v-icon class="ma-2">mdi-file-sign</v-icon></v-btn
                   >
                 </template>
                 <v-list>
-                  <v-list-item v-for="signature in contractors" :key="signature.idsignature" link @click="signaturePassword(signature)">
-                    <v-list-item-title v-show="signature.type == 1">{{ signature.name }}</v-list-item-title>
+                  <v-list-item
+                    v-for="signature in contractors"
+                    :key="signature.idsignature"
+                    link
+                    @click="signaturePassword(signature)"
+                  >
+                    <v-list-item-title v-show="signature.type == 1">{{
+                      signature.name
+                    }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -555,7 +576,7 @@ export default {
     contractors: [],
     signatureType: "",
     signNotInUse: "red--text darken-4",
-    ip: {ip: "", latitude: "", longitude: ""},
+    ip: { ip: "", latitude: "", longitude: "" },
   }),
   methods: {
     ...mapActions([
@@ -564,12 +585,13 @@ export default {
       "setBudgetActive",
       "verifyIsAgreement",
     ]),
-    getIP: async function(){
+    getIP: async function () {
       const resp = await axios.get("https://ipapi.co/json/");
       this.ip = resp.data;
     },
-    generateCode: function(){
-      var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJLMNOPQRSTUVWXYZ";
+    generateCode: function () {
+      var chars =
+        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJLMNOPQRSTUVWXYZ";
       var passwordLength = 16;
       var password = "";
 
@@ -585,9 +607,13 @@ export default {
       const response = await axios.get(
         this.apiURL + "/agreements/createCustomer/" + this.inscribeID
       );
-      this.loading = false;
-      this.$swal(response.data.msg, "", response.data.icon);
+      // this.loading = false;
+      // this.$swal(response.data.msg, "", response.data.icon);
+      // this.loading = true;
+      await this.getEngaged();
       await this.getAgreement();
+      await this.getSignature();
+      this.loading = false;
     },
     getInscribe: async function () {
       const response = await axios.get(
@@ -622,54 +648,54 @@ export default {
         this.apiURL + "/signatures/getSignaturesContract/" + this.inscribeID
       );
       this.signatures = response.data;
-      this.contractors = this.signatures.filter(item => (item.type == 1 && item.sign != 1));
+      this.contractors = this.signatures.filter(
+        (item) => item.type == 1 && item.sign != 1
+      );
     },
     selSignatureType: function (type) {
       if (type == 1) return "Contratante";
       if (type == 2) return "Contratado";
       if (type == 3) return "Testemunha";
     },
-    signaturePassword: async function(sign){
-      const { value:password } = await this.$swal({
-        title: 'Assinatura do contrato ',
-        icon: 'question',
-        input: 'password',
-        inputLabel: 'Assinatura eletrônica de ' + sign.name,
-        inputPlaceholder: 'Entre com sua senha',
+    signaturePassword: async function (sign) {
+      const { value: password } = await this.$swal({
+        title: "Assinatura do contrato ",
+        icon: "question",
+        input: "password",
+        inputLabel: "Assinatura eletrônica de " + sign.name,
+        inputPlaceholder: "Entre com sua senha",
         inputAtrributes: {
           maxLength: 10,
-          autocapitalize: 'off',
-          autocorrect: 'off'
+          autocapitalize: "off",
+          autocorrect: "off",
         },
-        confirmButtonText: 'Assinar',
-        showCancelButton: true
-      })
-      if(password){
+        confirmButtonText: "Assinar",
+        showCancelButton: true,
+      });
+      if (password) {
         const data = new FormData();
-        data.append('idsignature', sign.idsignature);
-        data.append('idinscribe', this.inscribeID);
-        data.append('idaccount', sign.account_idaccount);
-        data.append('date', this.$moment().format("YYYY-MM-DD HH:mm:ss"));
-        data.append('ip', this.ip.ip);
-        data.append('geolocation', this.ip.latitude + ", " + this.ip.longitude);
-        data.append('hash', this.generateCode());
-        data.append('password', password)
-        const response = await axios(this.apiURL + "/signatures/signWithPassword", {
-          method: 'POST',
-          data: data
-        })
-        this.$swal(response.data.msg, '', response.data.icon)
-        this.getSignature()
+        data.append("idsignature", sign.idsignature);
+        data.append("idinscribe", this.inscribeID);
+        data.append("idaccount", sign.account_idaccount);
+        data.append("date", this.$moment().format("YYYY-MM-DD HH:mm:ss"));
+        data.append("ip", this.ip.ip);
+        data.append("geolocation", this.ip.latitude + ", " + this.ip.longitude);
+        data.append("hash", this.generateCode());
+        data.append("password", password);
+        const response = await axios(
+          this.apiURL + "/signatures/signWithPassword",
+          {
+            method: "POST",
+            data: data,
+          }
+        );
+        this.$swal(response.data.msg, "", response.data.icon);
+        this.getSignature();
       }
-    }
+    },
   },
   computed: {
-    ...mapGetters([
-      "inscribeID",
-      "userNow",
-      "access",
-      "budget",
-    ]),
+    ...mapGetters(["inscribeID", "userNow", "access", "budget"]),
   },
   created: async function () {
     await this.setBudgetActive();

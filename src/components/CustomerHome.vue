@@ -188,6 +188,7 @@ export default {
       "setIsBudget",
       "verifyIsAgreement",
       "verifyStatusInscribe",
+      "setAccess"
     ]),
     getInscribe: async function () {
       this.loadingData1 = true;

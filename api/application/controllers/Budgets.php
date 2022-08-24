@@ -12,6 +12,7 @@ class Budgets extends CI_Controller{
 
     public function create(){
         $this->load->model('budget');
+        $this->load->model('inscribe');
         if($this->budget->createBudget()){
             $resp = array('msg' => "Orçamento gerado com sucesso", 'icon' => "success");
         } else{

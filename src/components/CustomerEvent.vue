@@ -310,6 +310,10 @@ export default {
     pickTimeEvent: false,
   }),
 
+  mounted(){
+    this.$refs.address.focus();
+  },
+
   methods: {
     ...mapActions(["setUserNow", "setIsEvent"]),
 

@@ -82,29 +82,7 @@
                           >
                             <h4>Taxa: {{ t.name }}</h4>
                             <p>{{ t.description }}</p>
-                            <p v-if="t.mutiplied == 'por km'">
-                              Origem: Americana-SP<br />
-                              Destino:
-                              {{
-                                events.address.city +
-                                "-" +
-                                events.address.state
-                              }}<br />
-                              Distância total (ida e volta):
-                              {{ (distance / 1000).toFixed("2") }} km
-                            </p>
-                            <v-chip color="grey darken-4" dark
-                              >{{
-                                parseFloat(t.value).toLocaleString("pt-BR", {
-                                  style: "currency",
-                                  currency: "BRL",
-                                })
-                              }}
-
-                              <span v-if="t.multiplied == 'por km'" class="ml-2"
-                                >x {{ (distance / 1000).toFixed("2") }} km</span
-                              >
-                            </v-chip>
+                            
                           </div>
                           <v-skeleton-loader
                             v-show="loadingTotalTax"
@@ -548,7 +526,7 @@ export default {
   },
   computed: {
     ...mapGetters(["inscribeID", "userNow", "access"]),
-    formationChecked: function () {
+    formationCheck: function () {
       this.formationChecked
         ? this.somaBudget(this.formation.price)
         : this.subtractBudget(this.formation.price);
