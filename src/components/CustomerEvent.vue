@@ -124,6 +124,7 @@
                         ref="address"
                         id="map"
                         placeholder="Digite o endereço"
+                        types="establishment"
                         v-on:placechanged="getAddressData"
                         country="br"
                       ></vuetify-google-autocomplete>
@@ -311,7 +312,7 @@ export default {
   }),
 
   mounted(){
-    this.$refs.address.focus();
+    // this.$refs.address.focus();
   },
 
   methods: {

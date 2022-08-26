@@ -17,6 +17,7 @@ import VCurrencyField from 'v-currency-field';
 import { VTextField } from 'vuetify/lib';
 import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
+import VueQRCodeComponent from 'vue-qrcode-component';
 
 Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
 
@@ -49,6 +50,7 @@ Vue.use(VCurrencyField, {
   allowNegative: true,
 });
 Vue.use(VueLodash, {lodash: lodash});
+Vue.component('qr-code', VueQRCodeComponent);
 
 Vue.config.productionTip = false
 

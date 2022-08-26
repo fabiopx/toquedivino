@@ -37,7 +37,16 @@ Verificar o carregamento da página Orçamento (>>OK<<)
 Tratar quando os noivos não são responsáveis pela assinatura do contrato (>>OK<<)
 Avisar que noivos não foram cadastrados (>>OK<<)
 Observador de mudança de status no orçamento - entre iniciado e validado (...)
-Atualizar página contrato quando gerar contrato (...)
-Persistir a variante da taxa (por km) para apresentar na tela de validação do contrato no dashboard (...)
+Atualizar página contrato quando gerar contrato (>>OK<<)
+Mudar busca de endereço no componente event (>>OK<<)
+Inserir QRCode e assinatura no contrato (...)
+
+Correções 25-08-2022:
+Problemas com página orçamento (...)
+Posicionamento dos vídeos de formação no celular (...)
+Problema de fechamento de dialog (...)
+Validador de CPF (...)
+Tradução de pickdate e ajuste de tela para celular (...)
+>> Teste de navegação em celular (...)
 
 Criar cadastro de indicadores, atrelados ao cadastro dos customers, via link (...)

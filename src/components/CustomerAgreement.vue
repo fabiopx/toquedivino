@@ -496,6 +496,14 @@
                         </div>
                       </v-col>
                     </v-row>
+                    <v-row>
+                      <v-col cols="12" md="2" lg="2">
+                        <qr-code text="https://viadelivery.com.br" size="100"></qr-code>
+                      </v-col>
+                      <v-col cols="12" md="8" lg="8">
+                        <p>Contrato assinado eletronicamente por {{ inscribe.accountable }}</p>
+                      </v-col>
+                    </v-row>
                   </div>
                   <!-- Fim Contrato -->
                 </div>
@@ -610,6 +618,7 @@ export default {
       // this.loading = false;
       // this.$swal(response.data.msg, "", response.data.icon);
       // this.loading = true;
+      await this.verifyIsAgreement();
       await this.getEngaged();
       await this.getAgreement();
       await this.getSignature();

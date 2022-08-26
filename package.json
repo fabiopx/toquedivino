@@ -30,6 +30,7 @@
     "vue-lodash": "^2.1.2",
     "vue-moment": "^4.1.0",
     "vue-money": "^0.4.1",
+    "vue-qrcode-component": "^2.1.1",
     "vue-router": "^3.5.3",
     "vue-session": "^1.0.0",
     "vue-sweetalert2": "^5.0.2",
