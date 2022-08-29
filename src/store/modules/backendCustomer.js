@@ -60,7 +60,7 @@ const actions = {
   },
 
   async setIsEvent({commit}){
-    const response = await axios.get(process.env.VUE_APP_URL + "/events/getCustomers/" + state.inscribeID);
+    const response = await axios.get(process.env.VUE_APP_URL + "/events/verify/" + state.inscribeID);
     const resp = (response.data) ? true : false
     commit('setIsEvent', resp)
   },

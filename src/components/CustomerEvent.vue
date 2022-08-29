@@ -47,6 +47,7 @@
                         <v-date-picker
                           v-model="eventDate"
                           @input="pickDateEvent = false"
+                          locale="pt-br"
                         >
                         </v-date-picker>
                       </v-menu>
@@ -78,7 +79,7 @@
                         <v-time-picker
                           v-if="pickTimeEvent"
                           v-model="eventTime"
-                          full-width
+                          format="24hr"
                           @click:minute="$refs.menu.save(eventTime)"
                         >
                         </v-time-picker>

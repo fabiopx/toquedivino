@@ -378,7 +378,7 @@ export default {
       );
       if (response.data) {
         this.events = response.data;
-        this.distance = await this.getDistance();
+        // this.distance = await this.getDistance();
       }
       this.loadingDatas = false;
     },
@@ -389,21 +389,23 @@ export default {
       // console.log(response.data.taxas);
       this.tax = response.data.taxas;
     },
-    getDistance() {
+    getDistance: async function() {
       return new Promise((resolve, reject) => {
+        let response;
         var service = new google.maps.DistanceMatrixService();
         service
           .getDistanceMatrix({
             origins: ["Americana-SP"],
             destinations: [this.events.address.city],
             travelMode: "DRIVING",
-          })
-          .then((response) => {
-            // console.log(response.rows[0].elements[0].distance.value * 2);
-            resolve(response.rows[0].elements[0].distance.value * 2);
-          })
-          .catch((error) => {
-            reject(error);
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false
+          },
+          function(resp, status){
+            if(status == 'OK'){
+              console.log(resp);
+            } 
           });
       });
     },
@@ -534,6 +536,7 @@ export default {
   },
   mounted() {
     // this.checkBudget();
+    
   },
 };
 </script>

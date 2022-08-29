@@ -35,6 +35,14 @@ class Events extends CI_Controller{
         echo json_encode($resp);
     }
 
+    public function verify($id){
+        $this->load->model('event');
+        $where = ['inscribe_idinscribe' => $id];
+        $event = $this->event->readEvent($where);
+        $resp = ($event->num_rows() != 0) ? true : false;
+        echo json_encode($resp);
+    }
+
     public function updateCustomers($id){
         $this->load->model('event');
         $where = array('idevent' => $id);

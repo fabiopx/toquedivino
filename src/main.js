@@ -33,7 +33,6 @@ Vue.use(VueSession);
 
 Vue.use(VuetifyGoogleAutocomplete, {
   apiKey: process.env.VUE_APP_API_KEY,
-
 });
 Vue.use(VueSweetalert2);
 Vue.use(require('vue-moment'));

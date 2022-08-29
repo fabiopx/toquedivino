@@ -43,10 +43,11 @@ Inserir QRCode e assinatura no contrato (...)
 
 Correções 25-08-2022:
 Problemas com página orçamento (...)
-Posicionamento dos vídeos de formação no celular (...)
-Problema de fechamento de dialog (...)
+Posicionamento dos vídeos de formação no celular (>>OK<<)
+Problema de fechamento de dialog (>>OK<<)
 Validador de CPF (...)
-Tradução de pickdate e ajuste de tela para celular (...)
+Tradução de pickdate e ajuste de tela para celular (>>OK<<)
 >> Teste de navegação em celular (...)
+>> Ver documento enviado pelo Douglas (...)
 
 Criar cadastro de indicadores, atrelados ao cadastro dos customers, via link (...)

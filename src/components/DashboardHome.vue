@@ -10,10 +10,7 @@
             ></v-card-title>
             <v-card-text>
               <v-sheet max-width="calc(100% - 32px)">
-                <GChart
-                  v-bind:type="card.typeChart"
-                  v-bind:data="card.dataChart"
-                ></GChart>
+                <v-img :src="card.img"></v-img>
               </v-sheet>
             </v-card-text>
             <v-card-actions>
@@ -22,7 +19,7 @@
                 depressed
                 color="blue-grey"
                 class="white--text"
-                @click="showActive(card.link)"
+                @click="$router.push({path: cards.link})"
               >
                 mais...</v-btn
               >
@@ -35,79 +32,32 @@
 </template>
 
 <script>
-import {GChart} from "vue-google-charts/legacy"
 export default {
   name: "DashboardHome",
-  components: {
-    GChart
-  },
 
   data() {
     return {
+      imgPath: process.env.VUE_APP_IMGPATH,
       cards: [
         {
-          title: "Contratos",
-          link: "contratos",
-          typeChart: "ColumnChart",
-          dataChart: [
-            [
-              "jan",
-              "fev",
-              "mar",
-              "abr",
-              "mai",
-              "jun",
-              "jul",
-              "ago",
-              "set",
-              "out",
-              "nov",
-              "dez",
-            ],
-            [10, 15, 25, 19, 30, 24, 36, 20, 26, 30, 32, 35],
-          ],
+          title: "Usuários",
+          link: "/dashboard/users",
+          img: process.env.VUE_APP_IMGPATH + "undraw_people_re_8spw.svg"
         },
         {
-          title: "Financeiro",
-          link: "financeiro",
-          typeChart: "PieChart",
-          dataChart: [
-            ["Tipo de Lançamento", "Valor"],
-            ["Receita", 15000.0],
-            ["Despesa", 10000.0],
-          ],
+          title: "Serviços",
+          link: "/dashboard/services",
+          img: process.env.VUE_APP_IMGPATH
         },
         {
-          title: "Contratos",
-          link: "contratos",
-          typeChart: "ColumnChart",
-          dataChart: [
-            [
-              "jan",
-              "fev",
-              "mar",
-              "abr",
-              "mai",
-              "jun",
-              "jul",
-              "ago",
-              "set",
-              "out",
-              "nov",
-              "dez",
-            ],
-            [10, 15, 25, 19, 30, 24, 36, 20, 26, 30, 32, 35],
-          ],
+          title: "Formações",
+          link: "/dashboard/formations",
+          img: process.env.VUE_APP_IMGPATH
         },
         {
-          title: "Financeiro",
-          link: "financeiro",
-          typeChart: "PieChart",
-          dataChart: [
-            ["Tipo de Lançamento", "Valor"],
-            ["Receita", 15000.0],
-            ["Despesa", 10000.0],
-          ],
+          title: "Gerencial",
+          link: "/dashboard/contracts",
+          img: process.env.VUE_APP_IMGPATH
         },
       ],
     };

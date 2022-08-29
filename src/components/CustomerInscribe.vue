@@ -23,13 +23,15 @@
               <v-form v-show="!loadingInscribeFields" ref="formInscribe">
                 <v-container>
                   <v-row>
-                    <v-col cols="12" md="4">
+                    <v-col cols="12">
                       <v-text-field
                         label="Nome do Responsável"
                         v-model="inscribeAccountable"
                       >
                       </v-text-field>
                     </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col cols="12" md="4">
                       <v-text-field
                         v-model="inscribeBirthdate"
@@ -44,6 +46,13 @@
                         label="Telefone"
                         v-model="inscribePhone"
                         v-mask="maskTel(inscribePhone)"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                      <v-text-field
+                        label="Celular"
+                        v-model="inscribeMobile"
+                        v-mask="maskTel(inscribeMobile)"
                       ></v-text-field>
                     </v-col>
                   </v-row>

@@ -166,78 +166,64 @@
                 </v-alert>
                 <v-skeleton-loader
                   v-show="loadingFormations"
-                  type="image@3"
+                  type="list-item-three-line"
                   class="mx-auto"
                 ></v-skeleton-loader>
-                <v-item-group
-                  v-show="!loadingFormations"
-                  v-model="selectedFormation"
-                  active-class="blue darken-4"
-                  @change="
-                    isSelected('selectedFormation', 'alertSelectedFormation')
-                  "
-                >
-                  <v-container>
-                    <v-row>
-                      <v-col
-                        cols="12"
-                        md="6"
-                        lg="3"
-                        v-for="formation in formations"
-                        :key="formation.idformation"
-                      >
-                        <v-item v-slot="{ active, toggle }" :value="formation">
-                          <v-card
-                            color="primary"
-                            class="white--text"
-                            max-width="300"
-                            @click="toggle"
-                          >
-                            <v-icon class="mt-2 ml-2 white--text">
-                              {{
-                                active
-                                  ? "mdi-check-circle"
-                                  : "mdi-checkbox-blank-circle-outline"
-                              }}
-                            </v-icon>
-
-                            <v-card-title>{{ formation.name }}</v-card-title>
-
-                            <v-card-actions>
-                              <v-btn
-                                icon
-                                color="white"
-                                class="mt-2 ml-2"
-                                title="Assista um vídeo desta formação"
-                                @click="openDialogFormationVideo(formation)"
-                              >
-                                <v-icon>mdi-youtube</v-icon>
-                              </v-btn>
-
-                              <v-btn
-                                icon
-                                color="white"
-                                class="mt-2 ml-2"
-                                @click="openDialogFormationTooltip(formation)"
-                              >
-                                <v-icon>mdi-tooltip-plus</v-icon>
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-item>
-                      </v-col>
-                    </v-row>
-                    <v-dialog
-                      v-model="dialogVideoFormation"
-                      max-width="600"
-                      persistent
+                <v-container v-show="!loadingFormations">
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      md="6"
+                      lg="3"
+                      v-for="formation in formations"
+                      :key="formation.idformation"
                     >
+                      <v-radio-group v-model="selectedFormation">
+                        <v-card
+                          color="primary"
+                          class="white--text"
+                          max-width="300"
+                        >
+                          <v-card-title>{{ formation.name }}</v-card-title>
+                          <v-card-text class="white--text">{{
+                            formation.description
+                          }}</v-card-text>
+                          <v-divider class="white"></v-divider>
+                          <v-card-actions class="grey">
+                            <v-btn
+                              icon
+                              color="white"
+                              class="mt-2 ml-2"
+                              title="Assista um vídeo desta formação"
+                              @click="openDialogFormationVideo(formation)"
+                            >
+                              <v-icon>mdi-youtube</v-icon>
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                            <v-radio
+                              color="white"
+                              label="selecionar"
+                              dark
+                              :value="formation"
+                              @click="isSelected('selectedFormation', 'alertSelectedFormation')"
+                            ></v-radio>
+                          </v-card-actions>
+                        </v-card>
+                      </v-radio-group>
+                    </v-col>
+                  </v-row>
+                  <v-dialog
+                    v-model="dialogVideoFormation"
+                    max-width="600"
+                    persistent
+                  >
+                    <v-card>
                       <v-card>
-                        <v-card>
-                          <v-toolbar color="primary" dark>
-                            {{ formation.name }}
-                          </v-toolbar>
-                          <v-card-text>
+                        <v-toolbar color="primary" dark>
+                          {{ formation.name }}
+                        </v-toolbar>
+                        <v-card-text>
+                          <div style="--aspect-ratio: 16/9;">
                             <iframe
                               width="560"
                               height="315"
@@ -247,38 +233,38 @@
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                               allowfullscreen
                             ></iframe>
-                          </v-card-text>
-                          <v-card-actions class="justify-end">
-                            <v-btn text @click="closeDialogFormationVideo()">
-                              Close
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
+                          </div>
+                        </v-card-text>
+                        <v-card-actions class="justify-end">
+                          <v-btn text @click="closeDialogFormationVideo()">
+                            Close
+                          </v-btn>
+                        </v-card-actions>
                       </v-card>
-                    </v-dialog>
-                    <v-dialog
-                      v-model="dialogTooltipFormation"
-                      max-width="600"
-                      persistent
-                    >
+                    </v-card>
+                  </v-dialog>
+                  <v-dialog
+                    v-model="dialogTooltipFormation"
+                    max-width="600"
+                    persistent
+                  >
+                    <v-card>
                       <v-card>
-                        <v-card>
-                          <v-toolbar color="primary" dark>
-                            {{ formation.name }}
-                          </v-toolbar>
-                          <v-card-text>
-                            {{ formation.description }}
-                          </v-card-text>
-                          <v-card-actions class="justify-end">
-                            <v-btn text @click="closeDialogFormationTooltip()">
-                              Close
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
+                        <v-toolbar color="primary" dark>
+                          {{ formation.name }}
+                        </v-toolbar>
+                        <v-card-text>
+                          {{ formation.description }}
+                        </v-card-text>
+                        <v-card-actions class="justify-end">
+                          <v-btn text @click="closeDialogFormationTooltip()">
+                            Close
+                          </v-btn>
+                        </v-card-actions>
                       </v-card>
-                    </v-dialog>
-                  </v-container>
-                </v-item-group>
+                    </v-card>
+                  </v-dialog>
+                </v-container>
               </v-col>
             </v-row>
             <v-row>
@@ -749,7 +735,7 @@ export default {
         method: "POST",
         data: data,
       });
-      if(resp.data){
+      if (resp.data) {
         this.$swal("Este e-mail já está sendo utilizado");
         this.inscribeEmail = null;
       }
@@ -921,3 +907,33 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  [style*="--aspect-ratio"] > :first-child {
+    width: 100%;
+  }
+
+  [style*="--aspect-ratio"] > img {  
+    height: auto;
+  }
+
+  @supports (--custom:property) {
+    [style*="--aspect-ratio"] {
+      position: relative;
+    }
+    
+    [style*="--aspect-ratio"]::before {
+      content: "";
+      display: block;
+      padding-bottom: calc(100% / (var(--aspect-ratio)));
+    }
+    
+    [style*="--aspect-ratio"] > :first-child {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }  
+  }
+</style>
+
