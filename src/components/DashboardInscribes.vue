@@ -313,38 +313,82 @@
                         <v-dialog v-model="dialogBudget" persistent>
                           <v-card>
                             <v-toolbar dark color="grey darken-4">
-                              <v-btn icon @click="closeBudget()"><v-icon>mdi-close</v-icon></v-btn>
-                              <v-toolbar-title>Validar Orçamento</v-toolbar-title>
-                              
-                              </v-toolbar>
+                              <v-btn icon @click="closeBudget()"
+                                ><v-icon>mdi-close</v-icon></v-btn
+                              >
+                              <v-toolbar-title
+                                >Validar Orçamento</v-toolbar-title
+                              >
+                            </v-toolbar>
                             <v-card-text>
-                              <v-chip class="mt-3 pa-5">Orçamento: {{ budget.code }}</v-chip>
-                              <v-chip class="mt-3 ml-3 pa-5" color="primary">Data: {{ $moment(budget.date).format("DD/MM/YYYY") }} </v-chip>
-                              <v-chip class="mt-3 ml-3 pa-5" color="primary">Valor: {{ parseInt(budget.value).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}) }}</v-chip>
-                              
-                              <v-divider class="mt-3 mb-3"></v-divider>
-                              <v-row>
-                                <v-col cols="12" md="6">
-                                  <v-currency-field label="Desconto" v-model="budget.discount"></v-currency-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                  <v-currency-field label="Acréscimo" v-model="budget.addition"></v-currency-field>
-                                </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col cols="12" md="6">
-                                  <v-currency-field label="Valor da entrada" v-model="budget.down_payment"></v-currency-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                  <v-text-field label="Data da entrada" v-model="budget.down_payment_date" v-mask="maskBirthdate"></v-text-field>
-                                </v-col>
-                              </v-row>
-                              <v-row>
-                                <v-col>
-                                  <v-spacer></v-spacer>
-                                  <v-btn :loading="btnLoading" rounded depressed color="primary" @click="validateBudget(budget.idbudget)">Validar</v-btn>
-                                </v-col>
-                              </v-row>
+                              <v-form ref="formValidateBudget">
+                                <v-chip class="mt-3 pa-5"
+                                  >Orçamento: {{ budget.code }}</v-chip
+                                >
+                                <v-chip class="mt-3 ml-3 pa-5" color="primary"
+                                  >Data:
+                                  {{
+                                    $moment(budget.date).format("DD/MM/YYYY")
+                                  }}
+                                </v-chip>
+                                <v-chip class="mt-3 ml-3 pa-5" color="primary"
+                                  >Valor:
+                                  {{
+                                    parseInt(budget.value).toLocaleString(
+                                      "pt-BR",
+                                      { style: "currency", currency: "BRL" }
+                                    )
+                                  }}</v-chip
+                                >
+
+                                <v-divider class="mt-3 mb-3"></v-divider>
+                                <v-row>
+                                  <v-col cols="12" md="6">
+                                    <v-currency-field
+                                      label="Desconto"
+                                      v-model="budget.discount"
+                                    ></v-currency-field>
+                                  </v-col>
+                                  <v-col cols="12" md="6">
+                                    <v-currency-field
+                                      label="Acréscimo"
+                                      v-model="budget.addition"
+                                    ></v-currency-field>
+                                  </v-col>
+                                </v-row>
+                                <v-row>
+                                  <v-col cols="12" md="6">
+                                    <v-currency-field
+                                      label="Valor da entrada"
+                                      v-model="budget.down_payment"
+                                      required
+                                      :rules="budgetDownPaymentRules"
+                                    ></v-currency-field>
+                                  </v-col>
+                                  <v-col cols="12" md="6">
+                                    <v-text-field
+                                      label="Data da entrada"
+                                      v-model="budget.down_payment_date"
+                                      v-mask="maskBirthdate"
+                                      required
+                                      :rules="budgetDownPaymentDateRules"
+                                    ></v-text-field>
+                                  </v-col>
+                                </v-row>
+                                <v-row>
+                                  <v-col>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                      :loading="btnLoading"
+                                      rounded
+                                      depressed
+                                      color="primary"
+                                      @click="validateBudget(budget.idbudget)"
+                                      >Validar</v-btn
+                                    >
+                                  </v-col>
+                                </v-row>
+                              </v-form>
                             </v-card-text>
                           </v-card>
                         </v-dialog>
@@ -380,19 +424,12 @@
 <script>
 function getAge(dataNasc) {
   var dataAtual = new Date();
-
   var anoAtual = dataAtual.getFullYear();
-
   var anoNascParts = dataNasc.split("/");
-
   var diaNasc = anoNascParts[0];
-
   var mesNasc = anoNascParts[1];
-
   var anoNasc = anoNascParts[2];
-
   var idade = anoAtual - anoNasc;
-
   var mesAtual = dataAtual.getMonth() + 1;
 
   //Se mes atual for menor que o nascimento, nao fez aniversario ainda;
@@ -422,18 +459,16 @@ function FormataStringData(data) {
   return ano + "-" + ("0" + mes).slice(-2) + "-" + ("0" + dia).slice(-2);
 }
 
-function moneyToFloat(valor){
-      
-      if(valor === ""){
-         valor =  0;
-      }else{
-         valor = valor.replace(".","");
-         valor = valor.replace(",",".");
-         valor = parseFloat(valor);
-      }
-      return valor;
-
-   }
+function moneyToFloat(valor) {
+  if (valor === "") {
+    valor = 0;
+  } else {
+    valor = valor.replace(".", "");
+    valor = valor.replace(",", ".");
+    valor = parseFloat(valor);
+  }
+  return valor;
+}
 
 export default {
   name: "DashboardInscribes",
@@ -444,7 +479,7 @@ export default {
       firstLoad: false,
       loadingVisible: false,
       inputLoading: false,
-      btnLoading:false,
+      btnLoading: false,
       dialogInscribe: false,
       dialogBudget: false,
       maskPhone: "(##) ####-####",
@@ -529,6 +564,10 @@ export default {
       inscribe: [],
       idInscribe: "",
       budget: {},
+      budgetDownPaymentRules: [(v) => !!v || "O valor de entrada é requerido"],
+      budgetDownPaymentDateRules: [
+        (v) => !!v || "A data da entrada de pagamento é requerida",
+      ],
       pickDateInscribe: false,
       contractService: { taxas: [] },
       contractFormation: {},
@@ -813,31 +852,40 @@ export default {
 
     showBudget: function (budget) {
       this.budget = budget;
-      this.budget.down_payment_date = this.$moment(budget.down_payment_date).format("DD/MM/YYYY");
+      this.budget.down_payment_date = this.$moment(
+        budget.down_payment_date
+      ).format("DD/MM/YYYY");
       this.dialogBudget = true;
     },
     closeBudget: function () {
       this.budget = {};
       this.dialogBudget = false;
     },
-    validateBudget: async function(id){
-      this.btnLoading = true;
-      var data = new FormData();
-      data.append('code', this.budget.code);
-      data.append('date', this.budget.date);
-      data.append('value', this.budget.value);
-      data.append('discount', this.budget.discount);
-      data.append('addition', this.budget.addition);
-      data.append('down_payment', this.budget.down_payment);
-      data.append('down_payment_date', FormataStringData(this.budget.down_payment_date));
-      data.append('expires_in', this.budget.expires_in);
-      data.append('status', 1);
-      data.append('inscribe_idinscribe', this.budget.inscribe_idinscribe);
-      const response = await axios.post("/budgets/validate/" + id, data, { baseURL: this.apiURL});
-      this.btnLoading = false;
-      this.closeBudget();
-      this.$swal(response.data.msg, '', response.data.icon);
-      await this.getInscribe();
+    validateBudget: async function (id) {
+      // if (this.$refs.formValidateBudget.validate) {
+        this.btnLoading = true;
+        var data = new FormData();
+        data.append("code", this.budget.code);
+        data.append("date", this.budget.date);
+        data.append("value", this.budget.value);
+        data.append("discount", this.budget.discount);
+        data.append("addition", this.budget.addition);
+        data.append("down_payment", this.budget.down_payment);
+        data.append(
+          "down_payment_date",
+          FormataStringData(this.budget.down_payment_date)
+        );
+        data.append("expires_in", this.budget.expires_in);
+        data.append("status", 1);
+        data.append("inscribe_idinscribe", this.budget.inscribe_idinscribe);
+        const response = await axios.post("/budgets/validate/" + id, data, {
+          baseURL: this.apiURL,
+        });
+        this.btnLoading = false;
+        this.closeBudget();
+        this.$swal(response.data.msg, "", response.data.icon);
+        await this.getInscribe();
+      // }
     },
   },
 

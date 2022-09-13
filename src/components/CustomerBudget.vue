@@ -82,7 +82,6 @@
                           >
                             <h4>Taxa: {{ t.name }}</h4>
                             <p>{{ t.description }}</p>
-                            
                           </div>
                           <v-skeleton-loader
                             v-show="loadingTotalTax"
@@ -320,7 +319,7 @@ export default {
     budgetSoma: 0,
     budgetOpen: false,
     budgetCancel: false,
-    distance: "",
+    distance: 0,
     tax: [],
     multipliedTaxValue: 0,
     loadingDatas: false,
@@ -368,7 +367,6 @@ export default {
       );
       this.formation = response.data.formation;
       this.service = response.data.service;
-      await this.getServiceTax();
       this.loadingDatas = false;
     },
     getEvent: async function () {
@@ -378,7 +376,10 @@ export default {
       );
       if (response.data) {
         this.events = response.data;
-        // this.distance = await this.getDistance();
+        console.log("Cidade Destino: " + response.data.address.city);
+        this.distance = await this.getDistance();
+        await this.getServiceTax();
+        await this.calculateTaxValue();
       }
       this.loadingDatas = false;
     },
@@ -389,36 +390,39 @@ export default {
       // console.log(response.data.taxas);
       this.tax = response.data.taxas;
     },
-    getDistance: async function() {
+    async getDistance() {
       return new Promise((resolve, reject) => {
-        let response;
         var service = new google.maps.DistanceMatrixService();
-        service
-          .getDistanceMatrix({
-            origins: ["Americana-SP"],
-            destinations: [this.events.address.city],
-            travelMode: "DRIVING",
-            unitSystem: google.maps.UnitSystem.METRIC,
-            avoidHighways: false,
-            avoidTolls: false
-          },
-          function(resp, status){
-            if(status == 'OK'){
-              console.log(resp);
-            } 
-          });
-      });
+        service.getDistanceMatrix(
+        {
+          origins: ["Americana-SP"],
+          destinations: [this.events.address.city],
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.METRIC,
+          avoidHighways: false,
+          avoidTolls: false,
+        }, response => {
+          // console.log(response);
+          resolve(response.rows[0].elements[0].distance.value);
+        }
+      );
+      })
+      
+      
     },
     calculateTaxValue: function () {
       var tax = this.tax;
       if (tax) {
         tax.forEach((t) => {
           if (t.multiplied == "por km") {
+            // console.log("Taxa: " + t.value);
+            // console.log("Distância: " + this.distance);
             this.multipliedTaxValue =
               parseFloat(t.value) * (parseFloat(this.distance) / 1000);
           }
         });
       }
+      // console.log("Cálculo da taxa: " + this.multipliedTaxValue);
       this.loadingTotalTax = false;
     },
     createVariantTax: async function () {
@@ -472,6 +476,7 @@ export default {
         await this.verifyBudgetExpires();
       } else {
         this.setIsBudget(false);
+        await this.getEvent();
       }
       this.budgetOpen =
         !this.access.isBudget || this.budgetCancel ? true : false;
@@ -520,9 +525,7 @@ export default {
     if (this.$session.exists()) {
       this.setUserNow(this.$session.get("userData"));
       await this.setIsEvent();
-      await this.getEvent();
       await this.getInscribe();
-      await this.calculateTaxValue();
       await this.getBudget();
     }
   },
@@ -536,7 +539,6 @@ export default {
   },
   mounted() {
     // this.checkBudget();
-    
   },
 };
 </script>

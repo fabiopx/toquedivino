@@ -3,23 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once(APPPATH.'models/Crud.php');
 
 class Account extends Crud{
-    public $name;
     public $email;
     public $password;
     public $status;
-    public $phone;
-    public $photo;
     public $pin;
     public $access;
 
     public function createAccount($data = null){
         if(is_null($data)){
-            $this->name = $_POST['name'];
             $this->email = $_POST['email'];
             $this->password = $_POST['password'];
             $this->status = $_POST['status'];
-            $this->phone = $_POST['phone'];
-            $this->photo = $_POST['photo'];
             $this->pin = code_generate();
             $this->access = $_POST['access'];
             $data = $this;
@@ -49,12 +43,9 @@ class Account extends Crud{
     }
 
     public function updateAccount($where){
-        $this->name = $_POST['name'];
         $this->email = $_POST['email'];
         $this->password = $_POST['password'];
         $this->status = $_POST['status'];
-        $this->phone = $_POST['phone'];
-        $this->photo = $_POST['photo'];
         $this->pin = code_generate();
         $this->access = $_POST['access'];
         $data = $this;
@@ -70,7 +61,6 @@ class Account extends Crud{
 
     public function updateAccountCustomers($where){
         $data = array(
-            'name' => $_POST['name'],
             'email' => $_POST['email'],
             'password' => $_POST['password'],
             'photo' => $_POST['photo'],

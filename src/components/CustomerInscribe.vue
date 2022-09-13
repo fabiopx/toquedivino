@@ -124,6 +124,8 @@
                       <v-text-field
                         label="CPF"
                         v-model="inscribeCpf"
+                        @input="pendente=true"
+                        @change="verificarCpf"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
@@ -183,15 +185,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-function toDateFormat(input) {
-  var datePart = input.match(/\d+/g),
-    year = datePart[0], // get only two digits
-    month = datePart[1],
-    day = datePart[2];
-
-  return day + "/" + month + "/" + year;
-}
-
 function FormataStringData(data) {
   var dia = data.split("/")[0];
   var mes = data.split("/")[1];
@@ -202,19 +195,12 @@ function FormataStringData(data) {
 
 function getAge(dataNasc) {
   var dataAtual = new Date();
-
   var anoAtual = dataAtual.getFullYear();
-
   var anoNascParts = dataNasc.split("/");
-
   var diaNasc = anoNascParts[0];
-
   var mesNasc = anoNascParts[1];
-
   var anoNasc = anoNascParts[2];
-
   var idade = anoAtual - anoNasc;
-
   var mesAtual = dataAtual.getMonth() + 1;
 
   //Se mes atual for menor que o nascimento, nao fez aniversario ainda;
@@ -227,7 +213,6 @@ function getAge(dataNasc) {
     if (mesAtual == mesNasc) {
       if (new Date().getDate() < diaNasc) {
         //Se a data atual for menor que o dia de nascimento ele ainda nao fez aniversario
-
         idade--;
       }
     }
@@ -236,9 +221,24 @@ function getAge(dataNasc) {
   return idade;
 }
 
-function convertToMMDDYYYY(date) {
-  return date[1] + "-" + date[0] + "-" + date[2];
-}
+const validar = (cpf) => checkAll(prepare(cpf));
+
+const notDig = (i) => ![".", "-", " "].includes(i);
+const prepare = (cpf) => cpf.trim().split("").filter(notDig).map(Number);
+const is11Len = (cpf) => cpf.length === 11;
+const notAllEquals = (cpf) => !cpf.every((i) => cpf[0] === i);
+const onlyNum = (cpf) => cpf.every((i) => !isNaN(i));
+
+const calcDig = (limit) => (a, i, idx) => a + i * (limit + 1 - idx);
+const somaDig = (cpf, limit) => cpf.slice(0, limit).reduce(calcDig(limit), 0);
+const resto11 = (somaDig) => 11 - (somaDig % 11);
+const zero1011 = (resto11) => ([10, 11].includes(resto11) ? 0 : resto11);
+
+const getDV = (cpf, limit) => zero1011(resto11(somaDig(cpf, limit)));
+const verDig = (pos) => (cpf) => getDV(cpf, pos) === cpf[pos];
+
+const checks = [is11Len, notAllEquals, onlyNum, verDig(9), verDig(10)];
+const checkAll = (cpf) => checks.map((f) => f(cpf)).every((r) => !!r);
 
 export default {
   data: () => ({
@@ -286,6 +286,8 @@ export default {
     inscribeServiceTax: "",
     inscribeAgree: false,
     addInstruments: false,
+    valido: false,
+    pendente: true
   }),
 
   methods: {
@@ -325,6 +327,13 @@ export default {
         this.$swal("Responsável precisa ter mais que 18 anos");
       }
       // console.log(getAge(date));
+    },
+    verificarCpf() {
+      this.valido = validar(this.inscribeCpf);
+      if(!this.valido){
+        this.$swal("CPF inválido!");
+      }
+      this.pendente = false;
     },
     openAddInstruments: function () {
       this.addInstruments = true;
@@ -423,7 +432,7 @@ export default {
             );
             this.inscribePhone = resp.phone;
             this.inscribeMobile = resp.mobile;
-            this.inscribeAddress = (resp.address) ? resp.address : "";
+            this.inscribeAddress = resp.address ? resp.address : "";
             this.inscribeCpf = resp.cpf;
             this.inscribeRg = resp.rg;
             this.inscribeStatus = resp.status;
@@ -458,7 +467,7 @@ export default {
       }).then((response) => {
         this.$swal(response.data.msg, "", response.data.icon);
         this.getInscribe();
-        if(this.access.first) this.$router.push('/customer/home');
+        if (this.access.first) this.$router.push("/customer/home");
       });
       // console.log(this.$moment(FormataStringData(this.inscribeBirthdate)).format("YYYY-MM-DD"));
     },

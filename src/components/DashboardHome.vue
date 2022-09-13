@@ -19,7 +19,7 @@
                 depressed
                 color="blue-grey"
                 class="white--text"
-                @click="$router.push({path: cards.link})"
+                @click="$router.push(card.link)"
               >
                 mais...</v-btn
               >
@@ -42,12 +42,12 @@ export default {
         {
           title: "Usuários",
           link: "/dashboard/users",
-          img: process.env.VUE_APP_IMGPATH + "undraw_people_re_8spw.svg"
+          img: process.env.VUE_APP_IMGPATH + "undraw_usability_testing_re_uu1g.svg"
         },
         {
           title: "Serviços",
           link: "/dashboard/services",
-          img: process.env.VUE_APP_IMGPATH
+          img: process.env.VUE_APP_IMGPATH + "undraw_operating_system_re_iqsc.svg"
         },
         {
           title: "Formações",
