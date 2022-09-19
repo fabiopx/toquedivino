@@ -71,12 +71,20 @@
                           <v-text-field
                             v-model="accountPhone"
                             v-mask="maskTel(accountPhone)"
-                            :rules="accountPhoneRules"
                             label="Telefone do Usuário"
-                            required
                           >
                           </v-text-field>
                         </v-col>
+                        <v-col>
+                          <v-text-field
+                          v-model="accountMobile"
+                          v-mask="maskTel(accountMobile)"
+                          label="Celular do Usuário"
+                          ></v-text-field>
+                        </v-col>
+                        
+                      </v-row>
+                      <v-row>
                         <v-col>
                           <v-select
                             v-model="accountAccessType"
@@ -89,8 +97,6 @@
                           >
                           </v-select>
                         </v-col>
-                      </v-row>
-                      <v-row>
                         <v-col>
                           <v-text-field
                             v-model="accountPassword"
@@ -111,42 +117,7 @@
                           ></v-switch>
                         </v-col>
                       </v-row>
-                      <v-row>
-                        <v-col>
-                          <v-file-input
-                            v-model="currentFile"
-                            label="Foto"
-                            chips
-                            @change="readAccountPhoto"
-                          ></v-file-input>
-                          <v-progress-linear
-                            v-show="progressShow"
-                            v-model="progressUpload"
-                            class="grey--text"
-                            height="20"
-                          >
-                            {{ progressUpload }} %</v-progress-linear
-                          >
-                          <v-alert
-                            v-show="uploadSuccess"
-                            type="success"
-                            transition="fade-transition"
-                            >{{ uploadMsg }}</v-alert
-                          >
-                          <v-alert
-                            v-show="uploadError"
-                            type="error"
-                            transition="fade-transition"
-                            >{{ uploadMsg }}</v-alert
-                          >
-                        </v-col>
-                        <v-col>
-                          <v-avatar>
-                            <v-img :src="accountPhoto"></v-img>
-                          </v-avatar>
-                          <span class="mr-3">{{ accountName }}</span>
-                        </v-col>
-                      </v-row>
+                      
                     </v-container>
                   </v-form>
                 </v-card>
@@ -173,18 +144,15 @@
                 :items="users"
                 :items-per-page="5"
               >
-                <template v-slot:item.access="{ item }">
-                  <span v-show="item.access == 0">Admin</span>
-                  <span v-show="item.access == 1">Usuário</span>
-                  <span v-show="item.access == 2">Cliente</span>
-                  <span v-show="item.access == 3">Músico</span>
-                  <span v-show="item.access == 4">Assinante</span>
+                <template v-slot:item.account.access="{ item }">
+                  <span v-show="item.account.access == 0">Admin</span>
+                  <span v-show="item.account.access == 1">Usuário</span>
                 </template>
-                <template v-slot:item.status="{ item }">
-                  <v-chip v-show="item.status == 1" color="primary">
+                <template v-slot:item.account.status="{ item }">
+                  <v-chip v-show="item.account.status == 1" color="primary">
                     Ativo</v-chip
                   >
-                  <v-chip v-show="item.status == 0"> Inativo</v-chip>
+                  <v-chip v-show="item.account.status == 0"> Inativo</v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <v-btn color="blue" icon @click="editUsers(item)">
@@ -194,7 +162,7 @@
                     v-if="item.access != 0 && item.access != 4"
                     color="red"
                     icon
-                    @click="deleteUser(item.idaccount)"
+                    @click="deleteUser(item.account.idaccount)"
                   >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
@@ -242,28 +210,22 @@ export default {
         (v) => /.+@.+/.test(v) || "Insira um E-mail válido",
       ],
       accountPhone: "",
-      accountPhoneRules: [(v) => !!v || "O campo CELULAR é requerido"],
+      accountPhoneRules: [(v) => !!v || "O campo TELEFONE é requerido"],
+      accountMobile: "",
+      accountMobileRules: [(v) => !!v || "O campo CELULAR é requerido"],
       accountAccessType: "",
       accountAccessTypeRules: [
         (v) => !!v || "Por favor selecione um TIPO DE ACESSO",
       ],
       accessType: [
         {
-          name: "User",
+          name: "Administrador de sistema",
+          value: "0",
+        },
+        {
+          name: "Usuário de sistema",
           value: "1",
-        },
-        {
-          name: "Cliente",
-          value: "2",
-        },
-        {
-          name: "Músicos",
-          value: "3",
-        },
-        {
-          name: "Assinante",
-          value: "4",
-        },
+        }
       ],
       accountPassword: "",
       accountPasswordRules: [(v) => !!v || "O campo SENHA é requerido"],
@@ -278,7 +240,7 @@ export default {
         },
         {
           text: "E-mail",
-          value: "email",
+          value: "account.email",
         },
         {
           text: "Telefone",
@@ -286,11 +248,11 @@ export default {
         },
         {
           text: "Acesso",
-          value: "access",
+          value: "account.access",
         },
         {
           text: "Status",
-          value: "status",
+          value: "account.status",
         },
         {
           text: "Ações",
@@ -382,7 +344,7 @@ export default {
 
     getUsers: async function () {
       this.firstLoad = true;
-      const response = await axios.get(this.apiURL + "/user/get");
+      const response = await axios.get(this.apiURL + "/users/get");
       this.users = response.data;
       this.stopContentLoading();
     },
@@ -390,14 +352,14 @@ export default {
     editUsers: function (item) {
       this.dialogUsers = true;
       this.crud = "u";
-      this.accountId = item.idaccount;
+      this.accountId = item.account.idaccount;
       this.accountName = item.name;
-      this.accountEmail = item.email;
+      this.accountEmail = item.account.email;
       this.accountPhone = item.phone;
-      this.accountAccessType = item.access;
-      this.accountPassword = item.password;
-      this.accountStatus = item.status;
-      this.accountPhoto = item.photo;
+      this.accountMobile = item.mobile;
+      this.accountAccessType = item.account.access;
+      this.accountPassword = item.account.password;
+      this.accountStatus = item.account.status;
     },
 
     saveUser: function () {
@@ -415,13 +377,10 @@ export default {
         data.append("password", this.accountPassword);
         data.append("status", this.accountStatus);
         data.append("phone", this.accountPhone);
-        data.append(
-          "photo",
-          this.currentFile ? "assets/uploads/" + this.currentFile.name : ""
-        );
+        data.append("mobile", this.accountMobile);
         data.append("access", this.accountAccessType);
         if (this.crud == "u") {
-          axios(this.apiURL + "/user/update/" + this.accountId, {
+          axios(this.apiURL + "/users/update/" + this.accountId, {
             method: "POST",
             data: data,
           }).then((response) => {
@@ -433,6 +392,7 @@ export default {
             this.accountName = "";
             this.accountEmail = "";
             this.accountPhone = "";
+            this.accountMobile = "";
             this.accountAccessType = "";
             this.accountPassword = "";
             this.accountPhoto = process.env.VUE_APP_IMGPATH + "profile.svg";
@@ -441,21 +401,17 @@ export default {
             this.getUsers();
           });
         } else if (this.crud == "c") {
-          axios(this.apiURL + "/user/create", {
+          axios(this.apiURL + "/users/create", {
             method: "POST",
             data: data,
           }).then((response) => {
-            this.loadingVisible = false;
-            this.progressShow = false;
-            this.uploadError = false;
-            this.uploadSuccess = false;
             this.accountId = "";
             this.accountName = "";
             this.accountEmail = "";
             this.accountPhone = "";
+            this.accountMobile = "";
             this.accountAccessType = "";
             this.accountPassword = "";
-            this.accountPhoto = process.env.VUE_APP_IMGPATH + "profile.svg";
             this.users = [];
             this.$swal(response.data.msg, "", response.data.icon);
             this.getUsers();
@@ -471,7 +427,7 @@ export default {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.get(this.apiURL + "/user/delete/" + id).then((response) => {
+          axios.get(this.apiURL + "/users/delete/" + id).then((response) => {
             this.$swal(response.data.msg, "", response.data.icon);
             this.getUsers();
           });

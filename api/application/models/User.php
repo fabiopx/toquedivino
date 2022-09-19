@@ -6,21 +6,20 @@ class User extends Crud{
     public $name;
     public $phone;
     public $mobile;
+    public $account_idaccount;
 
-    public function createUser(){
-        $post = $this->input->post();
-        $this->name = $post['name'];
-        $this->phone = $post['phone'];
-        $this->mobile = $post['mobile'];
-        $data = $this;
-
-        if($this->create('user', $data)){
-            return $this->response('success', 'Usuário cirado com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
+    public function createUser($data = null){
+        if(is_null($data)){
+            $post = $this->input->post();
+            $this->name = $post['name'];
+            $this->phone = $post['phone'];
+            $this->mobile = $post['mobile'];
+            $this->account = $post['account_idaccount'];
+            $data = $this;
         }
+        
+
+        return $this->create('user', $data);
     }
 
     public function readUser($where = null){
@@ -31,31 +30,21 @@ class User extends Crud{
         }
     }
 
-    public function updateUser($where){
-        $post = $this->input->post();
-        $this->name = $post['name'];
-        $this->phone = $post['phone'];
-        $this->mobile = $post['mobile'];
-        $data = $this;
+    public function updateUser($where, $data = null){
+        if(is_null($data)){
+            $post = $this->input->post();
+            $this->name = $post['name'];
+            $this->phone = $post['phone'];
+            $this->mobile = $post['mobile'];
+            $this->account = $post['account_idaccount'];
+            $data = $this;
+        }  
 
-        if($this->update('user', $where, $data)){
-            return $this->response('success', 'Usuário editado com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
-        }
+        return $this->update('user', $where, $data);
 
     }
 
     public function deleteUser($where){
-        $response = $this->delete('user', $where);
-        if($response !== false){
-            return  $this->response('success', 'Conta excluída com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
-        }
+        return $this->delete('user', $where);
     }
 }

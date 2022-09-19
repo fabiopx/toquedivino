@@ -19,13 +19,7 @@ class Account extends Crud{
             $data = $this;
         }
         
-        if($this->create('account', $data)){
-            return $this->response('success', 'Conta criada com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
-        }
+        return $this->create('account', $data);
     }
 
     public function readAccount($where = null){
@@ -50,13 +44,7 @@ class Account extends Crud{
         $this->access = $_POST['access'];
         $data = $this;
 
-        if($this->update('account', $where, $data)){
-            return $this->response('success', 'Conta editada com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
-        }
+        return $this->update('account', $where, $data);
     }
 
     public function updateAccountCustomers($where){
@@ -66,24 +54,11 @@ class Account extends Crud{
             'photo' => $_POST['photo'],
         );
 
-        if($this->update('account', $where, $data)){
-            return $this->response('success', 'Conta editada com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
-        }
+        return $this->update('account', $where, $data);
     }
 
     public function deleteAccount($where){
-        $response = $this->delete('account', $where);
-        if($response !== false){
-            return  $this->response('success', 'Conta excluída com sucesso');
-        } else{
-            $this->db->db_debug = false;
-            $error = $this->db->error();
-            return $this->response('error', $error['message']);
-        }
+        return $this->delete('account', $where);
     }
 
     public function deleteAccountByID($id){
