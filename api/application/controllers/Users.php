@@ -122,6 +122,38 @@ class Users extends CI_Controller{
 
     public function loginCustomer(){
         $this->load->model('account');
-        echo json_encode($this->account->loginCustomer());
+        $this->load->model('inscribe');
+        
+        $login = $this->account->loginCustomer();
+        $resp = [];
+
+        if($login->num_rows() != 0){
+            if($login->row()->access == 2){
+                $user = $this->inscribe->readInscribe(['account_idaccount' => $login->row()->idaccount]);
+                $resp['userNow']['logged'] = true;
+                $resp['userNow']['login'] = false;
+                $resp['userNow']['name'] = $user->row()->accountable;
+                $resp['userNow']['id'] = $login->row()->idaccount;
+                $resp['alert']['status'] = false;
+                $resp['alert']['msg'] = '';
+            } else{
+                $resp['userNow']['logged'] = false;
+                $resp['userNow']['login'] = true;
+                $resp['userNow']['name'] = 'Usuário';
+                $resp['userNow']['id'] = '';
+                $resp['alert']['status'] = true;
+                $resp['alert']['msg'] = 'Usuário não autorizado.';
+            }
+            
+        } else{
+            $resp['userNow']['logged'] = false;
+            $resp['userNow']['login'] = true;
+            $resp['userNow']['name'] = '';
+            $resp['userNow']['id'] = '';
+            $resp['alert']['status'] = true;
+            $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
+        }
+
+        echo json_encode($resp);
     }
 }

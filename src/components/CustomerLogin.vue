@@ -78,7 +78,7 @@ export default {
       let data = new FormData();
       data.append("email", this.loginData.email);
       data.append("password", this.loginData.password);
-      const response = await axios(this.apiURL + "/user/loginCustomer", {
+      const response = await axios(this.apiURL + "/users/loginCustomer", {
         method: "POST",
         data: data,
       });

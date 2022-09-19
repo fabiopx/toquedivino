@@ -81,7 +81,6 @@ class Account extends Crud{
                 $resp['userNow']['login'] = false;
                 $resp['userNow']['name'] = $login->row()->name;
                 $resp['userNow']['id'] = $login->row()->idaccount;
-                $resp['userNow']['photo'] = ($login->row()->photo) ?: 'assets/profile.svg';
                 $resp['alert']['status'] = false;
                 $resp['alert']['msg'] = '';
             } else{
@@ -89,7 +88,6 @@ class Account extends Crud{
                 $resp['userNow']['login'] = true;
                 $resp['userNow']['name'] = 'Usuário';
                 $resp['userNow']['id'] = '';
-                $resp['userNow']['photo'] = 'assets/profile.svg';
                 $resp['alert']['status'] = true;
                 $resp['alert']['msg'] = 'Usuário não autorizado.';
             }
@@ -113,39 +111,7 @@ class Account extends Crud{
             'password' => $_POST['password']
         );
 
-        $login = $this->ready('account', $where);
-        $resp = array();
-
-        if($login->num_rows() != 0){
-            if($login->row()->access == 2){
-                $resp['userNow']['logged'] = true;
-                $resp['userNow']['login'] = false;
-                $resp['userNow']['name'] = $login->row()->name;
-                $resp['userNow']['id'] = $login->row()->idaccount;
-                $resp['userNow']['photo'] = ($login->row()->photo) ?: 'assets/profile.svg';
-                $resp['alert']['status'] = false;
-                $resp['alert']['msg'] = '';
-            } else{
-                $resp['userNow']['logged'] = false;
-                $resp['userNow']['login'] = true;
-                $resp['userNow']['name'] = 'Usuário';
-                $resp['userNow']['id'] = '';
-                $resp['userNow']['photo'] = 'assets/profile.svg';
-                $resp['alert']['status'] = true;
-                $resp['alert']['msg'] = 'Usuário não autorizado.';
-            }
-            
-        } else{
-            $resp['userNow']['logged'] = false;
-            $resp['userNow']['login'] = true;
-            $resp['userNow']['name'] = '';
-            $resp['userNow']['id'] = '';
-            $resp['userNow']['photo'] = 'assets/profile.svg';
-            $resp['alert']['status'] = true;
-            $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
-        }
-
-        return $resp;
+        return $this->ready('account', $where);
     }
 
     public function signWithPassword(){
