@@ -6,7 +6,7 @@
           <v-card>
             <v-toolbar color="grey darken-4" dark>
               <v-toolbar-title>
-                <h2><v-icon class="mr-3">mdi-account</v-icon>Gerenciar dados</h2></v-toolbar-title>
+                <h2><v-icon class="mr-3">mdi-account</v-icon>Editar dados</h2></v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-skeleton-loader
@@ -16,14 +16,14 @@
               >
               </v-skeleton-loader>
               <v-form v-show="!loadingAccountFields" ref="formAccount">
-                <v-row>
+                <!-- <v-row>
                   <v-col>
                     <v-text-field
                       v-model="accountName"
                       label="Nome"
                     ></v-text-field>
                   </v-col>
-                </v-row>
+                </v-row> -->
                 <v-row>
                   <v-col>
                     <v-text-field
@@ -38,7 +38,7 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <v-row>
+                <!-- <v-row>
                   <v-col>
                     <v-file-input
                       v-model="currentFile"
@@ -77,7 +77,7 @@
                     </v-avatar>
                     <span>{{ accountName }}</span>
                   </v-col>
-                </v-row>
+                </v-row> -->
               </v-form>
             </v-card-text>
             <v-card-actions>
@@ -99,7 +99,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-var imgPath = "assets/";
+
 export default {
   data: () => ({
     apiURL: process.env.VUE_APP_URL,
@@ -108,7 +108,6 @@ export default {
     accountEmail: "",
     accountPassword: "",
     accountPhone: "",
-    accountPhoto: process.env.VUE_APP_IMGPATH + "profile.svg",
     accountBlob: null,
     currentFile: undefined,
     progressUpload: 0,
@@ -126,17 +125,13 @@ export default {
     getAccount: function () {
       this.loadingAccountFields = true;
       axios
-        .get(this.apiURL + "/user/get/" + this.userNow.id)
+        .get(this.apiURL + "/inscribes/getInscribeAccount/" + this.userNow.id)
         .then((response) => {
-          this.accountName = response.data.name;
-          this.accountEmail = response.data.email;
-          this.accountPassword = response.data.password;
-          this.accountPhoto = response.data.photo
-            ? response.data.photo
-            : process.env.VUE_APP_IMGPATH + "profile.svg";
+          this.accountName = response.data.accountable;
+          this.accountEmail = response.data.account.email;
+          this.accountPassword = response.data.account.password;
           this.loadingAccountFields = false;
           this.userData = this.$session.get("userData");
-          this.userData.photo = this.accountPhoto;
           this.userData.name = this.accountName;
           this.$session.remove("userData");
           this.$session.set("userData", this.userData);
@@ -191,21 +186,21 @@ export default {
 
     saveAccount: function () {
       let data = new FormData();
-      data.append("name", this.accountName);
       data.append("email", this.accountEmail);
       data.append("password", this.accountPassword);
-      data.append(
-        "photo",
-        this.currentFile
-          ? process.env.VUE_APP_UPLOAD + this.currentFile.name
-          : this.accountPhoto
-      );
+      // data.append(
+      //   "photo",
+      //   this.currentFile
+      //     ? process.env.VUE_APP_UPLOAD + this.currentFile.name
+      //     : this.accountPhoto
+      // );
       this.loading = true;
-      axios(this.apiURL + "/user/updateCustomer/" + this.userNow.id, {
+      axios(this.apiURL + "/inscribes/updateInscribeAccount/" + this.userNow.id, {
         method: "POST",
         data: data,
       }).then((response) => {
         this.loading = false;
+        this.$swal(response.data.msg, "", response.data.icon);
         this.getAccount();
       });
     },
@@ -216,6 +211,12 @@ export default {
       this.setUserNow(this.$session.get("userData"));
     }
     this.getAccount();
+  },
+
+  beforeCreated: function(){
+    if(!this.$session.exists()){
+      this.$router.push("/customer/login");
+    }
   },
 
   computed: {

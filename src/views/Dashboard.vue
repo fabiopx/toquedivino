@@ -3,9 +3,6 @@
     <v-navigation-drawer v-model="drawer" temporary color="grey darken-4" app>
       <v-list>
         <v-list-item class="px-2" dark>
-          <v-list-item-avatar>
-            <v-img :src="loginNow.photo"></v-img>
-          </v-list-item-avatar>
           <v-list-item-title>{{ loginNow.name }}</v-list-item-title>
         </v-list-item>
       </v-list>

@@ -6,13 +6,13 @@
           <v-toolbar-title><h2>Seja bem-vindo!</h2></v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-sheet v-show="!loadingData2" class="ml-4 mt-4 pa-3" outlined>
+          <v-sheet v-show="!loadingData2" class="ml-4 mt-4 pa-3" rounded="lg" color="grey lighten-4">
             <div class="d-lg-flex justify-lg-space-around mt-5">
               <v-img 
                 max-width="200" class="mb-3"
                 :src="require('../assets/undraw_setup_re_y9w8.svg')"
               ></v-img>
-              <v-sheet outlined rounded>
+              <v-sheet rounded="lg">
                 <v-skeleton-loader
                   v-show="loadingData1"
                   type="sentences"

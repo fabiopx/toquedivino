@@ -3,9 +3,6 @@
     <v-navigation-drawer dark v-model="drawer" app color="grey darken-4">
       <v-list dense>
         <v-list-item>
-          <v-list-item-avatar>
-            <v-img :src="userNow.photo"></v-img>
-          </v-list-item-avatar>
         </v-list-item>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">

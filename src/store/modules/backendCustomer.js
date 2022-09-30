@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const state = {
-  userNow: { id: "", name: "Customer", photo: process.env.VUE_APP_IMGPATH + "profile.svg", logged: false, login: true },
+  userNow: { id: "", name: "Customer", logged: false, login: true },
   alert: { status: false, msg: "" },
   inscribeID: null,
   startedRepertory: false,

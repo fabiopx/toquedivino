@@ -50,8 +50,7 @@ class Account extends Crud{
     public function updateAccountCustomers($where){
         $data = array(
             'email' => $_POST['email'],
-            'password' => $_POST['password'],
-            'photo' => $_POST['photo'],
+            'password' => $_POST['password']
         );
 
         return $this->update('account', $where, $data);

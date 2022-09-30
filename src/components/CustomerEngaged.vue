@@ -18,495 +18,512 @@
               >
               </v-skeleton-loader>
               <v-form v-show="!loadingEngagedFields" ref="formEngaged">
-                <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <h2>Dados da noiva</h2>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <v-avatar
-                        size="80"
-                        color="grey lighten-4"
-                        @click="openUploadPhoto('engagedBrideUploadPhoto')"
-                      >
-                        <v-img
-                          :src="
-                            engagedBrideBlob
-                              ? engagedBrideBlob
-                              : engagedBridePhoto
-                          "
-                        ></v-img>
-                      </v-avatar>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <v-checkbox
-                        color="grey darken-4"
-                        v-model="engagedBrideResponsibleFor"
-                        label="Responsável pelo contrato"
-                      >
-                      </v-checkbox>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" lg="4">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        label="Nome"
-                        v-model="engagedBrideName"
-                        :rules="engagedBrideNameRules"
-                        required
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="4">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        v-mask="maskTel(engagedBridePhone)"
-                        label="Telefone"
-                        v-model="engagedBridePhone"
-                        :rules="engagedBridePhoneRules"
-                        required
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="4">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        v-mask="maskTel(engagedBrideMobile)"
-                        label="Celular"
-                        v-model="engagedBrideMobile"
-                        :rules="engagedBrideMobileRules"
-                        required
-                      >
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="4" lg="2">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        label="CEP"
-                        v-model="engagedBrideAddress.zipcode"
-                        @blur="getCEP('engagedBrideAddress')"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="8" lg="6">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        :loading="inputLoading"
-                        label="Logradouro"
-                        v-model="engagedBrideAddress.street"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        label="Número"
-                        v-model="engagedBrideAddress.number"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        label="Complemento"
-                        v-model="engagedBrideAddress.complement"
-                      >
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        :loading="inputLoading"
-                        label="Bairro"
-                        v-model="engagedBrideAddress.neighborhood"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        :loading="inputLoading"
-                        label="Cidade"
-                        v-model="engagedBrideAddress.city"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        :loading="inputLoading"
-                        label="Estado"
-                        v-model="engagedBrideAddress.state"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        :loading="inputLoading"
-                        label="País"
-                        v-model="engagedBrideAddress.country"
-                        :rules="engagedBrideAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        v-model="engagedBrideCpf"
-                        label="CPF"
-                        v-mask="maskCpf"
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        v-model="engagedBrideRg"
-                        label="RG"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        v-model="engagedBrideBirthdate"
-                        label="Data de nascimento"
-                        v-mask="maskBirthdate"
-                        @blur="is18(engagedBrideBirthdate)"
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-female"
-                        v-model="engagedBrideEmail"
-                        label="E-mail"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col>
-                      <h2>Dados do noivo</h2>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <v-avatar
-                        size="80"
-                        color="grey lighten-4"
-                        @click="openUploadPhoto('engagedGroomUploadPhoto')"
-                      >
-                        <v-img
-                          :src="
-                            engagedGroomBlob
-                              ? engagedGroomBlob
-                              : engagedGroomPhoto
-                          "
-                        ></v-img>
-                      </v-avatar>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <v-checkbox
-                        color="grey darken-4"
-                        v-model="engagedGroomResponsibleFor"
-                        label="Responsável pelo contrato"
-                      >
-                      </v-checkbox>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" lg="4">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        label="Nome"
-                        v-model="engagedGroomName"
-                        :rules="engagedGroomNameRules"
-                        required
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="4">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        label="Telefone"
-                        v-model="engagedGroomPhone"
-                        v-mask="maskTel(engagedGroomPhone)"
-                        :rules="engagedGroomPhoneRules"
-                        required
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="4">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        label="Celular"
-                        v-model="engagedGroomMobile"
-                        :rules="engagedGroomMobileRules"
-                        v-mask="maskTel(engagedGroomMobile)"
-                        required
-                      >
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="4" lg="2">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        label="CEP"
-                        v-model="engagedGroomAddress.zipcode"
-                        @blur="getCEP('engagedGroomAddress')"
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="8" lg="6">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        :loading="inputLoading"
-                        label="Logradouro"
-                        v-model="engagedGroomAddress.street"
-                        :rules="engagedGroomAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        label="Número"
-                        v-model="engagedGroomAddress.number"
-                        :rules="engagedGroomAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="2">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        label="Complemento"
-                        v-model="engagedGroomAddress.complement"
-                      >
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        :loading="inputLoading"
-                        label="Bairro"
-                        v-model="engagedGroomAddress.neighborhood"
-                        :rules="engagedGroomAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        :loading="inputLoading"
-                        label="Cidade"
-                        v-model="engagedGroomAddress.city"
-                        :rules="engagedGroomAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        :loading="inputLoading"
-                        label="Estado"
-                        v-model="engagedGroomAddress.state"
-                        :rules="engagedGroomAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        :loading="inputLoading"
-                        label="País"
-                        v-model="engagedGroomAddress.country"
-                        :rules="engagedGroomAddressRules"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        v-model="engagedGroomCpf"
-                        label="CPF"
-                        v-mask="maskCpf"
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        v-model="engagedGroomRg"
-                        label="RG"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        v-model="engagedGroomBirthdate"
-                        label="Data de nascimento"
-                        v-mask="maskBirthdate"
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" lg="3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-human-male"
-                        v-model="engagedGroomEmail"
-                        label="E-mail"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-                <v-container v-if="selectEngaged">
-                  <v-row>
-                    <v-col>
-                      <v-sheet
-                        elevation="1"
-                        color="grey lighten-4"
-                        class="pa-4"
-                      >
-                        <h2>Serviços do casamento</h2>
-                        Saber os demais serviços do casamento nos ajuda a
-                        alinhar horários, posição da banda etc.
-                        <v-btn
-                          text
-                          color="red darken-4"
-                          dark
-                          rounded
-                          @click="formWeddingServicesAdd()"
+                <v-sheet color="grey lighten-4" class="mb-4" rounded="lg">
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <h2>Dados da noiva</h2>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="6">
+                        <v-avatar
+                          size="80"
+                          color="grey lighten-4"
+                          @click="openUploadPhoto('engagedBrideUploadPhoto')"
                         >
-                          <v-icon class="mr-3">mdi-plus-circle</v-icon>
-                          Cadastrar
-                        </v-btn>
-                        <div v-if="weddingServices.length != 0">
-                          <v-list two-line>
-                            <v-list-item
-                              v-for="wservice in weddingServices"
-                              :key="wservice.idwedding_services"
-                            >
-                              <v-list-item-content>
-                                <v-list-item-title>{{
-                                  wservice.companyname
-                                }}</v-list-item-title>
-                                <v-list-item-subtitle>
-                                  Endereço: {{ wservice.address }}<br />
-                                  Telefone: {{ wservice.phone }}<br />
-                                  Nome de contato: {{ wservice.contactname }}
-                                </v-list-item-subtitle>
-                              </v-list-item-content>
-                              <v-list-item-action>
-                                <v-btn
-                                  icon
-                                  @click="
-                                    deleteWeddingService(
-                                      wservice.idwedding_services
-                                    )
-                                  "
-                                  ><v-icon>mdi-delete</v-icon></v-btn
-                                >
-                                <v-btn
-                                  icon
-                                  @click="formWeddingServicesEdit(wservice)"
-                                  ><v-icon>mdi-pencil</v-icon></v-btn
-                                >
-                              </v-list-item-action>
-                            </v-list-item>
-                          </v-list>
-                        </div>
-                        <div class="pa-5 font-weight-bold" v-else>
-                          Não existe empresa cadastrada
-                        </div>
-                      </v-sheet>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col>
-                      <v-sheet elevation="1" class="pa-4 grey lighten-4">
-                        <h2>Redes Sociais</h2>
-                        <v-form ref="formSocialNetworks">
-                          <v-select
-                            v-model="socialNetworksSel"
-                            label="Selecione a Rede Social"
-                            :items="socialNetworksItems"
-                            item-text="name"
-                            :rules="socialNetworksSelRule"
-                            return-object
-                          >
-                            <template v-slot:append>
-                              <v-icon>{{ socialNetworksSel.icon }}</v-icon>
-                            </template>
-                          </v-select>
-                          <v-select
-                            v-model="socialNetworksEngaged"
-                            label="De quem é a Rede Social?"
-                            :items="socialNetworksEngagedItems"
-                            item-text="name"
-                            :rules="socialNetworksEngagedRule"
-                            return-object
-                          ></v-select>
-                          <v-text-field
-                            v-model="socialNetworksLink"
-                            label="Link do perfil público"
-                            prefix="https://"
-                            :rules="socialNetworksLinkRule"
-                          ></v-text-field>
-                        </v-form>
-                        <v-btn
-                          text
-                          rounded
-                          color="red darken-4"
-                          @click="saveSocialNetworks()"
-                          >
-                          <v-icon v-if="!socialNetworksEdit" class="mr-3">mdi-plus-circle</v-icon>
-                          <v-icon v-if="socialNetworksEdit" class="mr-3">mdi-content-save</v-icon>
-                          <span v-if="!socialNetworksEdit">Adicionar</span>
-                          <span v-if="socialNetworksEdit">Atualizar</span>
-                          </v-btn
+                          <v-img
+                            :src="
+                              engagedBrideBlob
+                                ? engagedBrideBlob
+                                : engagedBridePhoto
+                            "
+                          ></v-img>
+                        </v-avatar>
+                      </v-col>
+                      <v-col cols="12" md="6">
+                        <v-checkbox
+                          color="grey darken-4"
+                          v-model="engagedBrideResponsibleFor"
+                          label="Responsável pelo contrato"
                         >
-                        <v-btn v-if="socialNetworksEdit" text rounded color="red darken-4" @click="socialNetworksFormEmpty()">Limpar</v-btn>
-                        <v-divider class="mt-3 mb-3"></v-divider>
-                        <v-chip
-                          v-for="social in socialNetworks"
-                          :key="social.id"
-                          class="pa-5 mr-3"
+                        </v-checkbox>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" lg="4">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          label="Nome"
+                          v-model="engagedBrideName"
+                          :rules="engagedBrideNameRules"
+                          required
                         >
-                          <v-btn icon @click="openLink(social.link)"><v-icon>{{ social.icon }}</v-icon></v-btn>
-                          {{ social.name }}
-                          {{ socialNetworksEngagedReturn(social.engaged) }}
-
-                          <v-btn icon class="ml-3" @click="socialNetworksOpenEdit(social)"
-                            ><v-icon>mdi-pencil</v-icon></v-btn
-                          >
-                          <v-btn icon @click="deleteSocialNetworks(social.id)"
-                            ><v-icon>mdi-close</v-icon></v-btn
-                          >
-                        </v-chip>
-                      </v-sheet>
-                    </v-col>
-                  </v-row>
-                </v-container>
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="4">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          v-mask="maskTel(engagedBridePhone)"
+                          label="Telefone"
+                          v-model="engagedBridePhone"
+                          :rules="engagedBridePhoneRules"
+                          required
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="4">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          v-mask="maskTel(engagedBrideMobile)"
+                          label="Celular"
+                          v-model="engagedBrideMobile"
+                          :rules="engagedBrideMobileRules"
+                          required
+                        >
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="4" lg="2">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          label="CEP"
+                          v-model="engagedBrideAddress.zipcode"
+                          @blur="getCEP('engagedBrideAddress')"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="8" lg="6">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          :loading="inputLoading"
+                          label="Logradouro"
+                          v-model="engagedBrideAddress.street"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="2">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          label="Número"
+                          v-model="engagedBrideAddress.number"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="2">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          label="Complemento"
+                          v-model="engagedBrideAddress.complement"
+                        >
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          :loading="inputLoading"
+                          label="Bairro"
+                          v-model="engagedBrideAddress.neighborhood"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          :loading="inputLoading"
+                          label="Cidade"
+                          v-model="engagedBrideAddress.city"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          :loading="inputLoading"
+                          label="Estado"
+                          v-model="engagedBrideAddress.state"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          :loading="inputLoading"
+                          label="País"
+                          v-model="engagedBrideAddress.country"
+                          :rules="engagedBrideAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          v-model="engagedBrideCpf"
+                          label="CPF"
+                          v-mask="maskCpf"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          v-model="engagedBrideRg"
+                          label="RG"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          v-model="engagedBrideBirthdate"
+                          label="Data de nascimento"
+                          v-mask="maskBirthdate"
+                          @blur="is18(engagedBrideBirthdate)"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-female"
+                          v-model="engagedBrideEmail"
+                          label="E-mail"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-sheet>
+                <v-sheet color="grey lighten-4" rounded="lg">
+                  <v-container>
+                    <v-row>
+                      <v-col>
+                        <h2>Dados do noivo</h2>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="6">
+                        <v-avatar
+                          size="80"
+                          color="grey lighten-4"
+                          @click="openUploadPhoto('engagedGroomUploadPhoto')"
+                        >
+                          <v-img
+                            :src="
+                              engagedGroomBlob
+                                ? engagedGroomBlob
+                                : engagedGroomPhoto
+                            "
+                          ></v-img>
+                        </v-avatar>
+                      </v-col>
+                      <v-col cols="12" md="6">
+                        <v-checkbox
+                          color="grey darken-4"
+                          v-model="engagedGroomResponsibleFor"
+                          label="Responsável pelo contrato"
+                        >
+                        </v-checkbox>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" lg="4">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          label="Nome"
+                          v-model="engagedGroomName"
+                          :rules="engagedGroomNameRules"
+                          required
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="4">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          label="Telefone"
+                          v-model="engagedGroomPhone"
+                          v-mask="maskTel(engagedGroomPhone)"
+                          :rules="engagedGroomPhoneRules"
+                          required
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="4">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          label="Celular"
+                          v-model="engagedGroomMobile"
+                          :rules="engagedGroomMobileRules"
+                          v-mask="maskTel(engagedGroomMobile)"
+                          required
+                        >
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="4" lg="2">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          label="CEP"
+                          v-model="engagedGroomAddress.zipcode"
+                          @blur="getCEP('engagedGroomAddress')"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="8" lg="6">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          :loading="inputLoading"
+                          label="Logradouro"
+                          v-model="engagedGroomAddress.street"
+                          :rules="engagedGroomAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="2">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          label="Número"
+                          v-model="engagedGroomAddress.number"
+                          :rules="engagedGroomAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="2">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          label="Complemento"
+                          v-model="engagedGroomAddress.complement"
+                        >
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          :loading="inputLoading"
+                          label="Bairro"
+                          v-model="engagedGroomAddress.neighborhood"
+                          :rules="engagedGroomAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          :loading="inputLoading"
+                          label="Cidade"
+                          v-model="engagedGroomAddress.city"
+                          :rules="engagedGroomAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          :loading="inputLoading"
+                          label="Estado"
+                          v-model="engagedGroomAddress.state"
+                          :rules="engagedGroomAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          :loading="inputLoading"
+                          label="País"
+                          v-model="engagedGroomAddress.country"
+                          :rules="engagedGroomAddressRules"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          v-model="engagedGroomCpf"
+                          label="CPF"
+                          v-mask="maskCpf"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          v-model="engagedGroomRg"
+                          label="RG"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          v-model="engagedGroomBirthdate"
+                          label="Data de nascimento"
+                          v-mask="maskBirthdate"
+                        >
+                        </v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="6" lg="3">
+                        <v-text-field
+                          prepend-inner-icon="mdi-human-male"
+                          v-model="engagedGroomEmail"
+                          label="E-mail"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-sheet>
               </v-form>
+              <v-container v-if="selectEngaged">
+                <v-row>
+                  <v-col>
+                    <v-sheet elevation="1" color="grey lighten-4" class="pa-4">
+                      <h2>Serviços do casamento</h2>
+                      Saber os demais serviços do casamento nos ajuda a alinhar
+                      horários, posição da banda etc.
+                      <v-btn
+                        text
+                        color="red darken-4"
+                        dark
+                        rounded
+                        @click="formWeddingServicesAdd()"
+                      >
+                        <v-icon class="mr-3">mdi-plus-circle</v-icon>
+                        Cadastrar
+                      </v-btn>
+                      <div v-if="weddingServices.length != 0">
+                        <v-list two-line>
+                          <v-list-item
+                            v-for="wservice in weddingServices"
+                            :key="wservice.idwedding_services"
+                          >
+                            <v-list-item-content>
+                              <v-list-item-title>{{
+                                wservice.companyname
+                              }}</v-list-item-title>
+                              <v-list-item-subtitle>
+                                Endereço: {{ wservice.address }}<br />
+                                Telefone: {{ wservice.phone }}<br />
+                                Nome de contato: {{ wservice.contactname }}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                            <v-list-item-action>
+                              <v-btn
+                                icon
+                                @click="
+                                  deleteWeddingService(
+                                    wservice.idwedding_services
+                                  )
+                                "
+                                ><v-icon>mdi-delete</v-icon></v-btn
+                              >
+                              <v-btn
+                                icon
+                                @click="formWeddingServicesEdit(wservice)"
+                                ><v-icon>mdi-pencil</v-icon></v-btn
+                              >
+                            </v-list-item-action>
+                          </v-list-item>
+                        </v-list>
+                      </div>
+                      <div class="pa-5 font-weight-bold" v-else>
+                        Não existe empresa cadastrada
+                      </div>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-sheet elevation="1" class="pa-4 grey lighten-4">
+                      <h2>Redes Sociais</h2>
+                      <v-form ref="formSocialNetworks">
+                        <v-select
+                          v-model="socialNetworksSel"
+                          label="Selecione a Rede Social"
+                          :items="socialNetworksItems"
+                          item-text="name"
+                          :rules="socialNetworksSelRule"
+                          return-object
+                        >
+                          <template v-slot:append>
+                            <v-icon>{{ socialNetworksSel.icon }}</v-icon>
+                          </template>
+                        </v-select>
+                        <v-select
+                          v-model="socialNetworksEngaged"
+                          label="De quem é a Rede Social?"
+                          :items="socialNetworksEngagedItems"
+                          item-text="name"
+                          :rules="socialNetworksEngagedRule"
+                          return-object
+                        ></v-select>
+                        <v-text-field
+                          v-model="socialNetworksLink"
+                          label="Link do perfil público"
+                          prefix="https://"
+                          :rules="socialNetworksLinkRule"
+                        ></v-text-field>
+                      </v-form>
+                      <v-btn
+                        text
+                        rounded
+                        color="red darken-4"
+                        @click="saveSocialNetworks()"
+                      >
+                        <v-icon v-if="!socialNetworksEdit" class="mr-3"
+                          >mdi-plus-circle</v-icon
+                        >
+                        <v-icon v-if="socialNetworksEdit" class="mr-3"
+                          >mdi-content-save</v-icon
+                        >
+                        <span v-if="!socialNetworksEdit">Adicionar</span>
+                        <span v-if="socialNetworksEdit">Atualizar</span>
+                      </v-btn>
+                      <v-btn
+                        v-if="socialNetworksEdit"
+                        text
+                        rounded
+                        color="red darken-4"
+                        @click="socialNetworksFormEmpty()"
+                        >Limpar</v-btn
+                      >
+                      <v-divider class="mt-3 mb-3"></v-divider>
+                      <v-chip
+                        v-for="social in socialNetworks"
+                        :key="social.id"
+                        class="pa-5 mr-3"
+                      >
+                        <v-btn icon @click="openLink(social.link)"
+                          ><v-icon>{{ social.icon }}</v-icon></v-btn
+                        >
+                        {{ social.name }}
+                        {{ socialNetworksEngagedReturn(social.engaged) }}
+
+                        <v-btn
+                          icon
+                          class="ml-3"
+                          @click="socialNetworksOpenEdit(social)"
+                          ><v-icon>mdi-pencil</v-icon></v-btn
+                        >
+                        <v-btn icon @click="deleteSocialNetworks(social.id)"
+                          ><v-icon>mdi-close</v-icon></v-btn
+                        >
+                      </v-chip>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+              </v-container>
               <v-dialog
                 v-model="engagedBrideUploadPhoto"
                 transition="dialog-bottom-transition"
@@ -892,7 +909,7 @@ export default {
     socialNetworksEdit: false,
     socialNetworksSel: { name: "", icon: "" },
     socialNetworksSelRule: [(v) => !!v || "Selecione uma Rede Social"],
-    socialNetworksEngaged: {id: "", name: ""},
+    socialNetworksEngaged: { id: "", name: "" },
     socialNetworksEngagedRule: [(v) => !!v || "Diga de quem é a rede social"],
     socialNetworksEngagedItems: [
       {
@@ -1130,21 +1147,24 @@ export default {
       if (n == 2) return "da Noiva";
       if (n == 3) return "da Noiva e do Noivo";
     },
-    socialNetworksFormEmpty: function(){
+    socialNetworksFormEmpty: function () {
       this.$refs.formSocialNetworks.reset();
-      this.socialNetworksSel = {name: "", icon:""};
-      this.socialNetworksEngaged = {id: "", name: ""};
+      this.socialNetworksSel = { name: "", icon: "" };
+      this.socialNetworksEngaged = { id: "", name: "" };
       this.socialNetworksLink = "";
       this.socialNetworksEdit = false;
     },
-    socialNetworksOpenEdit: function(social){
+    socialNetworksOpenEdit: function (social) {
       this.socialNetworksEdit = true;
-      this.socialNetworksID = social.id
-      this.socialNetworksSel = {name: social.name, icon: social.icon};
-      this.socialNetworksEngaged = {id: social.engaged, name: this.socialNetworksEngagedReturn(social.engaged)};
+      this.socialNetworksID = social.id;
+      this.socialNetworksSel = { name: social.name, icon: social.icon };
+      this.socialNetworksEngaged = {
+        id: social.engaged,
+        name: this.socialNetworksEngagedReturn(social.engaged),
+      };
       this.socialNetworksLink = social.link;
     },
-    openLink: function(link){
+    openLink: function (link) {
       window.open("https://" + link);
     },
     getAddressData: function (addressData, placeResultData, id) {
@@ -1388,9 +1408,11 @@ export default {
             this.socialNetworksFormEmpty();
             this.getSocialNetworks(this.engagedID);
           });
-        } else if(this.socialNetworksEdit) {
+        } else if (this.socialNetworksEdit) {
           axios(
-            this.apiURL + "/engagedes/updateSocialNetworks/" + this.socialNetworksID,
+            this.apiURL +
+              "/engagedes/updateSocialNetworks/" +
+              this.socialNetworksID,
             {
               method: "POST",
               data: data,
@@ -1414,11 +1436,13 @@ export default {
           this.getWeddingServices(this.engagedID);
         });
     },
-    deleteSocialNetworks: async function(id){
-      const response =  await axios.get(this.apiURL + "/engagedes/deleteSocialNetworks/" + id);
+    deleteSocialNetworks: async function (id) {
+      const response = await axios.get(
+        this.apiURL + "/engagedes/deleteSocialNetworks/" + id
+      );
       this.$swal(response.data.msg, "", response.data.icon);
       this.getSocialNetworks(this.engagedID);
-    }
+    },
   },
 
   computed: {

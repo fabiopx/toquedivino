@@ -192,6 +192,20 @@ class Inscribes extends CI_Controller{
         echo json_encode($resp);
     }
 
+    public function getInscribeAccount($id){
+        $this->load->model('inscribe');
+        $this->load->model('account');
+
+        $account = $this->account->readAccount(['idaccount' => $id]);
+        $inscribe = $this->inscribe->readInscribe(['account_idaccount' => $account->row()->idaccount]);
+
+        $inscribe->row()->account = $account->row();
+        unset($inscribe->row()->account_idaccount);
+
+        echo json_encode($inscribe->row());
+
+    }
+
     public function verifyStatus($id){
         $this->load->model('inscribe');
         $inscribe = $this->inscribe->readInscribe(['idinscribe' => $id]);
@@ -203,6 +217,25 @@ class Inscribes extends CI_Controller{
         $this->load->model('inscribe');
         $resp = ($this->inscribe->updateInscribe($id)) ? ['msg' => 'Cadastro atualizado com sucesso', 'icon' => 'success'] : ['msg' => 'Cadastro não pode ser atualizado', 'icon' => 'error'];
         echo json_encode($resp);
+    }
+
+    public function updateInscribeAccount($id){
+        $this->load->model('inscribe');
+        $this->load->model('account');
+        $post = $this->input->post();
+
+        $account = $this->account->updateAccountCustomers(['idaccount' => $id]);
+
+        if($account){
+            $resp = ['msg' => 'Dados de acesso atualizados com sucesso', 'icon' => 'success'];
+        } else{
+            $this->db->db_debug = false;
+            $error = $this->db->error();
+            $resp = ['msg' => $error['message'], 'icon' => 'error'];
+        }
+
+        echo json_encode($resp);
+
     }
 
     public function validate($id){
