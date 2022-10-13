@@ -18,6 +18,7 @@ import { VTextField } from 'vuetify/lib';
 import VueLodash from 'vue-lodash';
 import lodash from 'lodash';
 import VueQRCodeComponent from 'vue-qrcode-component';
+import './assets/css/main.css';
 
 Object.defineProperty(Vue.prototype, '$extenso', {value: extenso});
 

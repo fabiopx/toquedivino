@@ -4,103 +4,16 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-toolbar dark color="blue-grey">
+            <v-toolbar dark color="grey darken-4">
               <h3>Assinaturas</h3>
               <v-spacer></v-spacer>
-              <v-dialog
-                v-model="dialogSignature"
-                fullscreen
-                hide-overlay
-                transition="dialog-bottom-transition"
+              <v-btn
+                color="blue-grey darken-4"
+                rounded
+                @click="dialogManager = true"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-toolbar-items>
-                    <v-btn
-                      dark
-                      text
-                      v-on="on"
-                      v-bind="attrs"
-                      @click="setCrud('c'), getUsers()"
-                    >
-                      <v-icon class="mr-2">mdi-plus</v-icon>nova assinatura
-                    </v-btn>
-                  </v-toolbar-items>
-                </template>
-                <v-card>
-                  <v-toolbar dark color="blue-grey">
-                    <v-btn icon dark @click="closeDialogSignature()">
-                      <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-toolbar-title> Cadastrar Assinatura </v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-toolbar-items>
-                      <v-btn
-                        depressed
-                        color="blue-grey"
-                        @click="saveSignature()"
-                      >
-                        <v-icon>mdi-content-save</v-icon> salvar
-                      </v-btn>
-                    </v-toolbar-items>
-                  </v-toolbar>
-                  <v-card-text>
-                    <v-form ref="formSignature">
-                      <v-row>
-                        <v-col v-show="crud == 'c'">
-                          <v-select
-                            v-model="signatureUserName"
-                            :items="users"
-                            label="Nome do signatário"
-                            item-text="name"
-                            return-object
-                          ></v-select>
-                        </v-col>
-                        <v-col v-show="crud == 'u'">
-                          <v-text-field
-                            v-model="signatureUserName.name"
-                            label="Nome"
-                            readonly
-                          ></v-text-field>
-                        </v-col>
-                        <v-col>
-                          <v-select
-                            v-model="signatureType"
-                            :items="signatureTypes"
-                            label="Tipo de assinatura"
-                            item-text="text"
-                            item-value="type"
-                          ></v-select>
-                        </v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col>
-                          <v-select
-                            v-model="signatureFont"
-                            :items="signaturesFonts"
-                            label="Fonte da assinatura"
-                            item-text="name"
-                            item-value="signClass"
-                          ></v-select>
-                        </v-col>
-                        <v-col>
-                          <v-switch label="Status" v-model="signatureStatus">
-                          </v-switch>
-                        </v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col>
-                          <v-sheet elevation="1" rounded outlined class="pa-5">
-                            <h3 :class="signatureFont">
-                              {{ signatureUserName.name }}
-                            </h3>
-                          </v-sheet>
-                        </v-col>
-                        <v-col></v-col>
-                      </v-row>
-                    </v-form>
-                  </v-card-text>
-                </v-card>
-              </v-dialog>
+                <v-icon>mdi-plus</v-icon> novo manager
+              </v-btn>
             </v-toolbar>
             <v-card-text>
               <v-skeleton-loader
@@ -149,6 +62,111 @@
           </v-card>
         </v-col>
       </v-row>
+
+      <v-dialog
+        v-model="dialogManager"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <v-toolbar color="grey darken-4" dark>
+            <v-btn icon dark @click="clearFormManager()"
+              ><v-icon>mdi-close</v-icon></v-btn
+            >
+            <v-toolbar-title>Cadastrar Gestor de Contrato</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn> <v-icon>mdi-content-save</v-icon> salvar </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" md="6" lg="4">
+                <v-text-field v-model="managerName" label="Nome do Gestor de Contrato"></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6" lg="4">
+                <v-text-field v-model="managerCPF" label="CPF do Gestor de Contrato"></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6" lg="4">
+                <v-select v-model="managerOffice" :items="offices" item-text="name" item-value="value" label="Função na empresa"></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog
+        v-model="dialogSignature"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <v-toolbar dark color="grey darken-4">
+            <v-btn icon dark @click="dialogSignature = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title> Cadastrar Gestor de Contrato </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn depressed @click="saveSignature()">
+                <v-icon>mdi-content-save</v-icon> salvar
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-card-text>
+            <v-form ref="formSignature">
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="signatureUserName.name"
+                    label="Nome"
+                    readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-select
+                    v-model="signatureType"
+                    :items="signatureTypes"
+                    label="Tipo de assinatura"
+                    item-text="text"
+                    item-value="type"
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-select
+                    v-model="signatureFont"
+                    :items="signaturesFonts"
+                    label="Fonte da assinatura"
+                    item-text="name"
+                    item-value="signClass"
+                  ></v-select>
+                </v-col>
+                <v-col>
+                  <v-switch label="Status" v-model="signatureStatus">
+                  </v-switch>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-sheet elevation="1" rounded outlined class="pa-5">
+                    <h3 :class="signatureFont">
+                      {{ signatureUserName.name }}
+                    </h3>
+                  </v-sheet>
+                </v-col>
+                <v-col></v-col>
+              </v-row>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -165,8 +183,10 @@ export default {
       inputLoading: false,
       btnLoading: false,
       create: true,
+      dialog: "",
       dialogSignature: false,
       dialogSignWithPassword: false,
+      dialogManager: false,
       signatureId: "",
       signatureUserName: { id: "", name: "" },
       signatureType: "",
@@ -274,12 +294,37 @@ export default {
         },
       ],
       signatures: [],
+      managerName: "",
+      managerCPF: "",
+      managerOffice: "",
+      offices: [
+        {
+          name: "Sócio Proprietário",
+          value: 1,
+        },
+        {
+          name: "Procurador Legal",
+          value: 2
+        },
+        {
+          name: "Gerente Financeiro",
+          value: 3
+        }
+      ],
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.getSignature();
+  },
 
   methods: {
+    clearFormManager: function(){
+      this.managerName = "";
+      this.managerCPF = "";
+      this.managerOffice = "";
+      this.dialogManager = false;
+    },
     saveSignature: function () {
       if (this.$refs.formSignature.validate()) {
         this.dialogSignature = false;
@@ -295,42 +340,26 @@ export default {
         data.append("type", this.signatureType);
         data.append("font", this.signatureFont);
         data.append("status", this.signatureStatus);
-        if (this.create) {
-          axios(this.apiURL + "/createSignature", {
-            method: "POST",
-            data: data,
-          }).then((response) => {
-            this.loadingVisible = false;
-            this.signatureUserName = { id: "", name: "" };
-            this.signatureType = "";
-            this.signatureFont = "";
-            this.signatureStatus = false;
-            this.signatures = [];
-            Swal.fire(response.data.msg, "", response.data.icon);
-            this.getSignature();
-          });
-        } else {
-          axios(this.urlApi + "updateSignature/" + this.signatureId, {
-            method: "POST",
-            data: data,
-          }).then((response) => {
-            this.loadingVisible = false;
-            Swal.fire(response.data.msg, "", response.data.icon);
-            this.getSignature();
-          });
-        }
+
+        axios(this.apiURL + "/signatures/update/" + this.signatureId, {
+          method: "POST",
+          data: data,
+        }).then((response) => {
+          this.loadingVisible = false;
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getSignature();
+        });
       }
     },
     getSignature: function () {
       this.firstLoad = true;
-      axios.get(this.urlApi + "getSignature").then((response) => {
+      axios.get(this.apiURL + "/signatures/get").then((response) => {
         this.signatures = response.data;
-        this.stopContentLoading();
+        this.firstLoad = false;
       });
     },
     editSignature: function (item) {
       this.dialogSignature = true;
-      this.crud = "u";
       this.signatureUserName.name = item.name;
       this.signatureUserName.idaccount = item.account_idaccount;
       this.signatureType = item.type;
@@ -346,10 +375,12 @@ export default {
         showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.get(this.urlApi + "deleteSignature/" + id).then((response) => {
-            this.$swal(response.data.msg, "", response.data.icon);
-            this.getSignature();
-          });
+          axios
+            .get(this.urlApi + "/signatures/delete/" + id)
+            .then((response) => {
+              this.$swal(response.data.msg, "", response.data.icon);
+              this.getSignature();
+            });
         }
       });
     },
