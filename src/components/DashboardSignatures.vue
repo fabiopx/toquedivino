@@ -10,7 +10,7 @@
               <v-btn
                 color="blue-grey darken-4"
                 rounded
-                @click="dialogManager = true"
+                @click="openManager()"
               >
                 <v-icon>mdi-plus</v-icon> novo manager
               </v-btn>
@@ -77,24 +77,63 @@
             <v-toolbar-title>Cadastrar Gestor de Contrato</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn> <v-icon>mdi-content-save</v-icon> salvar </v-btn>
+              <v-btn :loading="btnLoading" @click="saveManager()">
+                <v-icon>mdi-content-save</v-icon> salvar
+              </v-btn>
             </v-toolbar-items>
           </v-toolbar>
           <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6" lg="4">
-                <v-text-field v-model="managerName" label="Nome do Gestor de Contrato"></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6" lg="4">
-                <v-text-field v-model="managerCPF" label="CPF do Gestor de Contrato"></v-text-field>
-              </v-col>
-              <v-col cols="12" md="6" lg="4">
-                <v-select v-model="managerOffice" :items="offices" item-text="name" item-value="value" label="Função na empresa"></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              
-            </v-row>
+            <v-sheet rounded="lg" color="grey lighten-2" class="pa-5 mt-3">
+              <v-form ref="formManager">
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="managerName"
+                      label="Nome do Gestor de Contrato"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="managerCPF"
+                      label="CPF do Gestor de Contrato"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="managerEmail"
+                      label="E-mail do Gestor de Contrato"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      v-model="managerOffice"
+                      :items="offices"
+                      item-text="name"
+                      item-value="value"
+                      label="Função na empresa"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-form>
+            </v-sheet>
+            <v-sheet rounded="lg" class="mt-3 pa-5" color="grey lighten-2">
+              <h2>Gestores de Contrato</h2>
+              <v-divider class="mt-3 mb-3"></v-divider>
+              <v-data-table
+                :headers="headerManagers"
+                :items="managers"
+                :items-per-page="5"
+                :search="searchManagers"
+              >
+              <template v-slot:item.office="{item}">
+                <v-chip v-show="item.office == 1">Sócio Proprietário</v-chip>
+                <v-chip v-show="item.office == 2">Procurador Legal</v-chip>
+                <v-chip v-show="item.office == 3">Gerente Financeiro</v-chip>
+              </template>
+              </v-data-table>
+            </v-sheet>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -172,6 +211,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "DashboardSignatures",
 
@@ -304,13 +344,30 @@ export default {
         },
         {
           name: "Procurador Legal",
-          value: 2
+          value: 2,
         },
         {
           name: "Gerente Financeiro",
-          value: 3
-        }
+          value: 3,
+        },
       ],
+      managerEmail: "",
+      headerManagers: [
+        {
+          text: "Nome do Gestor",
+          value: "name",
+        },
+        {
+          text: "Função na Empresa",
+          value: "office",
+        },
+        {
+          text: "Ação",
+          value: "actions"
+        },
+      ],
+      searchManagers: "",
+      managers: [],
     };
   },
 
@@ -319,7 +376,7 @@ export default {
   },
 
   methods: {
-    clearFormManager: function(){
+    clearFormManager: function () {
       this.managerName = "";
       this.managerCPF = "";
       this.managerOffice = "";
@@ -384,6 +441,34 @@ export default {
         }
       });
     },
+    saveManager: function () {
+      if (this.$refs.formManager.validate()) {
+        this.btnLoading = true;
+        let data = new FormData();
+        data.append("name", this.managerName);
+        data.append("cpf", this.managerCPF);
+        data.append("office", this.managerOffice);
+        data.append("email", this.managerEmail);
+
+        axios(this.apiURL + "/managers/create", {
+          method: "POST",
+          data: data,
+        }).then((response) => {
+          this.btnLoading = false;
+          this.$swal(response.data.msg, "", response.data.icon);
+          this.getManagers();
+        });
+      }
+    },
+    getManagers: function () {
+      axios.get(this.apiURL + "/managers/get").then((response) => {
+        this.managers = response.data;
+      });
+    },
+    openManager: function() {
+      this.dialogManager = true;
+      this.getManagers();
+    }
   },
 };
 </script>

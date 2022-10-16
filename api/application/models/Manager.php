@@ -24,10 +24,10 @@ class Manager extends Crud
     }
 
     public function readManagers($where = null){
-        if(is_null($where)){
-            return $this->ready('agreements_managers');
-        } else{
+        if(!is_null($where)){
             return $this->ready('agreements_managers', $where);
+        } else{
+            return $this->ready('agreements_managers');
         }
     }
 
