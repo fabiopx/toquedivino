@@ -8,11 +8,11 @@
               <h3>Assinaturas</h3>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue-grey darken-4"
+                color="blue"
                 rounded
                 @click="openManager()"
               >
-                <v-icon>mdi-plus</v-icon> novo manager
+                <v-icon>mdi-account-eye</v-icon> gestores
               </v-btn>
             </v-toolbar>
             <v-card-text>
@@ -35,7 +35,7 @@
                   <v-chip v-show="item.type == 3">Testemunha</v-chip>
                 </template>
                 <template v-slot:item.status="{ item }">
-                  <v-chip v-if="item.status == 1" color="primary">Ativo</v-chip>
+                  <v-chip v-if="item.status" color="primary">Ativo</v-chip>
                   <v-chip v-else>Inativo</v-chip>
                 </template>
                 <template v-slot:item.inuse="{ item }">
@@ -47,14 +47,6 @@
                 <template v-slot:item.actions="{ item }">
                   <v-btn color="primary" icon @click="editSignature(item)">
                     <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn
-                    v-show="item.inuse == 0"
-                    color="red"
-                    icon
-                    @click="deleteSignature(item.idsignature)"
-                  >
-                    <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </template>
               </v-data-table>
@@ -70,20 +62,16 @@
         transition="dialog-bottom-transition"
       >
         <v-card>
-          <v-toolbar color="grey darken-4" dark>
-            <v-btn icon dark @click="clearFormManager()"
+          <v-toolbar color="blue" dark>
+            <v-btn icon dark @click="closeManager()"
               ><v-icon>mdi-close</v-icon></v-btn
             >
-            <v-toolbar-title>Cadastrar Gestor de Contrato</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn :loading="btnLoading" @click="saveManager()">
-                <v-icon>mdi-content-save</v-icon> salvar
-              </v-btn>
-            </v-toolbar-items>
+            <v-toolbar-title><v-icon>mdi-account-eye</v-icon> Gerenciar Gestores de Contrato</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-sheet rounded="lg" color="grey lighten-2" class="pa-5 mt-3">
+              <h2>Cadastrar Gestor de Contrato</h2>
+              <v-divider class="mt-3 mb-3"></v-divider>
               <v-form ref="formManager">
                 <v-row>
                   <v-col cols="12" md="6">
@@ -116,6 +104,13 @@
                     ></v-select>
                   </v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-btn v-if="btnManager" :loading="btnLoading" @click="saveManager()"><v-icon>mdi-content-save</v-icon> Salvar</v-btn>
+                    <v-btn v-else :loading="btnLoading" @click="editManager()"><v-icon>mdi-pencil</v-icon> Editar</v-btn>
+                    <v-btn class="ml-3" @click="clearFormManager">Limpar</v-btn>
+                  </v-col>
+                </v-row>
               </v-form>
             </v-sheet>
             <v-sheet rounded="lg" class="mt-3 pa-5" color="grey lighten-2">
@@ -131,6 +126,10 @@
                 <v-chip v-show="item.office == 1">Sócio Proprietário</v-chip>
                 <v-chip v-show="item.office == 2">Procurador Legal</v-chip>
                 <v-chip v-show="item.office == 3">Gerente Financeiro</v-chip>
+              </template>
+              <template v-slot:item.actions="{item}">
+                <v-btn icon @click="editManagerLoad(item)"><v-icon>mdi-pencil</v-icon></v-btn>
+                <v-btn icon><v-icon>mdi-delete</v-icon></v-btn>
               </template>
               </v-data-table>
             </v-sheet>
@@ -335,23 +334,27 @@ export default {
       ],
       signatures: [],
       managerName: "",
+      managerNameRule: [(v) => !!v || "O campo NOME precisa ser preenchido"],
       managerCPF: "",
+      managerCPFRule: [(v) => !!v || "O campo CPF precisa ser preenchido"],
       managerOffice: "",
+      managerOfficeRule: [(v) => !!v || "Selecione uma FUNÇÃO"],
       offices: [
         {
           name: "Sócio Proprietário",
-          value: 1,
+          value: "1",
         },
         {
           name: "Procurador Legal",
-          value: 2,
+          value: "2",
         },
         {
           name: "Gerente Financeiro",
-          value: 3,
+          value: "3",
         },
       ],
       managerEmail: "",
+      managerEmailRule: [(v) => !!v || "O campo EMAIL precisa ser preenchido"],
       headerManagers: [
         {
           text: "Nome do Gestor",
@@ -367,6 +370,9 @@ export default {
         },
       ],
       searchManagers: "",
+      managerIdAccount: "",
+      managerIdSignature: "",
+      btnManager: true,
       managers: [],
     };
   },
@@ -380,6 +386,19 @@ export default {
       this.managerName = "";
       this.managerCPF = "";
       this.managerOffice = "";
+      this.managerEmail = "";
+      this.managerIdAccount = "";
+      this.managerIdSignature = "";
+      this.btnManager = true;
+    },
+    closeManager: function(){
+      this.managerName = "";
+      this.managerCPF = "";
+      this.managerOffice = "";
+      this.managerEmail = "";
+      this.managerIdAccount = "";
+      this.managerIdSignature = "";
+      this.btnManager = true;
       this.dialogManager = false;
     },
     saveSignature: function () {
@@ -460,6 +479,17 @@ export default {
         });
       }
     },
+    editManager: function(){
+      if(this.$refs.formManager.validate()){
+        let data = new FormData();
+        data.append("name", this.managerName);
+        data.append("cpf", this.managerCPF);
+        data.append("office", this.managerOffice);
+        data.append("email", this.managerEmail);
+        data.append("idaccount", this.managerIdAccount);
+        data.append("idsignature", this.managerIdSignature);
+      }
+    },
     getManagers: function () {
       axios.get(this.apiURL + "/managers/get").then((response) => {
         this.managers = response.data;
@@ -468,6 +498,15 @@ export default {
     openManager: function() {
       this.dialogManager = true;
       this.getManagers();
+    },
+    editManagerLoad: function(item){
+      this.managerName = item.name;
+      this.managerCPF = item.cpf;
+      this.managerOffice = item.office;
+      this.managerEmail = item.email;
+      this.managerIdAccount = item.idaccount;
+      this.managerIdSignature = item.idsignature;
+      this.btnManager = false;
     }
   },
 };

@@ -59,12 +59,25 @@ class Managers extends CI_Controller{
 
     public function get(){
         $this->load->model('manager');
-        $manager = $this->manager->readManagers();
-        echo json_encode($manager->result());
+        $this->load->model('signature');
+        $this->load->model('account');
+        $resp = [];
+        $managers = $this->manager->readManagers();
+
+        foreach($managers->result() as $manager):
+            $signature = $this->signature->readSignature(['idsignature' => $manager->signature_idsignature]);
+            $account = $this->account->readAccount(['idaccount' => $signature->row()->account_idaccount]);
+            $manager->email = $account->row()->email;
+            $manager->idsignature = $signature->row()->idsignature;
+            $manager->idaccount = $account->row()->idaccount;
+            $resp[] = $manager;
+        endforeach;
+        echo json_encode($resp);
     }
 
     public function update($id){
         $this->load->model('manager');
+        $this->load->model('account');
         $where = ['id' => $id];
         $manager = $this->manager->updateManager($where);
 
@@ -77,16 +90,22 @@ class Managers extends CI_Controller{
         echo json_encode($resp);
     }
 
-    public function delete($id){
+    public function delete(){
         $this->load->model('manager');
+        $this->load->model('account');
+        $this->load->model('signature');
+        $post = $this->input->post();
 
-        $where = ['id' => $id];
-        $manager = $this->manager->deleteManager($where);
+        $manager = $this->manager->deleteManager(['id' => $post['idManager']]);
+        $signature = $this->signature->deleteSignature(['idsignature' => $post['idSignature']]);
+        $account = $this->account->deleteAccount(['idaccount' => $post['idAccount']]);
 
-        if($manager !== false){
+
+
+        if($manager !== false && $signature !== false && $account !== false){
             $resp = ['msg' => 'Gestor de contrato excluído com sucesso', 'icon' => 'success'];
         } else{
-            $resp = ['msg' => 'Não foio possível exlcuir gestro de contrato', 'icon' => 'error'];
+            $resp = ['msg' => 'Não foi possível exlcuir gestor de contrato', 'icon' => 'error'];
         }
 
         echo json_encode($resp);

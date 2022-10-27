@@ -18,7 +18,13 @@ class Signatures extends CI_Controller{
     public function get(){
         $this->load->model('signature');
         $signature = $this->signature->readSignature();
-        echo json_encode($signature->result());
+        $resp = [];
+        foreach($signature->result() as $sign):
+            $sign->status = ($sign->status == 0) ? false : true;
+            $resp[] = $sign;
+
+        endforeach;
+        echo json_encode($resp);
     }
 
     public function update($id){
