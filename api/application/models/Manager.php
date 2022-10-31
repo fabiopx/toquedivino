@@ -31,14 +31,17 @@ class Manager extends Crud
         }
     }
 
-    public function updateManager($where)
+    public function updateManager($where, $data = null)
     {
-        $post = $this->input->post();
-        $this->name = $post['name'];
-        $this->cpf = $post['cpf'];
-        $this->office = $post['office'];
-        $this->signature_idsignature = $post['signature_idsignature'];
-        $data = $this;
+        if(is_null($data)){
+            $post = $this->input->post();
+            $this->name = $post['name'];
+            $this->cpf = $post['cpf'];
+            $this->office = $post['office'];
+            $this->signature_idsignature = $post['signature_idsignature'];
+            $data = $this;
+        }
+        
 
         return $this->update('agreements_managers', $where, $data);
     }

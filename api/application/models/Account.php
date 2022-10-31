@@ -36,13 +36,15 @@ class Account extends Crud{
         return ($service->num_rows() != 0) ? true : false;
     }
 
-    public function updateAccount($where){
-        $this->email = $_POST['email'];
-        $this->password = $_POST['password'];
-        $this->status = $_POST['status'];
-        $this->pin = code_generate();
-        $this->access = $_POST['access'];
-        $data = $this;
+    public function updateAccount($where, $data = null){
+        if(is_null($data)){
+            $this->email = $_POST['email'];
+            $this->password = $_POST['password'];
+            $this->status = $_POST['status'];
+            $this->pin = code_generate();
+            $this->access = $_POST['access'];
+            $data = $this;
+        }        
 
         return $this->update('account', $where, $data);
     }

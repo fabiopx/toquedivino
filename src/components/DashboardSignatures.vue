@@ -107,7 +107,7 @@
                 <v-row>
                   <v-col>
                     <v-btn v-if="btnManager" :loading="btnLoading" @click="saveManager()"><v-icon>mdi-content-save</v-icon> Salvar</v-btn>
-                    <v-btn v-else :loading="btnLoading" @click="editManager()"><v-icon>mdi-pencil</v-icon> Editar</v-btn>
+                    <v-btn v-else :loading="btnLoading" @click="updateManager()"><v-icon>mdi-pencil</v-icon> Editar</v-btn>
                     <v-btn class="ml-3" @click="clearFormManager">Limpar</v-btn>
                   </v-col>
                 </v-row>
@@ -129,7 +129,7 @@
               </template>
               <template v-slot:item.actions="{item}">
                 <v-btn icon @click="editManagerLoad(item)"><v-icon>mdi-pencil</v-icon></v-btn>
-                <v-btn icon><v-icon>mdi-delete</v-icon></v-btn>
+                <v-btn icon @click="deleteManager(item)"><v-icon>mdi-delete</v-icon></v-btn>
               </template>
               </v-data-table>
             </v-sheet>
@@ -333,6 +333,7 @@ export default {
         },
       ],
       signatures: [],
+      managerID: "",
       managerName: "",
       managerNameRule: [(v) => !!v || "O campo NOME precisa ser preenchido"],
       managerCPF: "",
@@ -392,6 +393,7 @@ export default {
       this.btnManager = true;
     },
     closeManager: function(){
+      this.managerID = "";
       this.managerName = "";
       this.managerCPF = "";
       this.managerOffice = "";
@@ -504,9 +506,40 @@ export default {
       this.managerCPF = item.cpf;
       this.managerOffice = item.office;
       this.managerEmail = item.email;
+      this.managerID = item.id;
       this.managerIdAccount = item.idaccount;
       this.managerIdSignature = item.idsignature;
       this.btnManager = false;
+    },
+    deleteManager: function(item){
+      let data = new FormData();
+      data.append('idaccount', item.idaccount);
+      data.append('idsignature', item.signature_idsignature);
+      data.append('idmanager', item.id);
+      axios(this.apiURL + "/managers/delete", {
+        method: 'POST',
+        data: data
+      }).then((response) => {
+        this.$swal(response.data.msg, '', response.data.icon);
+        this.getManagers();
+      })
+    },
+    updateManager: function (){
+      let data = new FormData();
+      data.append('name', this.managerName);
+      data.append('cpf', this.managerCPF);
+      data.append('office', this.managerOffice);
+      data.append('email', this.managerEmail);
+      data.append('idaccount', this.managerIdAccount);
+      data.append('idmanager', this.managerID);
+
+      axios(this.apiURL + "/managers/update", {
+        method: 'POST',
+        data: data
+      }).then((response) => {
+        this.$swal(response.data.msg, '', response.data.icon);
+        this.closeManager();
+      });
     }
   },
 };

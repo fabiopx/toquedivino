@@ -68,20 +68,31 @@ class Managers extends CI_Controller{
             $signature = $this->signature->readSignature(['idsignature' => $manager->signature_idsignature]);
             $account = $this->account->readAccount(['idaccount' => $signature->row()->account_idaccount]);
             $manager->email = $account->row()->email;
-            $manager->idsignature = $signature->row()->idsignature;
             $manager->idaccount = $account->row()->idaccount;
             $resp[] = $manager;
         endforeach;
         echo json_encode($resp);
     }
 
-    public function update($id){
+    public function update(){
         $this->load->model('manager');
         $this->load->model('account');
-        $where = ['id' => $id];
-        $manager = $this->manager->updateManager($where);
+        $post = $this->input->post();
 
-        if($manager){
+        $resp = ['msg' => 'Início'];
+
+        $data = [
+            'name' => $post['name'],
+            'cpf' => $post['cpf'],
+            'office' => $post['office']
+        ];
+        
+        $manager = $this->manager->updateManager(['id' => $post['idmanager']], $data);
+        $resp = ['msg' => ($manager) ? 'Manager foi' : 'Manager não foi'];
+        $account = $this->account->updateAccount(['idaccount' => $post['idaccount']], ['email' => $post['email']]);
+        $resp = ['msg' => ($account) ? 'Account foi' : 'Account não foi'];
+
+        if($manager && $account){
             $resp = ['msg' => 'Gestor de contrato editado com sucesso', 'icon' => 'success'];
         } else{
             $resp = ['msg' => 'Não foi possível editar', 'icon' => 'error'];
@@ -96,9 +107,9 @@ class Managers extends CI_Controller{
         $this->load->model('signature');
         $post = $this->input->post();
 
-        $manager = $this->manager->deleteManager(['id' => $post['idManager']]);
-        $signature = $this->signature->deleteSignature(['idsignature' => $post['idSignature']]);
-        $account = $this->account->deleteAccount(['idaccount' => $post['idAccount']]);
+        $manager = $this->manager->deleteManager(['id' => $post['idmanager']]);
+        $signature = $this->signature->deleteSignature(['idsignature' => $post['idsignature']]);
+        $account = $this->account->deleteAccount(['idaccount' => $post['idaccount']]);
 
 
 
