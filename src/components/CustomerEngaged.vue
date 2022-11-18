@@ -33,11 +33,7 @@
                           @click="openUploadPhoto('engagedBrideUploadPhoto')"
                         >
                           <v-img
-                            :src="
-                              engagedBrideBlob
-                                ? engagedBrideBlob
-                                : engagedBridePhoto
-                            "
+                            :src="engagedBrideBlob ? engagedBrideBlob : engagedBridePhoto"
                           ></v-img>
                         </v-avatar>
                       </v-col>
@@ -217,11 +213,7 @@
                           @click="openUploadPhoto('engagedGroomUploadPhoto')"
                         >
                           <v-img
-                            :src="
-                              engagedGroomBlob
-                                ? engagedGroomBlob
-                                : engagedGroomPhoto
-                            "
+                            :src="engagedGroomBlob ? engagedGroomBlob : engagedGroomPhoto"
                           ></v-img>
                         </v-avatar>
                       </v-col>
@@ -390,8 +382,8 @@
                   <v-col>
                     <v-sheet elevation="1" color="grey lighten-4" class="pa-4">
                       <h2>Serviços do casamento</h2>
-                      Saber os demais serviços do casamento nos ajuda a alinhar
-                      horários, posição da banda etc.
+                      Saber os demais serviços do casamento nos ajuda a alinhar horários,
+                      posição da banda etc.
                       <v-btn
                         text
                         color="red darken-4"
@@ -421,16 +413,10 @@
                             <v-list-item-action>
                               <v-btn
                                 icon
-                                @click="
-                                  deleteWeddingService(
-                                    wservice.idwedding_services
-                                  )
-                                "
+                                @click="deleteWeddingService(wservice.idwedding_services)"
                                 ><v-icon>mdi-delete</v-icon></v-btn
                               >
-                              <v-btn
-                                icon
-                                @click="formWeddingServicesEdit(wservice)"
+                              <v-btn icon @click="formWeddingServicesEdit(wservice)"
                                 ><v-icon>mdi-pencil</v-icon></v-btn
                               >
                             </v-list-item-action>
@@ -510,10 +496,7 @@
                         {{ social.name }}
                         {{ socialNetworksEngagedReturn(social.engaged) }}
 
-                        <v-btn
-                          icon
-                          class="ml-3"
-                          @click="socialNetworksOpenEdit(social)"
+                        <v-btn icon class="ml-3" @click="socialNetworksOpenEdit(social)"
                           ><v-icon>mdi-pencil</v-icon></v-btn
                         >
                         <v-btn icon @click="deleteSocialNetworks(social.id)"
@@ -531,17 +514,13 @@
                 persistent
               >
                 <v-card>
-                  <v-toolbar color="primary" dark>
-                    Upload de foto da noiva
-                  </v-toolbar>
+                  <v-toolbar color="primary" dark> Upload de foto da noiva </v-toolbar>
                   <v-card-text>
                     <v-file-input
                       v-model="currentFileBride"
                       label="Foto"
                       chips
-                      @change="
-                        readEngagedPhoto(currentFileBride, 'engagedBrideBlob')
-                      "
+                      @change="readEngagedPhoto(currentFileBride, 'engagedBrideBlob')"
                     >
                     </v-file-input>
                     <v-progress-linear
@@ -586,17 +565,13 @@
                 persistent
               >
                 <v-card>
-                  <v-toolbar color="primary" dark>
-                    Upload de foto do noivo
-                  </v-toolbar>
+                  <v-toolbar color="primary" dark> Upload de foto do noivo </v-toolbar>
                   <v-card-text>
                     <v-file-input
                       v-model="currentFileGroom"
                       label="Foto"
                       chips
-                      @change="
-                        readEngagedPhoto(currentFileGroom, 'engagedGroomBlob')
-                      "
+                      @change="readEngagedPhoto(currentFileGroom, 'engagedGroomBlob')"
                     >
                     </v-file-input>
                     <v-progress-linear
@@ -685,8 +660,7 @@
                             class="mr-3 pa-8"
                             dark
                             @click="saveWeddingService()"
-                            ><v-icon class="mr-3">mdi-check</v-icon
-                            >Cadastrar</v-btn
+                            ><v-icon class="mr-3">mdi-check</v-icon>Cadastrar</v-btn
                           >
                         </v-col>
                       </v-row>
@@ -846,13 +820,9 @@ export default {
     },
     engagedBrideAddressRules: [(v) => !!v || "Este campo é requerido"],
     engagedBridePhone: "",
-    engagedBridePhoneRules: [
-      (v) => !!v || "O campo TELEFONE DA NOIVA é requerido",
-    ],
+    engagedBridePhoneRules: [(v) => !!v || "O campo TELEFONE DA NOIVA é requerido"],
     engagedBrideMobile: "",
-    engagedBrideMobileRules: [
-      (v) => !!v || "O campo CELULAR DA NOIVA é requerido",
-    ],
+    engagedBrideMobileRules: [(v) => !!v || "O campo CELULAR DA NOIVA é requerido"],
     engagedBrideCpf: "",
     engagedBrideRg: "",
     engagedBrideBirthdate: "",
@@ -874,13 +844,9 @@ export default {
     },
     engagedGroomAddressRules: [(v) => !!v || "Este campo é requerido"],
     engagedGroomPhone: "",
-    engagedGroomPhoneRules: [
-      (v) => !!v || "O campo TELEFONE DO NOIVO é requerido",
-    ],
+    engagedGroomPhoneRules: [(v) => !!v || "O campo TELEFONE DO NOIVO é requerido"],
     engagedGroomMobile: "",
-    engagedGroomMobileRules: [
-      (v) => !!v || "O campo CELULAR DO NOIVO é requerido",
-    ],
+    engagedGroomMobileRules: [(v) => !!v || "O campo CELULAR DO NOIVO é requerido"],
     engagedGroomCpf: "",
     engagedGroomRg: "",
     engagedGroomBirthdate: "",
@@ -893,16 +859,12 @@ export default {
     loadingWeddingServices: false,
     weddingServiceID: "",
     weddingServiceCompanyName: "",
-    weddingServiceCompanyNameRule: [
-      (v) => !!v || "O campo NOME DA EMPRESA é requerido",
-    ],
+    weddingServiceCompanyNameRule: [(v) => !!v || "O campo NOME DA EMPRESA é requerido"],
     weddingServiceAddress: "",
     weddingServicePhone: "",
     weddingServicePhoneRule: [(v) => !!v || "O campo TELEFONE é requerido"],
     weddingServiceContactName: "",
-    weddingServiceContactNameRule: [
-      (v) => !!v || "O campo NOME DE CONTATO é requerido",
-    ],
+    weddingServiceContactNameRule: [(v) => !!v || "O campo NOME DE CONTATO é requerido"],
     weddingServices: [],
     socialNetworks: [],
     socialNetworksID: "",
@@ -953,7 +915,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setUserNow"]),
+    ...mapActions(["setUserNow", "setSkipEngaged"]),
     resetAllVars: function () {
       this.currentFileBride = undefined;
       this.currentFileGroom = undefined;
@@ -1025,8 +987,7 @@ export default {
       this.engagedGroomCpf = "";
       (this.engagedGroomRg = ""), (this.engagedGroomBirthdate = "");
       this.engagedGroomEmail = "";
-      (this.engagedGroomResponsibleFor = false),
-        (this.graduationCommitteName = "");
+      (this.engagedGroomResponsibleFor = false), (this.graduationCommitteName = "");
       this.graduationCommitteMember = [];
     },
     maskTel: function (phone) {
@@ -1064,14 +1025,10 @@ export default {
               const totalLength = event.lengthComputable
                 ? event.total
                 : event.target.getResponseHeader("content-length") ||
-                  event.target.getResponseHeader(
-                    "x-decompressed-content-length"
-                  );
+                  event.target.getResponseHeader("x-decompressed-content-length");
               console.log("onUploadProgress", totalLength);
               if (totalLength !== null) {
-                this.progressUpload = Math.round(
-                  (event.loaded * 100) / totalLength
-                );
+                this.progressUpload = Math.round((event.loaded * 100) / totalLength);
               }
             },
           })
@@ -1313,10 +1270,7 @@ export default {
       );
       data.append("groom_cpf", this.engagedGroomCpf);
       data.append("groom_rg", this.engagedGroomRg);
-      data.append(
-        "groom_birthdate",
-        FormataStringData(this.engagedGroomBirthdate)
-      );
+      data.append("groom_birthdate", FormataStringData(this.engagedGroomBirthdate));
       data.append("groom_email", this.engagedGroomEmail);
       data.append("groom_responsible_for", this.engagedGroomResponsibleFor);
       data.append("bride_name", this.engagedBrideName);
@@ -1331,10 +1285,7 @@ export default {
       );
       data.append("bride_cpf", this.engagedBrideCpf);
       data.append("bride_rg", this.engagedBrideRg);
-      data.append(
-        "bride_birthdate",
-        FormataStringData(this.engagedBrideBirthdate)
-      );
+      data.append("bride_birthdate", FormataStringData(this.engagedBrideBirthdate));
       data.append("bride_email", this.engagedBrideEmail);
       data.append("bride_responsible_for", this.engagedBrideResponsibleFor);
       data.append("idinscribe", this.inscribeID);
@@ -1345,6 +1296,7 @@ export default {
           data: data,
         }).then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
+          this.setSkipEngaged(true);
           this.getEngaged();
         });
       } else if (this.crud == "u") {
@@ -1376,9 +1328,7 @@ export default {
           });
         } else if (this.crud == "u") {
           axios(
-            this.apiURL +
-              "/engagedes/updateWeddingServices/" +
-              this.weddingServiceID,
+            this.apiURL + "/engagedes/updateWeddingServices/" + this.weddingServiceID,
             {
               method: "POST",
               data: data,
@@ -1410,9 +1360,7 @@ export default {
           });
         } else if (this.socialNetworksEdit) {
           axios(
-            this.apiURL +
-              "/engagedes/updateSocialNetworks/" +
-              this.socialNetworksID,
+            this.apiURL + "/engagedes/updateSocialNetworks/" + this.socialNetworksID,
             {
               method: "POST",
               data: data,

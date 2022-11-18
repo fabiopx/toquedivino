@@ -73,45 +73,6 @@ class Account extends Crud{
             'password' => $_POST['password']
         );
 
-        $login = $this->ready('account', $where);
-        $resp = array();
-
-        if($login->num_rows() != 0){
-            if($login->row()->access == 0){
-                $resp['userNow']['logged'] = true;
-                $resp['userNow']['login'] = false;
-                $resp['userNow']['name'] = $login->row()->name;
-                $resp['userNow']['id'] = $login->row()->idaccount;
-                $resp['alert']['status'] = false;
-                $resp['alert']['msg'] = '';
-            } else{
-                $resp['userNow']['logged'] = false;
-                $resp['userNow']['login'] = true;
-                $resp['userNow']['name'] = 'Usuário';
-                $resp['userNow']['id'] = '';
-                $resp['alert']['status'] = true;
-                $resp['alert']['msg'] = 'Usuário não autorizado.';
-            }
-            
-        } else{
-            $resp['userNow']['logged'] = false;
-            $resp['userNow']['login'] = true;
-            $resp['userNow']['name'] = '';
-            $resp['userNow']['id'] = '';
-            $resp['userNow']['photo'] = 'assets/profile.svg';
-            $resp['alert']['status'] = true;
-            $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
-        }
-
-        return $resp;
-    }
-
-    public function loginCustomer(){
-        $where = array(
-            'email' => $_POST['email'],
-            'password' => $_POST['password']
-        );
-
         return $this->ready('account', $where);
     }
 

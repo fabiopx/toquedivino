@@ -17,10 +17,8 @@ class Agreements extends CI_controller{
         $this->load->model('signature');
         $this->load->model('inscribe');
 
-        $where = ['idinscribe' => $idInscribe];
-        $inscribe = $this->inscribe->readInscribe($where);
-        $whereBudget = ['inscribe_idinscribe' => $idInscribe, 'status' => 1];
-        $budget = $this->budget->readBudget($whereBudget);
+        $inscribe = $this->inscribe->readInscribe(['idinscribe' => $idInscribe]);
+        $budget = $this->budget->readBudget(['inscribe_idinscribe' => $idInscribe, 'status' => 1]);
 
         $data = [
             'code' => code_generate(),

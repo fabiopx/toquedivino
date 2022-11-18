@@ -6,7 +6,7 @@ const state = {
   inscribeID: null,
   startedRepertory: false,
   budget: {},
-  access: {first: true, isInscribe: false, isAgreement: false, isBudget: false, isEvent: false},
+  access: {first: true, isInscribe: false, isAgreement: false, isBudget: false, isEvent: false, skipEngaged: false},
 };
 
 const getters = {
@@ -37,6 +37,10 @@ const actions = {
 
   setIsBudget({commit}, payload){
     commit('setIsBudget', payload);
+  },
+
+  setSkipEngaged({commit}, payload){
+    commit('setSkipEngaged', payload);
   },
 
   setAccess({commit}, payload){
@@ -83,7 +87,8 @@ const mutations = {
   setIsBudget: (state, isBudget) => (state.access.isBudget = isBudget),
   setBudget: (state, budget) => (state.budget = budget),
   setIsEvent: (state, isEvent) => (state.access.isEvent = isEvent),
-  setFirstAccess: (state, firstAccess) => (state.access.first = firstAccess)
+  setFirstAccess: (state, firstAccess) => (state.access.first = firstAccess),
+  setSkipEngaged: (state, skipEngaged) => (state.access.skipEngaged = skipEngaged)
 };
 
 export default {

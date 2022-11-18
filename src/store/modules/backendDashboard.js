@@ -3,7 +3,7 @@ import axios from "axios";
 const state = {
   loginNow: {
     id: "",
-    name: "Administrador",
+    name: "#",
     logged: false,
     login: true,
   },

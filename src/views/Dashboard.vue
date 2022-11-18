@@ -176,8 +176,26 @@ export default {
 
   mounted() {},
 
+  beforeCreate: function () {
+    if (!this.$session.exists()) {
+      this.$router.push("/dashboard/login");
+    } else{
+      this.$router.push("/dashboard/home");
+    }
+  },
+
   methods: {
     ...mapActions(["setLoginNow"]),
+    logout: function () {
+      this.setLoginNow({
+        id: "",
+        name: "#",
+        logged: false,
+        login: true,
+      });
+      this.$session.destroy();
+      this.$router.push("/dashboard/login");
+    },
   },
   computed: {
     ...mapGetters(["loginNow"]),

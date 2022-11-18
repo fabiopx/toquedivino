@@ -124,7 +124,7 @@ class Users extends CI_Controller{
         $this->load->model('account');
         $this->load->model('inscribe');
         
-        $login = $this->account->loginCustomer();
+        $login = $this->account->login();
         $resp = [];
 
         if($login->num_rows() != 0){
@@ -150,6 +150,43 @@ class Users extends CI_Controller{
             $resp['userNow']['login'] = true;
             $resp['userNow']['name'] = '';
             $resp['userNow']['id'] = '';
+            $resp['alert']['status'] = true;
+            $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
+        }
+
+        echo json_encode($resp);
+    }
+
+    public function loginDashboard(){
+        $this->load->model('account');
+        $this->load->model('user');
+        
+        $login = $this->account->login();
+        $resp = [];
+
+        if($login->num_rows() != 0){
+            if($login->row()->access == 0 || $login->row()->access == 1){
+                $user = $this->user->readUser(['account_idaccount' => $login->row()->idaccount]);
+                $resp['loginNow']['logged'] = true;
+                $resp['loginNow']['login'] = false;
+                $resp['loginNow']['name'] = $user->row()->name;
+                $resp['loginNow']['id'] = $login->row()->idaccount;
+                $resp['alert']['status'] = false;
+                $resp['alert']['msg'] = '';
+            } else{
+                $resp['loginNow']['logged'] = false;
+                $resp['loginNow']['login'] = true;
+                $resp['loginNow']['name'] = 'Usuário';
+                $resp['loginNow']['id'] = '';
+                $resp['alert']['status'] = true;
+                $resp['alert']['msg'] = 'Usuário não autorizado.';
+            }
+            
+        } else{
+            $resp['loginNow']['logged'] = false;
+            $resp['loginNow']['login'] = true;
+            $resp['loginNow']['name'] = '';
+            $resp['loginNow']['id'] = '';
             $resp['alert']['status'] = true;
             $resp['alert']['msg'] = 'Usuário não encontrado. Verifique login e senha';
         }
