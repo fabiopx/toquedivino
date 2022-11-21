@@ -28,11 +28,9 @@ class Inscribe extends Crud{
         $data = $this;
 
         $dAccount = array(
-            'name' => $data->accountable,
             'email' => $_POST['email'],
             'password' => password_generate(),
             'status' => 1,
-            'phone' => $data->phone,
             'pin' => code_generate(),
             'access' => 2
         );
@@ -54,15 +52,6 @@ class Inscribe extends Crud{
 
             if($this->create('inscribe', $data)){
                 $idInscribe = $this->db->insert_id();
-                if(isset($_POST['flag'])){
-                    $dPreInscribe = array(
-                        'pre_inscribe_idpre_inscribe' => $_POST['idpre_inscribe'],
-                        'inscribe_idinscribe' => $idInscribe
-                    );
-
-                    $this->create('pre_inscribe_has_inscribe', $dPreInscribe);
-                    $this->update('pre_inscribe', array('idpre_inscribe' => $_POST['idpre_inscribe']), array('flag' => 1));
-                }
                 $dComposition = array(
                     'service_idservice' => $_POST['service_idservice'],
                     'formation_idformation' => $_POST['formation_idformation'],

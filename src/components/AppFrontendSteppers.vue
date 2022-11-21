@@ -93,8 +93,7 @@
                               >
                                 <v-img
                                   :src="
-                                    require('../assets/instrument/' +
-                                      instrument.image)
+                                    require('../assets/instrument/' + instrument.image)
                                   "
                                   width="40"
                                   class="ma-2"
@@ -106,14 +105,10 @@
                               </div>
                             </v-scroll-x-transition>
                             <v-scroll-x-transition>
-                              <div
-                                v-if="active"
-                                class="text-h2 flex-grow-1 text-center"
-                              >
+                              <div v-if="active" class="text-h2 flex-grow-1 text-center">
                                 <v-img
                                   :src="
-                                    require('../assets/instrument/' +
-                                      instrument.image)
+                                    require('../assets/instrument/' + instrument.image)
                                   "
                                   width="40"
                                   class="ma-2"
@@ -134,12 +129,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn
-                  depressed
-                  class="float-left"
-                  color="primary"
-                  @click="prevScreen()"
-                >
+                <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
                   <v-icon>mdi-menu-left</v-icon>Voltar
                 </v-btn>
                 <v-btn
@@ -158,8 +148,8 @@
             <v-row>
               <v-col>
                 <p class="text-h6 blue--text darken-4">
-                  Estas são as <b>Formações</b> que contém o(s) instrumento(s)
-                  que você selecionou. Escolha uma para prosseguirmos:
+                  Estas são as <b>Formações</b> que contém o(s) instrumento(s) que você
+                  selecionou. Escolha uma para prosseguirmos:
                 </p>
                 <v-alert type="error" v-show="alertSelectedFormation"
                   >Selecione uma formação
@@ -179,11 +169,7 @@
                       :key="formation.idformation"
                     >
                       <v-radio-group v-model="selectedFormation">
-                        <v-card
-                          color="primary"
-                          class="white--text"
-                          max-width="300"
-                        >
+                        <v-card color="primary" class="white--text" max-width="300">
                           <v-card-title>{{ formation.name }}</v-card-title>
                           <v-card-text class="white--text">{{
                             formation.description
@@ -205,25 +191,23 @@
                               label="selecionar"
                               dark
                               :value="formation"
-                              @click="isSelected('selectedFormation', 'alertSelectedFormation')"
+                              @click="
+                                isSelected('selectedFormation', 'alertSelectedFormation')
+                              "
                             ></v-radio>
                           </v-card-actions>
                         </v-card>
                       </v-radio-group>
                     </v-col>
                   </v-row>
-                  <v-dialog
-                    v-model="dialogVideoFormation"
-                    max-width="600"
-                    persistent
-                  >
+                  <v-dialog v-model="dialogVideoFormation" max-width="600" persistent>
                     <v-card>
                       <v-card>
                         <v-toolbar color="primary" dark>
                           {{ formation.name }}
                         </v-toolbar>
                         <v-card-text>
-                          <div style="--aspect-ratio: 16/9;">
+                          <div style="--aspect-ratio: 16/9">
                             <iframe
                               width="560"
                               height="315"
@@ -236,18 +220,12 @@
                           </div>
                         </v-card-text>
                         <v-card-actions class="justify-end">
-                          <v-btn text @click="closeDialogFormationVideo()">
-                            Close
-                          </v-btn>
+                          <v-btn text @click="closeDialogFormationVideo()"> Close </v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-card>
                   </v-dialog>
-                  <v-dialog
-                    v-model="dialogTooltipFormation"
-                    max-width="600"
-                    persistent
-                  >
+                  <v-dialog v-model="dialogTooltipFormation" max-width="600" persistent>
                     <v-card>
                       <v-card>
                         <v-toolbar color="primary" dark>
@@ -269,12 +247,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn
-                  depressed
-                  class="float-left"
-                  color="primary"
-                  @click="prevScreen()"
-                >
+                <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
                   <v-icon>mdi-menu-left</v-icon> Voltar
                 </v-btn>
                 <v-btn
@@ -295,17 +268,13 @@
               <v-col>
                 <v-sheet elevation="0" outlined rounded class="pa-5">
                   <p class="text-h5 blue--text">Dados reunidos até aqui</p>
-                  <p>
-                    <b class="blue--text">Evento:</b> {{ selectedService.name }}
-                  </p>
+                  <p><b class="blue--text">Evento:</b> {{ selectedService.name }}</p>
                   <p>
                     <b class="blue--text">Formação:</b>
                     {{ selectedFormation.name }}
                   </p>
                 </v-sheet>
-                <p class="text-h5 blue--text">
-                  Quem será o responsável pelo cadastro?
-                </p>
+                <p class="text-h5 blue--text">Quem será o responsável pelo cadastro?</p>
                 <v-form ref="formInscribePartOne">
                   <v-text-field
                     v-model="inscribeAccountable"
@@ -332,7 +301,6 @@
                     label="Celular"
                     :rules="inscribeMobileRules"
                     v-mask="maskTel(inscribeMobile)"
-                    @change="saveLead()"
                   >
                   </v-text-field>
                 </v-form>
@@ -340,20 +308,10 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn
-                  depressed
-                  class="float-left"
-                  color="primary"
-                  @click="prevScreen()"
-                >
+                <v-btn depressed class="float-left" color="primary" @click="prevScreen()">
                   <v-icon>mdi-menu-left</v-icon> Voltar
                 </v-btn>
-                <v-btn
-                  depressed
-                  class="float-right"
-                  color="primary"
-                  @click="finish()"
-                >
+                <v-btn depressed class="float-right" color="primary" @click="finish()">
                   <v-icon>mdi-menu-right</v-icon> Finalizar
                 </v-btn>
               </v-col>
@@ -517,13 +475,13 @@
             <v-row>
               <v-col>
                 <p>
-                  Que legal! Agora temos as informações necessárias para montar
-                  seu orçamento.
+                  Que legal! Agora temos as informações necessárias para montar seu
+                  orçamento.
                 </p>
                 <p>
                   Para continuar, acesse a
-                  <router-link to="customer">área restrita</router-link>. As
-                  informações de acesso foi enviada para seu e-mail.
+                  <router-link to="customer">área restrita</router-link>. As informações
+                  de acesso foi enviada para seu e-mail.
                 </p>
                 <p></p>
               </v-col>
@@ -536,13 +494,7 @@
       </v-stepper>
     </v-card-text>
     <v-card-actions>
-      <v-btn
-        color="amber ligthen-1 ml-2"
-        depressed
-        x-large
-        dark
-        @click="restartApp()"
-      >
+      <v-btn color="amber ligthen-1 ml-2" depressed x-large dark @click="restartApp()">
         <v-icon>mdi-restart</v-icon> Recomeçar
       </v-btn>
     </v-card-actions>
@@ -646,9 +598,7 @@ export default {
     inscribeAccountable: "",
     inscribeAccountableRules: [(v) => !!v || "O campo NOME é requerido"],
     inscribeBirthdate: "",
-    inscribeBirthdateRules: [
-      (v) => !!v || "O campo DATA DE NASCIMENTO é requerido",
-    ],
+    inscribeBirthdateRules: [(v) => !!v || "O campo DATA DE NASCIMENTO é requerido"],
     inscribeEmail: "",
     inscribeEmailRules: [
       (v) => !!v || "O campo EMAIL é requerido",
@@ -731,7 +681,7 @@ export default {
     verifyEmail: async function () {
       let data = new FormData();
       data.append("email", this.inscribeEmail);
-      const resp = await axios(this.urlApi + "/user/verifyEmail", {
+      const resp = await axios(this.urlApi + "/users/verifyEmail", {
         method: "POST",
         data: data,
       });
@@ -909,31 +859,30 @@ export default {
 </script>
 
 <style scoped>
+[style*="--aspect-ratio"] > :first-child {
+  width: 100%;
+}
+
+[style*="--aspect-ratio"] > img {
+  height: auto;
+}
+
+@supports (--custom: property) {
+  [style*="--aspect-ratio"] {
+    position: relative;
+  }
+
+  [style*="--aspect-ratio"]::before {
+    content: "";
+    display: block;
+    padding-bottom: calc(100% / (var(--aspect-ratio)));
+  }
+
   [style*="--aspect-ratio"] > :first-child {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
   }
-
-  [style*="--aspect-ratio"] > img {  
-    height: auto;
-  }
-
-  @supports (--custom:property) {
-    [style*="--aspect-ratio"] {
-      position: relative;
-    }
-    
-    [style*="--aspect-ratio"]::before {
-      content: "";
-      display: block;
-      padding-bottom: calc(100% / (var(--aspect-ratio)));
-    }
-    
-    [style*="--aspect-ratio"] > :first-child {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-    }  
-  }
+}
 </style>
-
