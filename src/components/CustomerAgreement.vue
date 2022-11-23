@@ -19,8 +19,24 @@
                     Você ainda não gerou seu contrato.
                   </h1>
                   <p v-if="access.isBudget && budget.status == 1" class="subtitle-1 mt-3">
-                    Existe um orçamento ativo na sua conta, você já pode gerar seu
-                    contrato.
+                    <v-alert
+                      border="top"
+                      color="red darken-4"
+                      v-if="!engaged && !access.skipEngaged"
+                      dark
+                    >
+                      <p>Os dados dos noivos não foram cadastrados.</p>
+                      <v-btn depressed rounded @click="$router.push('/customer/engaged')"
+                        >Cadastrar Noivos</v-btn
+                      >
+                      <v-btn depressed rounded class="ml-3" @click="setSkipEngaged(true)"
+                        >Pular cadastro</v-btn
+                      >
+                    </v-alert>
+                    <span v-if="access.skipEngaged">
+                      Existe um orçamento ativo na sua conta, você já pode gerar seu
+                      contrato.
+                    </span>
                   </p>
                 </div>
                 <div v-if="!access.isAgreement && !access.isBudget">
@@ -30,36 +46,14 @@
                   </p>
                 </div>
                 <div v-if="access.isAgreement">
-                  <v-alert
-                    border="top"
-                    color="red darken-4"
-                    v-if="!engaged && !access.skipEngaged"
-                    dark
-                    dismissible
-                  >
-                    <p>Os dados dos noivos não foram cadastrados.</p>
-                    <v-btn depressed rounded @click="$router.push('/customer/engaged')"
-                      >Cadastrar Noivos</v-btn
-                    >
-                    <v-btn depressed rounded class="mr-3" @click="setSkipEngaged(true)"
-                      >Pular cadastro</v-btn
-                    >
-                  </v-alert>
-                  <p
-                    v-if="access.skipEngaged"
-                    class="subtitle-1 pa-5 grey darken-4 white--text"
-                  >
+                  <p class="subtitle-1 pa-5 grey darken-4 white--text">
                     Leia atentamente o contrato abaixo. Estando de acordo com os termos do
                     contrato, assine eletronicamente usando a senha enviada para o e-mail
                     cadastrado.
                   </p>
 
                   <!-- Contrato -->
-                  <div
-                    v-if="access.skipEngaged"
-                    class="overflow-auto pa-8"
-                    style="height: 500px"
-                  >
+                  <div class="overflow-auto pa-8" style="height: 500px">
                     <p style="text-align: center">
                       <span style="font-size: 22px"
                         ><strong
@@ -476,7 +470,8 @@
                       </v-col>
                       <v-col cols="12" md="8" lg="8">
                         <p>
-                          Contrato assinado eletronicamente por {{ inscribe.accountable }}
+                          Contrato assinado eletronicamente por
+                          {{ inscribe.accountable }}
                         </p>
                       </v-col>
                     </v-row>
@@ -494,7 +489,7 @@
                   orçamento</v-btn
                 >
                 <v-btn
-                  v-if="access.isBudget && budget.status == 1"
+                  v-if="access.isBudget && budget.status == 1 && access.skipEngaged"
                   color="red darken-4"
                   class="pa-8"
                   dark

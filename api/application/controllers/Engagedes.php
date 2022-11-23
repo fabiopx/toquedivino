@@ -19,7 +19,6 @@ class Engagedes extends CI_Controller{
             $idEngaged = $this->db->insert_id();
             if($_POST['groom_responsible_for'] == "true"){
                 $account = [
-                    'name' => $_POST['groom_name'],
                     'email' => $_POST['groom_email'],
                     'password' => password_generate(),
                     'status' => 1,
@@ -49,7 +48,6 @@ class Engagedes extends CI_Controller{
             }
             if($_POST['bride_responsible_for'] == "true"){
                 $account = [
-                    'name' => $_POST['bride_name'],
                     'email' => $_POST['bride_email'],
                     'password' => password_generate(),
                     'status' => 1,

@@ -1296,8 +1296,12 @@ export default {
           data: data,
         }).then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
-          this.setSkipEngaged(true);
-          this.getEngaged();
+          if (this.access.skipEngaged) {
+            this.$router.push("/customer/agreement");
+          } else {
+            this.setSkipEngaged(true);
+            this.getEngaged();
+          }
         });
       } else if (this.crud == "u") {
         axios(this.apiURL + "/engagedes/updateCustomers/" + this.engagedID, {
@@ -1394,7 +1398,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["userNow", "isAgreement"]),
+    ...mapGetters(["userNow", "isAgreement", "access"]),
   },
 
   created: async function () {

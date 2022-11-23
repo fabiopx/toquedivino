@@ -38,12 +38,24 @@ class Agreements extends CI_controller
             $idAgreement = $this->db->insert_id();
             $this->budget->updateBudget(['idbudget' => $budget->row()->idbudget], ['status' => 2]);
             $this->inscribe->updateStatusInscribe($idInscribe, 2);
+            
             $agreementsManagers = $this->agreement->readAgreementsManagers();
             foreach ($agreementsManagers->result() as $am) :
-                $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $am->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                $signature = $this->signature->readSignature(['idsignature' => $am->signature_idsignature]);
+                if($signature->row()->status){
+                    $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $am->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                }
             endforeach;
             $engaged = $this->engaged->readEngaged(['inscribe_idinscribe' => $idInscribe]);
             if ($engaged->num_rows() != 0) {
+                $EHSGroom = $this->engaged->readEngagedHasSignature(['engaged' => 1, 'engaged_idengaged' => $engaged->row()->idengaged]);
+                $EHSBride = $this->engaged->readEngagedHasSignature(['engaged' => 2, 'engaged_idengaged' => $engaged->row()->idengaged]);
+                if ($EHSGroom->num_rows() != 0) {
+                    $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSGroom->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                }
+                if ($EHSBride->num_rows() != 0) {
+                    $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSBride->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
+                } 
                 if ($engaged->row()->groom_responsible_for == 0 && $engaged->row()->bride_responsible_for == 0) {
                     $dataSignature = [
                         'name' => $inscribe->row()->accountable,
@@ -56,15 +68,6 @@ class Agreements extends CI_controller
                     $this->signature->createSignature($dataSignature);
                     $idSignature = $this->db->insert_id();
                     $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $idSignature, 'inscribe_idinscribe' => $idInscribe]);
-                } else {
-                    $EHSGroom = $this->engaged->readEngagedHasSignature(['engaged' => 1, 'engaged_idengaged' => $engaged->row()->idengaged]);
-                    $EHSBride = $this->engaged->readEngagedHasSignature(['engaged' => 2, 'engaged_idengaged' => $engaged->row()->idengaged]);
-                    if ($EHSGroom->num_rows() != 0) {
-                        $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSGroom->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
-                    }
-                    if ($EHSBride->num_rows() != 0) {
-                        $this->agreement->createAgreementHasSignature(['agreement_idagreement' => $idAgreement, 'signature_idsignature' => $EHSBride->row()->signature_idsignature, 'inscribe_idinscribe' => $idInscribe]);
-                    }
                 }
             } else {
                 $dataSignature = [
