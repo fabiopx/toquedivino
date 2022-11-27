@@ -39,13 +39,12 @@
                 </template>
 
                 <template v-slot:item.actions="{ item }">
-                  
                   <!-- <v-btn v-show="item.status == 2" color="primary" icon dark>
                           <v-icon>mdi-file-link</v-icon>
                         </v-btn> -->
 
                   <v-btn
-                    v-show="item.status == 1"
+                    v-if="item.status == 1"
                     color="red"
                     icon
                     dark
@@ -53,9 +52,22 @@
                   >
                     <v-icon>mdi-file-cancel</v-icon>
                   </v-btn>
+
+                  
+                  <v-menu v-if="item.status == 2">
+                    <template v-slot:activator="{on, attrs}">
+                      <v-btn v-bind="attrs" v-on="on"  color="blue" icon dark
+                    ><v-icon>mdi-draw</v-icon></v-btn
+                  >
+                    </template>
+                    <v-list>
+                      <v-list-item v-for="s in item.signatures" :key="s.idsignature">
+                        <v-list-item-title>{{ s.name }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
                 </template>
               </v-data-table>
-              
             </v-card-text>
           </v-card>
         </v-col>
@@ -126,7 +138,6 @@ export default {
         },
       ],
       itemsContractTrash: [],
-      contractSignatures: [],
       signatureWithPassword: {},
       signaturePassword: "",
       loadingSignWithPassword: false,

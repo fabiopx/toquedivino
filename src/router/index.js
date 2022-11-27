@@ -26,6 +26,7 @@ import DashboardInscribes from "../components/DashboardInscribes.vue";
 import DashboardContracts from "../components/DashboardContracts.vue";
 import DashboardSignatures from "../components/DashboardSignatures.vue";
 import DashboardLogin from "../components/DashboardLogin.vue";
+import Signature from "../views/Signature.vue";
 
 Vue.use(VueRouter);
 
@@ -138,6 +139,19 @@ const routes = [
       {
         path: "login",
         component: DashboardLogin
+      }
+    ]
+  },
+  {
+    path: "/signature",
+    name: "Signature",
+    component: Signature,
+    children: [
+      {
+        path: "sign",
+      },
+      {
+        path: "validate"
       }
     ]
   }

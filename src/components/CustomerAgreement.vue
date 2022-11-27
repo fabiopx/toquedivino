@@ -456,7 +456,7 @@
                           </p>
                           <p
                             class="text-subtitle-2 mt-n6"
-                            :class="sign.sign == 0 ? signNotInUse : null"
+                            :class="!sign.sign ? signNotInUse : sign.font"
                             v-if="sign.type == 2 || sign.type == 3"
                           >
                             {{ selSignatureType(sign.type) }}
@@ -465,14 +465,25 @@
                       </v-col>
                     </v-row>
                     <v-row>
-                      <v-col cols="12" md="2" lg="2">
-                        <qr-code text="https://viadelivery.com.br" size="100"></qr-code>
-                      </v-col>
-                      <v-col cols="12" md="8" lg="8">
-                        <p>
-                          Contrato assinado eletronicamente por
-                          {{ inscribe.accountable }}
-                        </p>
+                      <v-col>
+                        <v-sheet v-if="signBox" outlined rounded="lg" class="pa-3">
+                          <v-row>
+                            <v-col cols="12" md="2" lg="2">
+                              <qr-code
+                                text="https://cerimonialtoquedivino.com.br"
+                                :size="100"
+                              ></qr-code>
+                            </v-col>
+                            <v-col cols="12" md="8" lg="8">
+                              <div v-for="s in signatures" :key="s.idsignature">
+                                <span v-if="s.sign" class="mr-3">
+                                  Assinado eletronicamente por
+                                  {{ s.name }} - {{ s.date }}
+                                </span>
+                              </div>
+                            </v-col></v-row
+                          >
+                        </v-sheet>
                       </v-col>
                     </v-row>
                   </div>
@@ -500,7 +511,7 @@
             </v-card-text>
             <v-card-actions v-if="access.isAgreement">
               <v-spacer></v-spacer>
-              <v-menu rounded="lg" offset-x color="grey darken-4" dark>
+              <v-menu v-if="contractors.length != 0" rounded="lg" offset-x color="grey darken-4" dark>
                 <template v-slot:activator="{ attrs, on }">
                   <v-btn
                     class="mr-3"
@@ -552,6 +563,7 @@ export default {
     contract: { value_total: "", down_payment: "" },
     signatures: [],
     contractors: [],
+    signBox: false,
     signatureType: "",
     signNotInUse: "red--text darken-4",
     ip: { ip: "", latitude: "", longitude: "" },
@@ -628,8 +640,10 @@ export default {
       );
       this.signatures = response.data;
       this.contractors = this.signatures.filter(
-        (item) => item.type == 1 && item.sign != 1
+        (item) => item.type == 1 && !item.sign
       );
+      let signed = this.signatures.find((item) => item.sign);
+      this.signBox = (signed && signed.sign) ? true : false;
     },
     selSignatureType: function (type) {
       if (type == 1) return "Contratante";

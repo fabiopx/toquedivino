@@ -1296,10 +1296,10 @@ export default {
           data: data,
         }).then((response) => {
           this.$swal(response.data.msg, "", response.data.icon);
-          if (this.access.skipEngaged) {
+          if (!this.access.skipEngaged) {
+            this.setSkipEngaged(true);
             this.$router.push("/customer/agreement");
           } else {
-            this.setSkipEngaged(true);
             this.getEngaged();
           }
         });

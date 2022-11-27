@@ -65,7 +65,8 @@ class Signatures extends CI_Controller{
         foreach($ahs->result() as $s):
             $signature = $this->signature->readSignature(['idsignature' => $s->signature_idsignature]);
             $signature = $signature->row();
-            $signature->sign = $s->sign;
+            $signature->sign = ($s->sign == 0) ? false : true;
+            $signature->date = $s->date;
             $resp[] = $signature;
         endforeach;
 
