@@ -9,11 +9,11 @@
     >
       <h1>Contrato {{ $route.params.agreement }}</h1>
       <h3>Assinante: {{ contract.signature.name }}</h3>
-      <p>
+      <v-sheet rounded color="grey lighten-4" class="pa-3 ma-3">
         Leia atentamente o contrato abaixo. Estando de acordo com os termos do
         contrato, assine eletronicamente usando a senha enviada para o e-mail
         cadastrado.
-      </p>
+      </v-sheet>
       <v-divider></v-divider>
       <!-- Contrato -->
       <div class="overflow-auto pa-8" style="height: 500px">
@@ -386,8 +386,26 @@
       <!-- Fim Contrato -->
       <v-divider></v-divider>
       <v-sheet rounded="lg" class="pa-3 ma-3" color="grey lighten-4">
-        <v-spacer></v-spacer>
-        <v-btn depressed color="primary"><v-icon>mdi-draw-pen</v-icon>Assinar</v-btn>
+        <v-menu offset-x :close-on-content-click="false" :nudge-width="200">
+          <template v-slot:activator="{on, attrs}">
+            <v-btn depressed color="primary" v-bind="attrs" v-on="on"><v-icon>mdi-draw-pen</v-icon>Assinar</v-btn>
+          </template>
+
+          <v-card>
+            <v-toolbar color="primary" dark>
+              <v-toolbar-title>Assinatura Eletrônica</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text>
+              <v-form>
+                <v-text-field label="Senha" outlined></v-text-field>
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn depressed block color="primary"><v-icon>mdi-draw</v-icon>Assinar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
+        
       </v-sheet>
     </v-sheet>
     <v-overlay :value="loading"
