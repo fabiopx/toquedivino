@@ -27,6 +27,38 @@ class Signatures extends CI_Controller{
         echo json_encode($resp);
     }
 
+    public function getForSign($id, $code){
+        $this->load->model('agreement');
+        $this->load->model('signature');
+        $this->load->model('inscribe');
+        $this->load->model('engaged');
+        $resp = [];
+
+        $agreement = $this->agreement->readAgreement(['code' => $code]);
+        $agreement = $agreement->row();
+        $agreement->value_total = $agreement->value - $agreement->discount + $agreement->addition;
+        $signature = $this->signature->readSignature(['idsignature' => $id]);
+        $inscribe = $this->inscribe->readInscribe(['idinscribe' => $agreement->inscribe_idinscribe]);
+        $inscribe = $inscribe->row();
+        $inscribe->address = json_decode($inscribe->address);
+        $engaged = $this->engaged->readEngaged(['inscribe_idinscribe' => $inscribe->idinscribe]);
+        if($engaged->num_rows() != 0){
+            $engaged = $engaged->row();
+            $engaged->groom_address = json_decode($engaged->groom_address);
+            $engaged->bride_address = json_decode($engaged->bride_address);
+        } else{
+            $engaged = null;
+        }
+
+        $resp['agreement'] = $agreement;
+        $resp['signature'] = $signature->row();
+        $resp['inscribe'] = $inscribe;
+        $resp['engaged'] = $engaged;
+
+        echo json_encode($resp);
+
+    }
+
     public function update($id){
         $this->load->model('signature');
         echo json_encode($this->signature->updateSignature($id));
