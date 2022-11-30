@@ -32,15 +32,26 @@ class Signatures extends CI_Controller{
         $this->load->model('signature');
         $this->load->model('inscribe');
         $this->load->model('engaged');
+        $this->load->model('account');
         $resp = [];
 
         $agreement = $this->agreement->readAgreement(['code' => $code]);
         $agreement = $agreement->row();
         $agreement->value_total = $agreement->value - $agreement->discount + $agreement->addition;
-        $signature = $this->signature->readSignature(['idsignature' => $id]);
+
         $inscribe = $this->inscribe->readInscribe(['idinscribe' => $agreement->inscribe_idinscribe]);
         $inscribe = $inscribe->row();
         $inscribe->address = json_decode($inscribe->address);
+
+        $signature = $this->signature->readSignature(['idsignature' => $id]);
+        $signature = $signature->row();
+        $ahs = $this->agreement->readAgreementHasSignature(['agreement_idagreement' => $agreement->idagreement, 'signature_idsignature' => $id, 'inscribe_idinscribe' => $inscribe->idinscribe]);
+        $ahs = $ahs->row();
+        $signature->sign = $ahs->sign;
+
+        $account = $this->account->readAccount(['idaccount' => $signature->account_idaccount]);
+        $account = $account->row();
+
         $engaged = $this->engaged->readEngaged(['inscribe_idinscribe' => $inscribe->idinscribe]);
         if($engaged->num_rows() != 0){
             $engaged = $engaged->row();
@@ -51,9 +62,10 @@ class Signatures extends CI_Controller{
         }
 
         $resp['agreement'] = $agreement;
-        $resp['signature'] = $signature->row();
+        $resp['signature'] = $signature;
         $resp['inscribe'] = $inscribe;
         $resp['engaged'] = $engaged;
+        $resp['account'] = $account;
 
         echo json_encode($resp);
 
@@ -119,5 +131,33 @@ class Signatures extends CI_Controller{
         }
 
         echo json_encode($response);
+    }
+
+    public function signAgreement(){
+        $this->load->model('agreement');
+
+        $post = $this->input->post();
+
+        $where = [
+            'agreement_idagreement' => $post['agreement'],
+            'signature_idsignature' => $post['signature'],
+            'inscribe_idinscribe' => $post['inscribe']
+        ];
+
+        $data = [
+            'sign' => 1,
+            'date' => $post['date'],
+            'ip' => $post['ip'],
+            'geolocation', $post['geolocation'],
+            'hash' => $post['hash']
+        ];
+
+        if($this->agreement->updateAgreementHasSignature($where, $data)){
+            $resp = ['msg' => "Contrato assinado com sucesso", 'icon' => "success"];
+        } else{
+            $resp = ['msg' => "Contrato não assinado", 'icon' => "error"];
+        }
+
+        echo json_encode($resp);
     }
 }

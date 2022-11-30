@@ -397,11 +397,11 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <v-text-field label="Senha" outlined></v-text-field>
+                <v-text-field v-model="password" type="password" label="Senha" filled outlined :append-icon="inputIcon"></v-text-field>
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn depressed block color="primary"><v-icon>mdi-draw</v-icon>Assinar</v-btn>
+              <v-btn depressed block color="primary" :loading="btnLoading" @click="verifyPassword()"><v-icon>{{ btnIcon }}</v-icon>{{ btnText }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
@@ -421,15 +421,37 @@ export default {
   data() {
     return {
       apiURL: process.env.VUE_APP_URL,
-      contract: { inscribe: "", agreement: "", signature: "", engaged: "" },
+      contract: { inscribe: "", agreement: "", signature: "", engaged: "", account: "" },
       loading: true,
       loaded: false,
+      inputIcon: 'mdi-lock',
+      btnIcon: 'mdi-draw',
+      btnText: "Assinar",
+      password: null,
+      btnLoading: false,
+      ip: { ip: "", latitude: "", longitude: "" },
     };
   },
 
   mounted() {},
 
   methods: {
+    getIP: async function () {
+      const resp = await axios.get("https://ipapi.co/json/");
+      this.ip = resp.data;
+    },
+    generateCode: function () {
+      var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJLMNOPQRSTUVWXYZ";
+      var passwordLength = 16;
+      var password = "";
+
+      for (var i = 0; i < passwordLength; i++) {
+        var randomNumber = Math.floor(Math.random() * chars.length);
+        password += chars.substring(randomNumber, randomNumber + 1);
+      }
+
+      return password;
+    },
     getContract: async function () {
       let response = await axios.get(
         this.apiURL +
@@ -452,10 +474,38 @@ export default {
         );
       }
     },
+    verifyPassword: async function(){
+      this.btnLoading = true
+      if(this.password == this.contract.account.password){
+        this.inputIcon = 'mdi-lock-check'
+        this.btnLoading = false
+      } else{
+        this.btnLoading = false;
+        this.inputIcon = "mdi-lock-question"
+      }
+    },
+    signAgreement: async function(){
+      let data = new FormData();
+      data.append('agreement', this.contract.agreement.idagreement);
+      data.append('signature', this.contract.signature.idsignature);
+      data.append('inscribe', this.contract.inscribe.idinscribe);
+      data.append('ip', this.ip.ip);
+      data.append('geolocation', this.ip.latitude + ', ' + this.ip.longitude);
+      data.append('hash', this.generateCode());
+
+      const response = await axios(this.apiURL + '/signatures/signAgreement', {
+        method: 'POST',
+        data: data
+      });
+
+      this.$swal(response.data.msg, '', response.data.icon);
+      this.getContract();
+    }
   },
 
   created: async function () {
     await this.getContract();
+    await this.getIP();
   },
 };
 </script>

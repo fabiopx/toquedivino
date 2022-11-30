@@ -62,6 +62,10 @@ class Agreement extends Crud{
         return $this->update('agreement', $where, $data);
     }
 
+    public function updateAgreementHasSignature($where, $data){
+        return $this->update('agreement_has_signature', $where, $data);
+    }
+
     public function deleteAgreement($where){
         return $this->delete('agreement', $where);
     }
