@@ -268,6 +268,7 @@ class Contract extends CI_Controller{
                     }
                     array_push($signatures, 
                         array(
+                            'idsignature' => $signature->row()->idsignature,
                             'name' => $signature->row()->name, 
                             'type' => $signature->row()->type, 
                             'font' => $signature->row()->font, 

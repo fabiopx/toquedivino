@@ -2,14 +2,14 @@
   <div>
     <v-container class="home">
       <v-row class="justify-space-around mt-5">
-        <v-col cols="6" v-for="(card, i) in cards" :key="i">
-          <v-card elevation="5">
+        <v-col cols="12" md="6" v-for="(card, i) in cards" :key="i">
+          <v-card elevation="5" height="400">
             <v-card-title
               class="blue-grey--text"
               v-text="card.title"
             ></v-card-title>
             <v-card-text>
-              <v-sheet max-width="calc(100% - 32px)">
+              <v-sheet max-width="calc(100% - 32px)" height="250">
                 <v-img :src="card.img"></v-img>
               </v-sheet>
             </v-card-text>
@@ -21,7 +21,7 @@
                 class="white--text"
                 @click="$router.push(card.link)"
               >
-                mais...</v-btn
+                acessar</v-btn
               >
             </v-card-actions>
           </v-card>
@@ -52,12 +52,12 @@ export default {
         {
           title: "Formações",
           link: "/dashboard/formations",
-          img: process.env.VUE_APP_IMGPATH
+          img: process.env.VUE_APP_IMGPATH + "undraw_compose_music_re_wpiw.svg"
         },
         {
           title: "Gerencial",
           link: "/dashboard/contracts",
-          img: process.env.VUE_APP_IMGPATH
+          img: process.env.VUE_APP_IMGPATH + "undraw_manage_chats_re_0yoj.svg"
         },
       ],
     };

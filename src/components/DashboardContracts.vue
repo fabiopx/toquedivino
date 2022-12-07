@@ -54,7 +54,7 @@
                   </v-btn>
 
                   
-                  <v-menu v-if="item.status == 2">
+                  <v-menu v-if="item.status == 2" :close-on-content-click="false" bottom>
                     <template v-slot:activator="{on, attrs}">
                       <v-btn v-bind="attrs" v-on="on"  color="blue" icon dark
                     ><v-icon>mdi-draw</v-icon></v-btn
@@ -62,7 +62,14 @@
                     </template>
                     <v-list>
                       <v-list-item v-for="s in item.signatures" :key="s.idsignature">
-                        <v-list-item-title>{{ s.name }}</v-list-item-title>
+                        <v-list-item-content>
+                          <v-list-item-title>{{ s.name }}</v-list-item-title>
+                          <v-list-item-subtitle>https://app.cerimonialtoquedivino.com.br/signature/sign/{{ s.idsignature }}/{{ item.agreement.code }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-btn icon color="primary"><v-icon>mdi-link-variant</v-icon></v-btn>
+                          <v-btn icon color="red"><v-icon>mdi-file-sign</v-icon></v-btn>
+                        </v-list-item-action>
                       </v-list-item>
                     </v-list>
                   </v-menu>
